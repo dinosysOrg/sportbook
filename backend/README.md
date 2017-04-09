@@ -1,16 +1,24 @@
 # README
 
-## Heroku deployment
+This README would normally document whatever steps are necessary to get the
+application up and running.
 
-We used this custom buildpack to deploy to Heroku https://github.com/aarongray/heroku-buildpack-ruby
+Things you may want to cover:
 
-```
-heroku buildpacks:set https://github.com/aarongray/heroku-buildpack-ruby
-```
+* Ruby version
 
-Therefore we need to set 2 config vars on Heroku:
+* System dependencies
 
-```
-APP_SUBDIR="backend"
-BUNDLE_GEMFILE="backend/Gemfile"
-```
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
