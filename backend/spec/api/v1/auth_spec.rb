@@ -7,6 +7,7 @@ describe 'Auth' do
 
       user = User.find_by(email: 'zi@dinosys.com')
       expect(user.valid_password?('password')).to be true
+
     end
 
     context 'when email already exists' do
@@ -15,7 +16,7 @@ describe 'Auth' do
         post '/api/v1/auth', params: { email: 'zi@dinosys.com', password: 'password', password_confirmation: 'password' }
 
         expect(response.status).to eq(422)
-        expect(json_response[:errors][:email]).to include('đã có')
+        expect(json_response[:errors][:email]).to include('has already been taken')
       end
     end
 
@@ -24,7 +25,7 @@ describe 'Auth' do
         post '/api/v1/auth', params: { email: 'zi@dinosys.', password: 'password', password_confirmation: 'password' }
 
         expect(response.status).to eq(422)
-        expect(json_response[:errors][:email]).to include('không hợp lệ')
+        expect(json_response[:errors][:email]).to include('is not an email')
       end
     end
 
@@ -33,7 +34,7 @@ describe 'Auth' do
         post '/api/v1/auth', params: { email: 'zi@dinosys.com', password: 'password', password_confirmation: 'pass' }
 
         expect(response.status).to eq(422)
-        expect(json_response[:errors][:password_confirmation]).to include('không khớp với xác nhận')
+        expect(json_response[:errors][:password_confirmation]).to include("doesn't match Password")
       end
     end
   end
