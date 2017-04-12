@@ -1,0 +1,2 @@
+describe ApplicationApi do
+end
