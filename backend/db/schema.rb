@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413040245) do
+ActiveRecord::Schema.define(version: 20170413044525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "participants", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "tournament_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["tournament_id"], name: "index_participants_on_tournament_id", using: :btree
+    t.index ["user_id"], name: "index_participants_on_user_id", using: :btree
+  end
 
   create_table "tournaments", force: :cascade do |t|
     t.string   "name"
@@ -50,4 +59,6 @@ ActiveRecord::Schema.define(version: 20170413040245) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
   end
 
+  add_foreign_key "participants", "tournaments"
+  add_foreign_key "participants", "users"
 end
