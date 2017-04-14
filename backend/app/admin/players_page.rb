@@ -6,10 +6,18 @@ ActiveAdmin.register Player do
       link_to record.tournament.name, admin_tournament_path(record.tournament)
     end
     column :group do |record|
-      link_to record.group.name, admin_user_path(record.group)
+      if record.team
+        link_to record.team.group.name, admin_user_path(record.team.group)
+      else
+        nil
+      end
     end
     column :team do |record|
-      link_to record.team.name, admin_user_path(record.team)
+      if record.team
+        link_to record.team.name, admin_user_path(record.team)
+      else
+        nil
+      end
     end
     column :user do |record|
       link_to record.user.name, admin_user_path(record.user)
