@@ -1,8 +1,6 @@
 class Team < ApplicationRecord
-  belongs_to :group
+  belongs_to :tournament
   has_many :players, dependent: :destroy
 
-  delegate :tournament, to: :group
-
-  validates :name, presence: true, uniqueness: { scope: :group_id, case_sensitive: false }
+  validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
 end

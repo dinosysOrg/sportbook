@@ -35,24 +35,28 @@ namespace :sb do
           end
 
           user = User.find_or_create_by!(name: row[:name].squish, phone_number: row[:phone_number].squish) do |u|
-            u.phone_number = row[:phone_number].squish
             u.skill_level = (row[:skill_level].gsub(/\s+/, "")).downcase.underscore
             u.address = row[:address].try(:squish)
             u.note = row[:note].try(:squish)
 
             u.password = FFaker::Internet.password
-            u.email = FFaker::Internet.email
+            u.email = FFaker::Internet.email #todo: remove devise email requirement
           end
 
           tournament_names = row[:tournaments].split(',').map(&:squish)
 
           tournament_names.each do |name|
-            puts tournaments_mapping[name]
+            team = Team.find_or_create_by!(
+              name: user.name,
+              tournament_id: tournaments_mapping[name]
+            )
 
             players << Player.find_or_create_by!(
               user_id: user.id,
-              tournament_id: tournaments_mapping[name]
+              tournament_id: tournaments_mapping[name],
+              team_id: team.id
             )
+
           end
         end
 

@@ -13,10 +13,10 @@ namespace :sb do
         # tournament.matches.destroy_all
 
         puts "Removing #{tournament.players.count} players."
-        # tournament.players.destroy_all
+        tournament.players.destroy_all
 
         puts "Removing #{tournament.teams.count} teams."
-        # tournament.teams.destroy_all
+        tournament.teams.destroy_all
 
         puts "Removing #{tournament.groups.count} groups."
         # tournament.groups.destroy_all
