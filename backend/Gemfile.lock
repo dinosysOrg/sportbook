@@ -229,6 +229,7 @@ GEM
     rack-cors (0.4.1)
     rack-test (0.6.3)
       rack (>= 1.0)
+    railroady (1.5.2)
     rails (5.0.2)
       actioncable (= 5.0.2)
       actionmailer (= 5.0.2)
@@ -383,6 +384,7 @@ DEPENDENCIES
   pg_search
   puma (~> 3.0)
   rack-cors
+  railroady
   rails (~> 5.0.2)
   rails-i18n
   roar
