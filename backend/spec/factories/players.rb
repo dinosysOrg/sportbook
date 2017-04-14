@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  factory :participant do
+  factory :player do
     user
-    tournament
+    group
   end
 end

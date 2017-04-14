@@ -1,5 +1,6 @@
 class Team < ApplicationRecord
   belongs_to :group
+  has_many :players, dependent: :destroy
 
   delegate :tournament, to: :group
 

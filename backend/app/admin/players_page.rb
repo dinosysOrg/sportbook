@@ -1,4 +1,4 @@
-ActiveAdmin.register Participant do
+ActiveAdmin.register Player do
   index do
     selectable_column
     column :id
