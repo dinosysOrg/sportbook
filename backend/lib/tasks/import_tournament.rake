@@ -52,13 +52,20 @@ namespace :sb do
             end
           end
 
-          # time = Time.zone.parse("#{row[:date]} #{row[:hour]}")
-          # matches << Match.find_or_create_by!(group: group, team_a: team_a, team_b: team_b, time: time, venue: venue)
+          time = nil
+          if row[:date] && row[:hour]
+            time = row[:date].to_datetime + ((row[:hour] / 3600).round * 3600).seconds
+          end
+
+          matches << Match.find_or_create_by!(group: group, team_a: team_a, team_b: team_b) do |match|
+            match.time = time
+            match.venue = venue
+          end
         end
 
         puts "Imported #{matches.count} matches without issues."
         if dry_run
-          puts "Rolling back changes."
+          puts 'Rolling back changes.'
           raise ActiveRecord::Rollback
         end
       end
