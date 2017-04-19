@@ -12,7 +12,7 @@ namespace :sb do
       ActiveRecord::Base.transaction do
         players = []
 
-        file = Roo::Spreadsheet.open('./players.xlsx')
+        file = Roo::Spreadsheet.open(Rails.root.join('import_data', 'players.xlsx').to_s)
         players_sheet = file.sheet('Form responses 1')
         players_sheet.parse(
           name: 'Họ và Tên / First & Last Name',

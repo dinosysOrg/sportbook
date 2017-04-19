@@ -12,7 +12,7 @@ namespace :sb do
         players = []
         matches = []
 
-        file = Roo::Spreadsheet.open("./tournament_#{tournament_id}.xlsx")
+        file = Roo::Spreadsheet.open(Rails.root.join('import_data', "tournament_#{tournament_id}.xlsx").to_s)
         players_sheet = file.sheet('Danh sách các trận đấu')
         players_sheet.parse(
           stt: 'STT',
