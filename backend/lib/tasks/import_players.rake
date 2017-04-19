@@ -1,13 +1,12 @@
 namespace :sb do
   namespace :import do
     desc 'Import players for a tournament'
-    task :players, [:dry_run] => [:environment, :confirm_dry_run] do |t, args|
+    task :players, [:tournaments_mapping, :dry_run] => [:environment, :confirm_dry_run] do |t, args|
       dry_run = args[:dry_run] != 'false'
 
-      tournaments_mapping = {
-        '9 Ball' => 1,
-        '10 Ball' => 2
-      }
+      tournaments_mapping = Hash[*args[:tournaments_mapping].split('|')]
+      puts "==== TOURNAMENT MAPPING ===="
+      puts tournaments_mapping.inspect
 
       ActiveRecord::Base.transaction do
         players = []

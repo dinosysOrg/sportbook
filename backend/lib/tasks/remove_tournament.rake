@@ -1,6 +1,6 @@
 namespace :sb do
   namespace :remove do
-    desc 'Remove a tournament and all of its information'
+    desc 'Remove a tournament data'
     task :tournament, [:tournament_id, :dry_run] => [:environment, :require_tournament, :confirm_dry_run] do |t, args|
       tournament_id = args[:tournament_id]
       dry_run = args[:dry_run] != 'false'
@@ -9,6 +9,8 @@ namespace :sb do
       puts "=== Tournament '#{tournament.name}' ==="
 
       ActiveRecord::Base.transaction do
+        puts "Removing #{tournament.name} tournament's data"
+
         puts "Removing #{tournament.matches.count} matches."
         # tournament.matches.destroy_all
 
@@ -20,9 +22,6 @@ namespace :sb do
 
         puts "Removing #{tournament.groups.count} groups."
         tournament.groups.destroy_all
-
-        puts "Removing #{tournament.name} tournament."
-        # tournament.destroy
 
         if dry_run
           puts "Rolling back changes."
