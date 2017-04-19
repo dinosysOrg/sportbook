@@ -75,10 +75,10 @@ namespace :sb do
                 lost_team_names = row[:score].gsub(/bỏ cuộc|bị xử thua/, '').split('&')
                 if lost_team_names.size == 1
                   lost_team_name = lost_team_names.first.strip
-                  lost_team = if team_a.name == lost_team_name
-                    team_a
+                  if team_a.name == lost_team_name
+                    match.point = '0-3'
                   elsif team_b.name == lost_team_name
-                    team_b
+                    match.point = '3-0'
                   else
                     raise 'Could not match lost team!!!'
                   end
