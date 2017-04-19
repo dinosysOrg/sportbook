@@ -12,7 +12,7 @@ namespace :sb do
         players = []
         matches = []
 
-        file = Roo::Spreadsheet.open('./tournament_1.xlsx')
+        file = Roo::Spreadsheet.open("./tournament_#{tournament_id}.xlsx")
         players_sheet = file.sheet('Danh sách các trận đấu')
         players_sheet.parse(
           stt: 'STT',
@@ -43,11 +43,8 @@ namespace :sb do
             if team_name.blank?
               nil
             else
-              team = group.teams.find_or_create_by!(name: team_name.squish)
-
-              user = User.find_or_create_by!(name: team_name.squish) # TODO: phone_number is needed to identify user
-
-              Player.find_or_create_by!(user_id: user.id, tournament_id: tournament_id, team_id: team.id)
+              team = tournament.teams.find_by!(name: team_name.squish)
+              player = tournament.players.includes(:user).find_by!(name: team_name.squish) # TODO: phone_number is needed to identify user
 
               team
             end

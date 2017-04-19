@@ -56,7 +56,6 @@ namespace :sb do
               tournament_id: tournaments_mapping[name],
               team_id: team.id
             )
-
           end
         end
 
