@@ -38,18 +38,24 @@ namespace :sb do
 
           group = tournament.groups.find_or_create_by!(name: row[:group].squish)
           venue = row[:venue] ? Venue.find_or_create_by!(name: row[:venue].squish) : nil
+          _, team_a_order, team_b_order = row[:match_code].split('-')
 
-          team_a, team_b = [row[:team_a], row[:team_b]].map do |team_name|
-            if team_name.blank?
-              nil
-            else
-              team = tournament.teams.find_by!(name: team_name.squish)
-              player = team.players.first
+          team_a = if row[:team_a].blank?
+            nil
+          else
+            team = tournament.teams.find_by!(name: row[:team_a].squish)
+            team.groups_teams.find_or_create_by!(group_id: group.id, order: team_a_order)
 
-              team.groups << group
+            team
+          end
 
-              team
-            end
+          team_b = if row[:team_b].blank?
+            nil
+          else
+            team = tournament.teams.find_by!(name: row[:team_b].squish)
+            team.groups_teams.find_or_create_by!(group_id: group.id, order: team_b_order)
+
+            team
           end
 
           time = nil
@@ -60,6 +66,7 @@ namespace :sb do
           matches << Match.find_or_create_by!(group: group, team_a: team_a, team_b: team_b) do |match|
             match.time = time
             match.venue = venue
+            match.code = row[:match_code]
           end
         end
 

@@ -9,20 +9,20 @@ namespace :sb do
       puts "=== Tournament '#{tournament.name}' ==="
 
       ActiveRecord::Base.transaction do
-        # puts "Removing #{tournament.matches.count} matches."
+        puts "Removing #{tournament.matches.count} matches."
         # tournament.matches.destroy_all
 
         puts "Removing #{tournament.players.count} players."
-        tournament.players.destroy_all
+        # tournament.players.destroy_all
 
         puts "Removing #{tournament.teams.count} teams."
         tournament.teams.destroy_all
 
         puts "Removing #{tournament.groups.count} groups."
-        # tournament.groups.destroy_all
+        tournament.groups.destroy_all
 
         puts "Removing #{tournament.name} tournament."
-        tournament.destroy
+        # tournament.destroy
 
         if dry_run
           puts "Rolling back changes."
