@@ -19,3 +19,6 @@
 # Ignore VSCode Project file
 .vscode
 .vscode/*
+
+# Ignore Libre Office lock files
+.~lock*
