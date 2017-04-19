@@ -44,7 +44,9 @@ namespace :sb do
               nil
             else
               team = tournament.teams.find_by!(name: team_name.squish)
-              player = tournament.players.includes(:user).find_by!(name: team_name.squish) # TODO: phone_number is needed to identify user
+              player = team.players.first
+
+              team.groups << group
 
               team
             end
