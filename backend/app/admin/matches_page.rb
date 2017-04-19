@@ -7,13 +7,19 @@ ActiveAdmin.register Match do
     column :group, :sortable => 'groups.name' do |record|
       link_to record.group.name, admin_group_path(record.group)
     end
+    column :code
     column :team_a do |record|
       link_to record.team_a.name, admin_team_path(record.team_a)
     end
     column :team_b do |record|
       link_to record.team_b.name, admin_team_path(record.team_b)
     end
-    column :code
+    column :score do |record|
+      "#{record.score_a}-#{record.score_b}"
+    end
+    column :point do |record|
+      "#{record.point_a}-#{record.point_b}"
+    end
     column :time
     column :venue do |record|
       link_to record.venue.name, admin_venue_path(record.venue)
