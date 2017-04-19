@@ -22,7 +22,7 @@ namespace :sb do
           team_b: 'Cơ thủ 2',
           hour: 'Thời gian đăng ký',
           date: 'Ngày',
-          score: 'Tỉ số',
+          score: 'Tỉ số text',
           venue: 'Địa điểm'
         ).each do |row|
           puts row.inspect
@@ -70,21 +70,14 @@ namespace :sb do
             match.code = row[:match_code]
             if row[:score]
               if row[:score] =~ /\-/
-                score_a, score_b = row[:score].split('-')
-                match.score_a = score_a
-                match.score_b = score_b
-                case (score_a <=> score_b)
-                when 1
-                  match.score_a = 3
-                when -1
-                  match.score_b = 3
-                end
+                match.score = row[:score]
               elsif row[:score] =~ /bỏ cuộc|bị xử thua/
                 lost_team_names = row[:score].gsub(/bỏ cuộc|bị xử thua/, '').split('&')
                 if lost_team_names.size == 1
-                  lost_team = if team_a.name =~ lost_team_names.first
+                  lost_team_name = lost_team_names.first.strip
+                  lost_team = if team_a.name == lost_team_name
                     team_a
-                  elsif team_b.name =~ lost_team_names.first
+                  elsif team_b.name == lost_team_name
                     team_b
                   else
                     raise 'Could not match lost team!!!'

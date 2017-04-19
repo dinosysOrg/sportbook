@@ -1,10 +1,12 @@
 ActiveAdmin.register Match do
+  config.sort_order = 'groups.name'
+
   index do
     selectable_column
     column :tournament do |record|
       link_to record.tournament.name, admin_tournament_path(record.tournament)
     end
-    column :group, :sortable => 'groups.name' do |record|
+    column :group, sortable: 'groups.name' do |record|
       link_to record.group.name, admin_group_path(record.group)
     end
     column :code

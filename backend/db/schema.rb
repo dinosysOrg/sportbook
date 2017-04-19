@@ -39,13 +39,13 @@ ActiveRecord::Schema.define(version: 20170419093508) do
     t.integer  "team_a_id"
     t.integer  "team_b_id"
     t.datetime "time"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.string   "code"
-    t.integer  "score_a"
-    t.integer  "score_b"
-    t.integer  "point_a"
-    t.integer  "point_b"
+    t.integer  "score_a",    default: 0
+    t.integer  "score_b",    default: 0
+    t.integer  "point_a",    default: 0
+    t.integer  "point_b",    default: 0
     t.index ["group_id"], name: "index_matches_on_group_id", using: :btree
     t.index ["team_a_id"], name: "index_matches_on_team_a_id", using: :btree
     t.index ["team_b_id"], name: "index_matches_on_team_b_id", using: :btree
