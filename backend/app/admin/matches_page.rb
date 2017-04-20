@@ -1,9 +1,8 @@
 ActiveAdmin.register Match do
   actions :index, :show, :edit, :update, :destroy
 
-  filter :group
-  filter :team_a
-  filter :team_b
+  filter :group_tournament_id, as: :select, collection: -> { Tournament.all }
+  filter :team_a_name_or_team_b_name, as: :string, filters: [:contains]
   filter :venue
 
   config.sort_order = 'groups.name'
