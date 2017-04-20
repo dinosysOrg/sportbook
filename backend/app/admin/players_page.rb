@@ -5,7 +5,6 @@ ActiveAdmin.register Player do
   filter :user
 
   index do
-    selectable_column
     column :id
     column :tournament do |record|
       link_to record.tournament.name, admin_tournament_path(record.tournament)

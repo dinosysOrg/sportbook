@@ -5,7 +5,6 @@ ActiveAdmin.register Team do
   filter :name, filters: [:contains]
 
   index do
-    selectable_column
     column :tournament do |record|
       link_to record.tournament.name, admin_tournament_path(record.tournament)
     end

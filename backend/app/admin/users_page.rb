@@ -2,7 +2,6 @@ ActiveAdmin.register User do
   permit_params :name, :email, :phone_number, :password, :password_confirmation
 
   index do
-    selectable_column
     id_column
     column :name
     column :slug
