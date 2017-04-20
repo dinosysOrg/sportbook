@@ -7,21 +7,20 @@ vi:
       long: "%d-%m-%Y %H:%M"
   activerecord:
     models:
-      tournament: Giải đấu
-      group:
-        one: Bảng
-        other: Bảng
-      venue: Địa điểm
-      team: Đội
-      player: Đăng kí chơi
-      groups_team: Sắp xếp bảng
-      match: trận
+      user: người dùng
+      tournament: giải đấu
+      group: bảng
+      venue: địa điểm
+      team: đội thi đấu
+      player: đăng kí chơi
+      groups_team: sắp xếp bảng
+      match: trận đấu
     attributes:
       tournament:
-        name: Tên
+        name: tên
       group:
-        name: Tên
-        tournament: Giải đấu
+        name: tên
+        tournament: giải đấu
         team: đội
         teams: các đội
       venue:
