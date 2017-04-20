@@ -6,5 +6,7 @@ class Team < ApplicationRecord
   has_many :groups_teams
   has_many :groups, through: :groups_teams
 
+  accepts_nested_attributes_for :groups_teams, allow_destroy: true
+
   validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
 end

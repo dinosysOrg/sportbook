@@ -5,3 +5,51 @@ vi:
   time:
     formats:
       long: "%d-%m-%Y %H:%M"
+  activerecord:
+    models:
+      tournament: Giải đấu
+      group:
+        one: Bảng
+        other: Bảng
+      venue: Địa điểm
+      team: Đội
+      player: Đăng kí chơi
+      groups_team: Sắp xếp bảng
+      match: trận
+    attributes:
+      tournament:
+        name: Tên
+      group:
+        name: Tên
+        tournament: Giải đấu
+        team: đội
+        teams: các đội
+      venue:
+        name: tên
+      team:
+        name: tên
+        tournament: giải đấu
+        group: bảng
+        groups: các bảng
+      groups_team:
+        group: bảng
+        team: đội
+        order: thứ tự
+      player:
+        user: người dùng
+        tournament: giải đấu
+      match:
+        name: tên
+        tournament: giải đấu
+        group: bảng
+        team_a: đội nhà
+        team_b: đội khách
+        time: thời gian
+        venue: địa điểm
+        code: mã trận
+        score: tỉ số
+        score_a: số đội nhà
+        score_b: số đội khách
+        point: điểm
+        point_a: điểm đội nhà
+        point_b: điểm đội khách

@@ -1,4 +1,9 @@
 ActiveAdmin.register Group do
+  actions :index, :show, :edit, :update, :destroy
+
+  filter :tournament
+  filter :name, filters: [:contains]
+
   index do
     selectable_column
     column :tournament do |record|
@@ -8,7 +13,30 @@ ActiveAdmin.register Group do
     actions
   end
 
-  permit_params do
-    [:name, :tournament_id]
+  show do
+    attributes_table do
+      row :tournament
+      row :name
+      row :teams do |object|
+        object.teams.pluck(:name).join(', ')
+      end
+    end
   end
+
+  form do |f|
+    f.inputs 'Admin Details' do
+      f.input :tournament, input_html: { disabled: true }
+      f.input :name
+
+      if f.object.tournament
+        f.has_many :groups_teams do |groups_team|
+          groups_team.input :team, collection: f.object.tournament.teams
+          groups_team.input :order
+        end
+      end
+    end
+    f.actions
+  end
+
+  permit_params :name, :tournament_id, groups_teams_attributes: [:id, :team_id, :order, :_destroy]
 end

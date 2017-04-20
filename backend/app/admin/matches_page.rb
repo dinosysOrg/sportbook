@@ -1,4 +1,11 @@
 ActiveAdmin.register Match do
+  actions :index, :show, :edit, :update, :destroy
+
+  filter :group
+  filter :team_a
+  filter :team_b
+  filter :venue
+
   config.sort_order = 'groups.name'
 
   index do

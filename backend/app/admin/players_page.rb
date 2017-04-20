@@ -1,16 +1,14 @@
 ActiveAdmin.register Player do
+  actions :index, :show, :destroy
+
+  filter :tournament
+  filter :user
+
   index do
     selectable_column
     column :id
     column :tournament do |record|
       link_to record.tournament.name, admin_tournament_path(record.tournament)
-    end
-    column :team do |record|
-      if record.team
-        link_to record.team.name, admin_user_path(record.team)
-      else
-        nil
-      end
     end
     column :user do |record|
       link_to record.user.name, admin_user_path(record.user)
@@ -19,6 +17,13 @@ ActiveAdmin.register Player do
       record.user.phone_number
     end
     actions
+  end
+
+  show do
+    attributes_table do
+      row :tournament
+      row :user
+    end
   end
 
   permit_params do
