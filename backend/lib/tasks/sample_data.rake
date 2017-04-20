@@ -12,5 +12,11 @@ namespace :generate do
 
       # u.roles << Role.admin_role
     end
+
+    [
+      '9 Ball', '10 Ball'
+    ].each do |tournament_name|
+      Tournament.find_or_create_by!(name: tournament_name)
+    end
   end
 end
