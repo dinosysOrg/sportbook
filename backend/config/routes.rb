@@ -4,8 +4,8 @@ Rails.application.routes.draw do
 
   mount ApplicationApi => '/'
 
-  resources :tournaments do
-    resources :matches
+  resources :tournaments, only: [] do
+    resources :matches, only: [:index]
   end
 
   namespace :api do
