@@ -1,0 +1,24 @@
+%table#matchesTable.tablesorter-blue
+  %thead
+    %td= t('activerecord.attributes.match.group')
+    %td= t('activerecord.attributes.match.code')
+    %td= t('activerecord.attributes.match.team_a')
+    %td= t('activerecord.attributes.match.team_b')
+    %td= t('activerecord.attributes.match.score')
+    %td= t('activerecord.attributes.match.point')
+    %td= t('activerecord.attributes.match.time')
+    %td= t('activerecord.attributes.match.venue')
+  %tbody
+    - @matches.each do |m|
+      %tr
+        %td= m.group.name
+        %td= m.code
+        %td= m.team_a.name
+        %td= m.team_b.name
+        %td= m.score
+        %td= m.point
+        %td= l(m.time, format: :long)
+        %td= m.venue.name
+
+:javascript
+  $('#matchesTable').tablesorter();

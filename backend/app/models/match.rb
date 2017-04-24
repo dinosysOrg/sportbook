@@ -8,11 +8,19 @@ class Match < ApplicationRecord
 
   delegate :tournament, to: :group
 
+  def score
+    "#{score_a}-#{score_b}"
+  end
+
   def score=(match_score)
     score_a, score_b = match_score.split('-')
     self.score_a = score_a
     self.score_b = score_b
     calculate_points_from_score
+  end
+
+  def point
+    "#{point_a}-#{point_b}"
   end
 
   def point=(point)
@@ -24,17 +32,16 @@ class Match < ApplicationRecord
   private
 
   def calculate_points_from_score
-    if score_a && score_b
-      case (score_a <=> score_b)
-      when 1
-        self.point = '3-0'
-      when -1
-        self.point = '0-3'
-      else
-        self.point = '0-0'
-      end
-    else
-      self.point = '0-0'
-    end
+    return self.point = '0-0' unless score_a && score_b
+    self.point = case (score_a <=> score_b)
+                 when 1
+                   '3-0'
+                 when -1
+                   '0-3'
+                 when 0
+                   '1-1'
+                 else
+                   '0-0'
+                 end
   end
 end
