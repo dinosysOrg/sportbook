@@ -1,13 +1,15 @@
+%button(type="button" class="reset")= t('reset')
+
 %table#matchesTable.tablesorter-blue
   %thead
-    %td= t('activerecord.attributes.match.group')
-    %td= t('activerecord.attributes.match.code')
-    %td= t('activerecord.attributes.match.team_a')
-    %td= t('activerecord.attributes.match.team_b')
-    %td= t('activerecord.attributes.match.score')
-    %td= t('activerecord.attributes.match.point')
-    %td= t('activerecord.attributes.match.time')
-    %td= t('activerecord.attributes.match.venue')
+    %th.filter-select.filter-onlyAvail= t('activerecord.attributes.match.group')
+    %th= t('activerecord.attributes.match.code')
+    %th= t('activerecord.attributes.match.team_a')
+    %th= t('activerecord.attributes.match.team_b')
+    %th.filter-false= t('activerecord.attributes.match.score')
+    %th.filter-false= t('activerecord.attributes.match.point')
+    %th= t('activerecord.attributes.match.time')
+    %th.filter-select.filter-onlyAvail= t('activerecord.attributes.match.venue')
   %tbody
     - @matches.each do |m|
       %tr
@@ -21,4 +23,38 @@
         %td= m.venue.name
 
 :javascript
-  $('#matchesTable').tablesorter();
+  $('#matchesTable').tablesorter({
+    theme: 'blue',
+    widgets: ["zebra", "filter"],
+    ignoreCase: true,
+    widgetOptions : {
+      // class added to filtered rows (rows that are not showing); needed by pager plugin
+      filter_filteredRow : 'filtered',
+
+      // if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
+      // below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
+      // in v2.26.6, this option will also accept a function
+      filter_hideFilters : false,
+
+      // Set this option to false to make the searches case sensitive
+      filter_ignoreCase : true,
+
+      // global query settings ('exact' or 'match'); overridden by "filter-match" or "filter-exact" class
+      filter_matchType : { 'input': 'exact', 'select': 'exact' },
+
+      // a header with a select dropdown & this class name will only show available (visible) options within that drop down.
+      filter_onlyAvail : 'filter-onlyAvail',
+
+      // default placeholder text (overridden by any header "data-placeholder" setting)
+      filter_placeholder : { search : '', select : '' },
+
+      // Use the $.tablesorter.storage utility to save the most recent filters (default setting is false)
+      filter_saveFilters : true,
+
+      // Reset filter input when the user presses escape - normalized across browsers
+      filter_resetOnEsc : true,
+
+      // jQuery selector string of an element used to reset the filters
+      filter_reset : 'button.reset',
+    }
+  });
