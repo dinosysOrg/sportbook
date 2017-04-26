@@ -1,7 +1,14 @@
+---
 en:
+  active_admin:
+    dashboard: Dashboard
+    dashboard_welcome:
+      call_to_action: Call to action
+      welcome: Welcome
   date:
     formats:
       long: "%Y-%m-%d"
+  show_all: Show all
   time:
     formats:
       long: "%Y-%m-%d %H:%M:%S"

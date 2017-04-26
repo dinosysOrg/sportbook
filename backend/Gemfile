@@ -74,6 +74,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'railroady'
+  gem 'i18n-tasks', '~> 0.9.13'
 end
 
 group :test do
