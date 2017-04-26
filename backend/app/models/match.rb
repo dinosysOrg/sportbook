@@ -1,4 +1,10 @@
 class Match < ApplicationRecord
+  POINTS = {
+    win: 3,
+    lose: 0,
+    draw: 0
+  }.freeze
+
   belongs_to :group
   belongs_to :venue
   belongs_to :team_a, class_name: 'Team'
@@ -35,13 +41,13 @@ class Match < ApplicationRecord
     return self.point = '0-0' unless score_a && score_b
     self.point = case (score_a <=> score_b)
                  when 1
-                   '3-0'
+                   "#{POINTS[:win]}-#{POINTS[:lose]}"
                  when -1
-                   '0-3'
+                   "#{POINTS[:lose]}-#{POINTS[:win]}"
                  when 0
-                   '1-1'
+                   "#{POINTS[:draw]}-#{POINTS[:draw]}"
                  else
-                   '0-0'
+                   "#{POINTS[:lose]}-#{POINTS[:lose]}"
                  end
   end
 end

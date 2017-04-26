@@ -13,3 +13,9 @@
  */
 
 @import 'jquery.tablesorter/theme.blue.scss';
+
+.groupsTable-groupName {
+  text-align: center;
+  font-weight: bold;
+  background-color: lightyellow !important;
+}
