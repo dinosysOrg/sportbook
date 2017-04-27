@@ -42,7 +42,7 @@ $.extend(true, $.tablesorter.defaults, {
   // Enable use of the characterEquivalents reference
   sortLocaleCompare : true,
 
-  // maintain a stable sort (First Name column)
+  // maintain a stable sort
   sortStable : true,
 
   // if false, upper case sorts BEFORE lower case

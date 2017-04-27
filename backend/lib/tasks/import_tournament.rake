@@ -1,7 +1,7 @@
 namespace :sb do
   namespace :import do
     desc 'Import players for a tournament'
-    task :tournament, [:tournament_id, :dry_run] => [:environment, :require_tournament, :confirm_dry_run] do |t, args|
+    task :tournament, [:tournament_id, :dry_run] => [:environment, :require_tournament, :confirm_dry_run] do |_, args|
       tournament_id = args[:tournament_id]
       dry_run = args[:dry_run] != 'false'
 
@@ -9,7 +9,6 @@ namespace :sb do
       puts "=== Tournament '#{tournament.name}' ==="
 
       ActiveRecord::Base.transaction do
-        players = []
         matches = []
 
         file = Roo::Spreadsheet.open(Rails.root.join('import_data', "tournament_#{tournament_id}.xlsx").to_s)
@@ -42,22 +41,20 @@ namespace :sb do
           _, team_a_order, team_b_order = row[:match_code].split('-')
 
           team_a = if row[:team_a].blank?
-            nil
-          else
-            team = tournament.teams.find_by!(name: row[:team_a].squish)
-            team.groups_teams.find_or_create_by!(group_id: group.id, order: team_a_order)
-
-            team
-          end
+                     nil
+                   else
+                     team = tournament.teams.find_by!(name: row[:team_a].squish)
+                     team.groups_teams.find_or_create_by!(group_id: group.id, order: team_a_order)
+                     team
+                   end
 
           team_b = if row[:team_b].blank?
-            nil
-          else
-            team = tournament.teams.find_by!(name: row[:team_b].squish)
-            team.groups_teams.find_or_create_by!(group_id: group.id, order: team_b_order)
-
-            team
-          end
+                     nil
+                   else
+                     team = tournament.teams.find_by!(name: row[:team_b].squish)
+                     team.groups_teams.find_or_create_by!(group_id: group.id, order: team_b_order)
+                     team
+                   end
 
           time = nil
           if row[:date] && row[:hour]
@@ -76,9 +73,9 @@ namespace :sb do
                 if lost_team_names.size == 1
                   lost_team_name = lost_team_names.first.strip
                   if team_a.name == lost_team_name
-                    match.point = '0-3'
+                    match.team_b_wins
                   elsif team_b.name == lost_team_name
-                    match.point = '3-0'
+                    match.team_a_wins
                   else
                     raise 'Could not match lost team!!!'
                   end

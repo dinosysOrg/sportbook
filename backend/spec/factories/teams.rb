@@ -1,10 +1,6 @@
 FactoryGirl.define do
   factory :team do
+    tournament
     name { FFaker::Name.name }
-    group
-
-    before(:create) do |team|
-      team.tournament = team.group.try(:tournament)
-    end
   end
 end
