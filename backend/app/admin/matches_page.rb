@@ -5,7 +5,7 @@ ActiveAdmin.register Match do
   filter :team_a_name_or_team_b_name, as: :string, filters: [:contains]
   filter :venue
 
-  config.sort_order = 'groups.name'
+  config.sort_order = 'code_asc'
 
   index do
     column :tournament do |record|
