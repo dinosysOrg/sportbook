@@ -35,7 +35,7 @@ ActiveAdmin.register Match do
       link_to truncate(record.calendar_link), record.calendar_link, target: :_blank if record.calendar_link
     end
     actions do |record|
-      item "Add to Calendar", add_to_calendar_admin_match_path(record), method: :put, remote: true
+      item t('.add_to_calendar'), add_to_calendar_admin_match_path(record), method: :put, remote: true, class: 'member_link'
     end
   end
 
@@ -58,7 +58,7 @@ ActiveAdmin.register Match do
     redirect_to collection_url
   end
 
-  action_item :add_to_calendar, only: :show do |match|
-    link_to 'Add to calendar', add_to_calendar_admin_match_path(match), method: :put, remote: true
+  action_item :add_to_calendar, only: :show do
+    link_to t('.add_to_calendar'), add_to_calendar_admin_match_path(resource), method: :put, remote: true
   end
 end
