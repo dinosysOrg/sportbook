@@ -5,6 +5,11 @@ en:
     dashboard_welcome:
       call_to_action: Call to action
       welcome: Welcome
+    resource:
+      index:
+        add_to_calendar: Add To Calendar
+      show:
+        add_to_calendar: Add To Calendar
   date:
     formats:
       long: "%Y-%m-%d"

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "sportbook-165808",
+  "private_key_id": "c24cca0b718f9d8c2e9b8d43b98d89afff7f7964",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCJ+jtfi3X0Pxf2\nUGpUDQHhINXSnPVS0oxhOA23SzcRu+ED0IGFRPadueqgtH419V/0SFNOmI2nFgp1\nt1v5v2mij2pbTcD/YguPuE1i/UnCQseN7mvMNMAcrR92Scp7YLdkp68EiDnFpBHS\nvyq5EFJ7Z8PKaavdGtYWv+JMvZkcw7UBJbenK5K1+ric00SORsvrVusnZD0oOE4m\nC+fz1A3YErlWTOdC6ttqAt/OEDVzT22AvF5jJ1ktqurH0Vsxu24gKQzlmuP/8RJL\nMwzEDAUPXKTsmQUKSW0ICUjK17WlIe4MoKVqjSCnV21/AopV8rvSjpustJTL2UK+\nUNCAbIKtAgMBAAECggEANWKRSGWATPGAhvgUO9MQkBeRQ70hGluGnzL985ZxhzYH\nWN96zaKiPOKrSmSrlJsM9kppmTZjUGuxvlwkhRwvdgtBXnRWITnBOWlY390ahcQq\ny9qc8NTUJARD8ROZ+WSxcIuEpx9CIxtZHg6DLDmJgF/knFOIgLMadJDnsUOGk18A\nGjc2mYR6S85YQrSek8TMGyKKzTvycpOQkBYh6K71UXl4GEgtR4ZRJKzEjtdQ/h2m\nOgqr2VNI8syDEmALbymzKTLlHHcWsBouhROYLK2f3el2RrYf+J4SjyooQecQuD4b\nNXhWcH22y1P5sSyNWJNN71SuZdyjIwVj4EW3X1QvLQKBgQC/kUstvYOjcDaEbsfE\nW/jOM+KjIF2W7qAOB0cERC4RgJyA5lxvnfULOJWQ4VfRoS7Xw8KwXs5l1a30Djd7\n6IjcHPGq/QUzHnwKL6rSwROtvxIpgmXZmDPC65mNlf4RSe7OA3r4dtahZFg5RJ63\nqHIDBd6ohFlu4HvgorbNpz14MwKBgQC4Yp/8GWso3csHJuX2LCcK6Z0mYVsdP+Jh\n/DGm3uXxWl8djfjAGFbl61zhSbRDLTcqc/FuvIERkdzmlTl/0+ce9iREliuh95vV\nca3AEkcDK2hVZGacdgLvWIzF0QodrLxDKdT7A8OB/LZIGF1Q5QDNcv/zsoRjvVe4\nc2Ypmxa5nwKBgHEGfY+4MBHfJBtQ7UZ6aTroPAC5GN7zXbXJL2ph+7hR5ITc5Y7p\naGm9celwOwsxCV0+YAEFfstwnljPhobx9MXBwgh7jnTRuKed5jDAwCaUBFg/Wm5e\nsbOApDF4XNXAhEhCn2w3WX0Rokfvp6F+nf4QmYVdyRJ1GkG4XxjJYqgnAoGAGQrk\nGbRGFp3RBl6lGwMyJkxGWMEeQ+G6WH6NK9HYPyh8BKKUp1pm6wFFcx+0iO8qL+zh\nXJ3jlcRO0U5xKchY+p6JnHsc3/mmQ54V8CFLXcXWfMqPGS76BRHsxK04h4E/bIvQ\n7mq7cfslsrMEcYk4y66TzsBvNLCxqk6aEIqM0pcCgYA0mGZAncCcBv0blThg5gxG\n1P4fYtGugA95EeTZSD/0wn3ZbqbR79x+FOdS71Wp6vyqPyuINZhL7wjWDnxC2J2l\nCurFyvyKH4lpepvTn4rHT9p0TKaHGjJ3aDg3LbagK+40V4rdJ+jFexQXtG3sILvR\noutqEjEYb7Y5dLZZo5UACA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "sportbook@sportbook-165808.iam.gserviceaccount.com",
+  "client_id": "111773662991055823111",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sportbook%40sportbook-165808.iam.gserviceaccount.com"
+}

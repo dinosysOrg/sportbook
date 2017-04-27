@@ -7,6 +7,6 @@ RSpec.describe Player, type: :model do
 
   it 'validates uniqueness of [:user_id, :team_id]' do
     user = create :user
-    expect(Player.new(user_id: user.id)).to validate_uniqueness_of(:user_id).scoped_to(:team_id)
+    expect(Player.new(user_id: user.id)).to validate_uniqueness_of(:user_id).scoped_to(:tournament_id)
   end
 end

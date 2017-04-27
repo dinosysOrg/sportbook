@@ -17,6 +17,24 @@ class Match < ApplicationRecord
 
   delegate :tournament, to: :group
 
+  def player_emails
+    team_a_emails = team_a ? team_a.emails : []
+    team_b_emails = team_b ? team_b.emails : []
+    team_a_emails + team_b_emails
+  end
+
+  def event_summary
+    "#{code}:#{team_a.name} - #{team_b.name}"
+  end
+
+  def event_start_time
+    time.to_datetime.rfc3339(2)
+  end
+
+  def event_end_time
+    (time + 1.hour).to_datetime.rfc3339(2)
+  end
+
   def score
     "#{score_a}-#{score_b}"
   end

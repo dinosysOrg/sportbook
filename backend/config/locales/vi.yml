@@ -5,6 +5,11 @@ vi:
     dashboard_welcome:
       call_to_action: Call to action
       welcome: Welcome
+    resource:
+      index:
+        add_to_calendar: thêm lịch
+      show:
+        add_to_calendar: thêm lịch
   activerecord:
     attributes:
       group:
@@ -31,6 +36,7 @@ vi:
         time: thời gian
         tournament: giải đấu
         venue: địa điểm
+        calendar_link: lịch
       player:
         name: Name
         phone_number: Phone number
@@ -51,6 +57,7 @@ vi:
         name: tên
       venue:
         name: tên
+        calendar: lịch
     models:
       group: bảng
       groups_team: sắp xếp bảng

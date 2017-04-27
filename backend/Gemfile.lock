@@ -107,6 +107,10 @@ GEM
       devise (> 3.5.2, <= 4.2)
       rails (< 6)
     diff-lcs (1.3)
+    dotenv (2.2.0)
+    dotenv-rails (2.2.0)
+      dotenv (= 2.2.0)
+      railties (>= 3.2, < 5.1)
     draper (3.0.0.pre1)
       actionpack (~> 5.0)
       activemodel (~> 5.0)
@@ -125,6 +129,8 @@ GEM
     factory_girl_rails (4.8.0)
       factory_girl (~> 4.8.0)
       railties (>= 3.0.0)
+    faraday (0.12.1)
+      multipart-post (>= 1.2, < 3)
     ffaker (2.5.0)
     ffi (1.9.18)
     font-awesome-rails (4.7.0.1)
@@ -136,6 +142,21 @@ GEM
       activerecord (>= 4.0.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    google-api-client (0.11.1)
+      addressable (>= 2.5.1)
+      googleauth (~> 0.5)
+      httpclient (>= 2.8.1, < 3.0)
+      mime-types (>= 3.0)
+      representable (~> 3.0)
+      retriable (>= 2.0, < 4.0)
+    googleauth (0.5.1)
+      faraday (~> 0.9)
+      jwt (~> 1.4)
+      logging (~> 2.0)
+      memoist (~> 0.12)
+      multi_json (~> 1.11)
+      os (~> 0.9)
+      signet (~> 0.7)
     grape (0.19.1)
       activesupport
       builder
@@ -184,6 +205,7 @@ GEM
       haml (~> 4.0)
       nokogiri (>= 1.6.0)
       ruby_parser (~> 3.5)
+    httpclient (2.8.3)
     i18n (0.8.1)
     i18n-tasks (0.9.13)
       activesupport (>= 4.0.2)
@@ -209,9 +231,13 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
+    jquery-turbolinks (2.1.0)
+      railties (>= 3.1.0)
+      turbolinks
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.1.0)
+    jwt (1.5.6)
     kaminari (1.0.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.0.1)
@@ -231,10 +257,15 @@ GEM
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    little-plugger (1.1.4)
+    logging (2.2.2)
+      little-plugger (~> 1.1)
+      multi_json (~> 1.10)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    memoist (0.15.0)
     method_source (0.8.2)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
@@ -243,6 +274,7 @@ GEM
     minitest (5.10.1)
     multi_json (1.12.1)
     multi_xml (0.6.0)
+    multipart-post (2.0.0)
     mustermann (0.4.0)
       tool (~> 0.2)
     mustermann-grape (0.4.0)
@@ -251,6 +283,7 @@ GEM
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
     orm_adapter (0.5.0)
+    os (0.9.6)
     overcommit (0.39.1)
       childprocess (~> 0.6.3)
       iniparse (~> 1.4)
@@ -320,6 +353,7 @@ GEM
     request_store (1.3.2)
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
+    retriable (3.0.1)
     roar (1.1.0)
       representable (~> 3.0.0)
     rollbar (2.14.1)
@@ -364,6 +398,11 @@ GEM
     sexp_processor (4.9.0)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    signet (0.7.3)
+      addressable (~> 2.3)
+      faraday (~> 0.9)
+      jwt (~> 1.5)
+      multi_json (~> 1.10)
     spring (2.0.1)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -421,10 +460,13 @@ DEPENDENCIES
   devise
   devise-i18n
   devise_token_auth
+  dotenv-rails
   draper (= 3.0.0.pre1)
   factory_girl_rails
   ffaker
+  font-awesome-rails
   friendly_id
+  google-api-client
   grape
   grape-cancan
   grape-middleware-logger
@@ -437,6 +479,7 @@ DEPENDENCIES
   i18n-tasks (~> 0.9.13)
   jbuilder (~> 2.5)
   jquery-rails
+  jquery-turbolinks
   kaminari
   letter_opener
   listen (~> 3.0.5)

@@ -5,7 +5,7 @@ ActiveAdmin.register Match do
   filter :team_a_name_or_team_b_name, as: :string, filters: [:contains]
   filter :venue
 
-  config.sort_order = 'groups.name'
+  config.sort_order = 'code_asc'
 
   index do
     column :tournament do |record|
@@ -31,7 +31,12 @@ ActiveAdmin.register Match do
     column :venue do |record|
       link_to record.venue.name, admin_venue_path(record.venue)
     end
-    actions
+    column :calendar_link, sortable: false do |record|
+      link_to fa_icon('calendar'), target: :_blank if record.calendar_link
+    end
+    actions do |record|
+      item t('.add_to_calendar'), add_to_calendar_admin_match_path(record), method: :put, remote: true, class: 'member_link'
+    end
   end
 
   controller do
@@ -42,5 +47,18 @@ ActiveAdmin.register Match do
 
   permit_params do
     [:name, :tournament_id]
+  end
+
+  member_action :add_to_calendar, method: :put do
+    match = Match.find params[:id]
+    result = GoogleCalendarService.instance.create_match_event(match)
+    match.calendar_link = result.html_link
+    match.save!
+
+    redirect_to collection_url
+  end
+
+  action_item :add_to_calendar, only: :show do
+    link_to t('.add_to_calendar'), add_to_calendar_admin_match_path(resource), method: :put, remote: true
   end
 end
