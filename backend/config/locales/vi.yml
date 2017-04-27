@@ -36,6 +36,7 @@ vi:
         time: thời gian
         tournament: giải đấu
         venue: địa điểm
+        calendar_link: lịch
       player:
         name: Name
         phone_number: Phone number

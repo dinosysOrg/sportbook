@@ -464,6 +464,7 @@ DEPENDENCIES
   draper (= 3.0.0.pre1)
   factory_girl_rails
   ffaker
+  font-awesome-rails
   friendly_id
   google-api-client
   grape
