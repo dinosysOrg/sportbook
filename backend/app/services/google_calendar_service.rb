@@ -23,7 +23,7 @@ class GoogleCalendarService
       attendees: attendees_email
     )
 
-    service.insert_event(match.venue.calendar_id, event)
+    service.insert_event(match.venue.google_calendar_name, event)
   end
 
   private

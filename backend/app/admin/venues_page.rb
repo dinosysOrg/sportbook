@@ -4,18 +4,18 @@ ActiveAdmin.register Venue do
   index do
     id_column
     column :name
-    column :calendar_id
+    column :google_calendar_name
     actions
   end
 
   permit_params do
-    [:name, :calendar_id]
+    [:name, :google_calendar_name]
   end
 
   form do |f|
     f.inputs 'Venue Details' do
       f.input :name
-      f.input :calendar_id
+      f.input :google_calendar_name
     end
     f.actions
   end

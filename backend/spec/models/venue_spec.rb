@@ -6,8 +6,8 @@ RSpec.describe Venue, type: :model do
 
   it 'strips calendar' do
     venue = create :venue
-    venue.calendar_id = "83843uref nkfhfkahsfsd   \t\r\n\n"
+    venue.google_calendar_name = "83843uref nkfhfkahsfsd   \t\r\n\n"
     venue.validate
-    expect(venue.calendar_id).to eq('83843uref nkfhfkahsfsd')
+    expect(venue.google_calendar_name).to eq('83843uref nkfhfkahsfsd')
   end
 end

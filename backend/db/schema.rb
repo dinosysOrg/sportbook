@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427110715) do
+ActiveRecord::Schema.define(version: 20170427112017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,9 +120,9 @@ ActiveRecord::Schema.define(version: 20170427110715) do
 
   create_table "venues", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "calendar_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.string   "google_calendar_name"
   end
 
   add_foreign_key "groups", "tournaments"
