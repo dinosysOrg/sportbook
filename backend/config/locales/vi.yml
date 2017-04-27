@@ -51,6 +51,7 @@ vi:
         name: tên
       venue:
         name: tên
+        calendar: lịch
     models:
       group: bảng
       groups_team: sắp xếp bảng

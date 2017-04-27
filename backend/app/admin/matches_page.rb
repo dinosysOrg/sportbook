@@ -31,7 +31,12 @@ ActiveAdmin.register Match do
     column :venue do |record|
       link_to record.venue.name, admin_venue_path(record.venue)
     end
-    actions
+    column :calendar_link do |record|
+      link_to truncate(record.calendar_link), record.calendar_link, target: :_blank if record.calendar_link
+    end
+    actions do |record|
+      item "Add to Calendar", add_to_calendar_admin_match_path(record), method: :put, remote: true
+    end
   end
 
   controller do
@@ -42,5 +47,18 @@ ActiveAdmin.register Match do
 
   permit_params do
     [:name, :tournament_id]
+  end
+
+  member_action :add_to_calendar, :method => :put do
+    match = Match.find params[:id]
+    result = GoogleCalendarService.instance.create_match_event(match)
+    match.calendar_link = result.html_link
+    match.save!
+
+    redirect_to collection_url
+  end
+
+  action_item :add_to_calendar, only: :show do |match|
+    link_to 'Add to calendar', add_to_calendar_admin_match_path(match), method: :put, remote: true
   end
 end

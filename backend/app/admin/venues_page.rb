@@ -4,6 +4,7 @@ ActiveAdmin.register Venue do
   index do
     id_column
     column :name
+    column :calendar_id
     actions
   end
 

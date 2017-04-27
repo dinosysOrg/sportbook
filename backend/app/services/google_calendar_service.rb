@@ -5,6 +5,10 @@ require 'singleton'
 class GoogleCalendarService
   include Singleton
 
+  def initialize
+    authorize
+  end
+
   def authorize
     @service = Google::Apis::CalendarV3::CalendarService.new
 
@@ -15,7 +19,7 @@ class GoogleCalendarService
   end
 
   def create_match_event(match)
-    attandees_email = [{email: 'di.dy211@gmail.com'}]
+    attandees_email = []
     match.team_a.players.each do |player|
       attandees_email << {email: player.user.email}
     end
@@ -39,16 +43,11 @@ class GoogleCalendarService
       attendees: attandees_email
     })
 
-    service.insert_event('primary', event)
+    service.insert_event(match.venue.calendar_id, event)
   end
 
   private
 
   attr_reader(:service)
-
-  def calendar_id
-    @calendar_id ||= 'di.dy211@gmail.com'
-  end
-
 
 end
