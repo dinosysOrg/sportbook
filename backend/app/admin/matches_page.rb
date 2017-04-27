@@ -32,7 +32,7 @@ ActiveAdmin.register Match do
       link_to record.venue.name, admin_venue_path(record.venue)
     end
     column :calendar_link, sortable: false do |record|
-      link_to fa_icon('calendar'), target: :_blank if record.calendar_link
+      link_to fa_icon('calendar'), record.calendar_link, target: :_blank if record.calendar_link
     end
     actions do |record|
       item t('.add_to_calendar'), add_to_calendar_admin_match_path(record), method: :put, remote: true, class: 'member_link'
