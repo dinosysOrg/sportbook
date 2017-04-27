@@ -10,7 +10,6 @@ class GoogleCalendarService
 
     # An alternative to the following line is to set the ENV variable directly
     # in the environment or use a gem that turns a YAML file into ENV variables
-    ENV['GOOGLE_APPLICATION_CREDENTIALS'] = "lib/google_calendar/Sportbook.json"
     scopes = [Google::Apis::CalendarV3::AUTH_CALENDAR]
     service.authorization = Google::Auth.get_application_default(scopes)
   end
