@@ -26,9 +26,14 @@ ActiveRecord::Schema.define(version: 20170427081844) do
   create_table "groups_teams", force: :cascade do |t|
     t.integer  "group_id"
     t.integer  "team_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.integer  "order"
+    t.integer  "points",           default: 0
+    t.integer  "score_difference", default: 0
+    t.integer  "wins",             default: 0
+    t.integer  "draws",            default: 0
+    t.integer  "losses",           default: 0
     t.index ["group_id"], name: "index_groups_teams_on_group_id", using: :btree
     t.index ["team_id"], name: "index_groups_teams_on_team_id", using: :btree
   end

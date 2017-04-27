@@ -1,54 +1,69 @@
+---
 vi:
-  date:
-    formats:
-      long: "%d-%m-%Y"
-  time:
-    formats:
-      long: "%d-%m-%Y %H:%M"
+  active_admin:
+    dashboard: Dashboard
+    dashboard_welcome:
+      call_to_action: Call to action
+      welcome: Welcome
   activerecord:
-    models:
-      user: người dùng
-      tournament: giải đấu
-      group: bảng
-      venue: địa điểm
-      team: đội thi đấu
-      player: đăng kí chơi
-      groups_team: sắp xếp bảng
-      match: trận đấu
     attributes:
-      tournament:
-        name: tên
       group:
         name: tên
-        tournament: giải đấu
         team: đội
         teams: các đội
-      venue:
-        name: tên
-      team:
-        name: tên
         tournament: giải đấu
-        group: bảng
-        groups: các bảng
       groups_team:
         group: bảng
-        team: đội
         order: thứ tự
-      player:
-        user: người dùng
-        tournament: giải đấu
+        team: đội
       match:
-        name: tên
-        tournament: giải đấu
-        group: bảng
-        team_a: đội nhà
-        team_b: đội khách
-        time: thời gian
-        venue: địa điểm
         code: mã trận
-        score: tỉ số
-        score_a: số đội nhà
-        score_b: số đội khách
+        group: bảng
+        name: tên
         point: điểm
         point_a: điểm đội nhà
         point_b: điểm đội khách
+        score: tỉ số
+        score_a: số đội nhà
+        score_b: số đội khách
+        team_a: đội nhà
+        team_b: đội khách
+        time: thời gian
+        tournament: giải đấu
+        venue: địa điểm
+      player:
+        name: Name
+        phone_number: Phone number
+        tournament: giải đấu
+        user: người dùng
+      team:
+        draws: hoà
+        group: bảng
+        groups: các bảng
+        losses: thua
+        name: tên
+        phone_number: số điện thoại
+        points: điểm
+        score_difference: hiệu số
+        tournament: giải đấu
+        wins: thắng
+      tournament:
+        name: tên
+      venue:
+        name: tên
+    models:
+      group: bảng
+      groups_team: sắp xếp bảng
+      match: trận đấu
+      player: đăng kí chơi
+      team: đội thi đấu
+      tournament: giải đấu
+      user: người dùng
+      venue: địa điểm
+  date:
+    formats:
+      long: "%d-%m-%Y"
+  show_all: hiện tất cả
+  time:
+    formats:
+      long: "%d-%m-%Y %H:%M"

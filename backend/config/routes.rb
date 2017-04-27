@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   resources :tournaments, only: [] do
     resources :matches, only: [:index]
+    resources :players, only: [:index]
+    resources :groups, only: [:index]
   end
 
   namespace :api do

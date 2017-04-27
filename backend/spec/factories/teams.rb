@@ -1,8 +1,7 @@
 FactoryGirl.define do
   factory :team do
-    name { FFaker::Name.name }
     tournament
-
+    name { FFaker::Name.name }
     trait :has_players do
       after(:create) do |team|
         create_list :player, 1, team: team
