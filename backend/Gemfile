@@ -36,6 +36,7 @@ gem 'rollbar'
 gem 'roo'
 gem 'friendly_id'
 gem 'draper', '3.0.0.pre1'
+gem 'auto_strip_attributes'
 
 gem 'google-api-client'
 gem 'dotenv-rails'

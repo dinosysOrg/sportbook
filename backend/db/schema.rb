@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427081844) do
+ActiveRecord::Schema.define(version: 20170427112017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 20170427081844) do
     t.integer  "score_b",       default: 0
     t.integer  "point_a",       default: 0
     t.integer  "point_b",       default: 0
-    t.string   "calendar_link"
+    t.text     "calendar_link"
     t.index ["group_id"], name: "index_matches_on_group_id", using: :btree
     t.index ["team_a_id"], name: "index_matches_on_team_a_id", using: :btree
     t.index ["team_b_id"], name: "index_matches_on_team_b_id", using: :btree
@@ -120,9 +120,9 @@ ActiveRecord::Schema.define(version: 20170427081844) do
 
   create_table "venues", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "calendar_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.string   "google_calendar_name"
   end
 
   add_foreign_key "groups", "tournaments"
