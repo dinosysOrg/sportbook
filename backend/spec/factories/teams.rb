@@ -1,10 +1,12 @@
 FactoryGirl.define do
   factory :team do
     name { FFaker::Name.name }
-    group
+    tournament
 
-    before(:create) do |team|
-      team.tournament = team.group.try(:tournament)
+    trait :has_players do
+      after(:create) do |team|
+        create_list :player, 1, team: team
+      end
     end
   end
 end

@@ -1,0 +1,1 @@
+GoogleCalendarService.instance.authorize
