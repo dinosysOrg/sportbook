@@ -2,7 +2,7 @@ class Match < ApplicationRecord
   POINTS = {
     win: 3,
     lose: 0,
-    draw: 0
+    draw: 1
   }.freeze
 
   belongs_to :group
@@ -11,6 +11,9 @@ class Match < ApplicationRecord
   belongs_to :team_b, class_name: 'Team'
 
   validates :group, presence: true
+
+  after_save :recalculate_groups_teams_statistics
+  after_destroy :recalculate_groups_teams_statistics
 
   delegate :tournament, to: :group
 
@@ -35,19 +38,43 @@ class Match < ApplicationRecord
     self.point_b = point_b
   end
 
+  def groups_teams
+    @groups_teams ||= group.groups_teams.where(team_id: [team_a_id, team_b_id])
+  end
+
+  def team_a_wins
+    self.point = "#{POINTS[:win]}-#{POINTS[:lose]}"
+  end
+
+  def team_b_wins
+    self.point = "#{POINTS[:lose]}-#{POINTS[:win]}"
+  end
+
+  def draws
+    self.point = "#{POINTS[:draw]}-#{POINTS[:draw]}"
+  end
+
+  def both_lose
+    self.point = "#{POINTS[:lose]}-#{POINTS[:lose]}"
+  end
+
   private
 
   def calculate_points_from_score
     return self.point = '0-0' unless score_a && score_b
-    self.point = case (score_a <=> score_b)
-                 when 1
-                   "#{POINTS[:win]}-#{POINTS[:lose]}"
-                 when -1
-                   "#{POINTS[:lose]}-#{POINTS[:win]}"
-                 when 0
-                   "#{POINTS[:draw]}-#{POINTS[:draw]}"
-                 else
-                   "#{POINTS[:lose]}-#{POINTS[:lose]}"
-                 end
+    case (score_a <=> score_b)
+    when 1
+      team_a_wins
+    when -1
+      team_b_wins
+    when 0
+      draws
+    else
+      both_lose
+    end
+  end
+
+  def recalculate_groups_teams_statistics
+    groups_teams.each(&:recalculate_statistics)
   end
 end
