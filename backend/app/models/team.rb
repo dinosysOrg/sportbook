@@ -13,4 +13,8 @@ class Team < ApplicationRecord
   def phone_numbers
     players.map(&:phone_number).join(', ')
   end
+
+  def emails
+    players.map(&:email)
+  end
 end

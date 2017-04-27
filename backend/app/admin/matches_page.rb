@@ -31,7 +31,7 @@ ActiveAdmin.register Match do
     column :venue do |record|
       link_to record.venue.name, admin_venue_path(record.venue)
     end
-    column :calendar_link do |record|
+    column :calendar_link, sortable: false do |record|
       link_to fa_icon('calendar'), target: :_blank if record.calendar_link
     end
     actions do |record|
@@ -49,7 +49,7 @@ ActiveAdmin.register Match do
     [:name, :tournament_id]
   end
 
-  member_action :add_to_calendar, :method => :put do
+  member_action :add_to_calendar, method: :put do
     match = Match.find params[:id]
     result = GoogleCalendarService.instance.create_match_event(match)
     match.calendar_link = result.html_link
