@@ -7,16 +7,6 @@ describe GoogleCalendarService do
     expect(result.summary).to eq("#{match.code}:#{match.team_a.name} - #{match.team_b.name}")
 
     result_email_list = result.attendees.map(&:email)
-
-    attandees_email = []
-    match.team_a.players.each do |player|
-      attandees_email << player.user.email
-    end
-
-    match.team_b.players.each do |player|
-      attandees_email << player.user.email
-    end
-
-    expect(result_email_list).to match_array(attandees_email)
+    expect(result_email_list).to match_array(match.player_emails)
   end
 end

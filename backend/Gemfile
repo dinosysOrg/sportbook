@@ -38,6 +38,7 @@ gem 'friendly_id'
 gem 'draper', '3.0.0.pre1'
 
 gem 'google-api-client'
+gem 'dotenv-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
@@ -82,7 +83,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'railroady'
-  gem 'dotenv-rails'
   gem 'i18n-tasks', '~> 0.9.13'
 end
 
