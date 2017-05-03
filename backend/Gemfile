@@ -64,7 +64,11 @@ gem 'haml-rails', '~> 0.9'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-gem 'rails-assets-jquery.tablesorter', source: 'https://rails-assets.org'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-lodash'
+  gem 'rails-assets-jquery.tablesorter'
+end
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'

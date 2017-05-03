@@ -8,7 +8,7 @@
     %th= t('activerecord.attributes.match.team_b')
     %th.filter-false= t('activerecord.attributes.match.score')
     %th.filter-false= t('activerecord.attributes.match.point')
-    %th= t('activerecord.attributes.match.time')
+    %th.filter-select.filter-match= t('activerecord.attributes.match.time')
     %th.filter-select.filter-onlyAvail= t('activerecord.attributes.match.venue')
   %tbody
     - @matches.each do |m|
@@ -23,4 +23,17 @@
         %td= m.venue.name
 
 :javascript
-  $('#matchesTable').tablesorter({ sortList: [[1,0]] });
+  $('#matchesTable').tablesorter({
+    sortList: [[1,0]],
+    widgetOptions: {
+      filter_selectSource: {
+        6: function(table, column, onlyAvail){
+          var array = $.tablesorter.filter.getOptions(table, column, onlyAvail);
+          var dates = array.map(function(item) {
+            return item.substr(0, 10);
+          });
+          return _.uniqBy(dates, function(item) { return item; }).sort();
+        }
+      },
+    }
+  });
