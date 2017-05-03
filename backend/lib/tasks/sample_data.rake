@@ -18,5 +18,16 @@ namespace :generate do
     ].each do |tournament_name|
       Tournament.find_or_create_by!(name: tournament_name)
     end
+
+    [
+      'Carmen', 'Sinh đôi', 'Huyền thoại', 'Chuyên nghiệp'
+    ].each do |venue_name|
+      Venue.find_or_create_by!(name: venue_name) do |venue|
+        venue.google_calendar_name = [
+          'q240vu0q51lkmbbq70e8f2i344@group.calendar.google.com',
+          'b0os5t7s53bgplis90aish9mhk@group.calendar.google.com'
+        ].sample
+      end
+    end
   end
 end

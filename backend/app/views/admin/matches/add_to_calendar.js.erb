@@ -1,0 +1,2 @@
+<% calendar_link = link_to(fa_icon('calendar'), @match.calendar_link, target: :_blank).to_s %>
+$('#match_<%= @match.id %> .col-calendar_link').html('<%= calendar_link %>')
