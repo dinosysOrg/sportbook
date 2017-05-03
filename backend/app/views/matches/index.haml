@@ -25,6 +25,9 @@
 :javascript
   $('#matchesTable').tablesorter({
     sortList: [[1,0]],
+    headers: {
+      6: { sorter: 'text'}
+    },
     widgetOptions: {
       filter_selectSource: {
         6: function(table, column, onlyAvail){
