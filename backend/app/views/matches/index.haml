@@ -1,11 +1,12 @@
 %button(type="button" class="reset")= t('show_all')
 
+%input.search{"data-column" => "all", type: "text", placeholder: "#{t('search_by_name')}"}/
 %table#matchesTable.tablesorter-blue
   %thead
     %th.filter-select.filter-onlyAvail= t('activerecord.attributes.match.group')
     %th= t('activerecord.attributes.match.code')
-    %th= t('activerecord.attributes.match.team_a')
-    %th= t('activerecord.attributes.match.team_b')
+    %th.filter-false= t('activerecord.attributes.match.team_a')
+    %th.filter-false= t('activerecord.attributes.match.team_b')
     %th.filter-false= t('activerecord.attributes.match.score')
     %th.filter-false= t('activerecord.attributes.match.point')
     %th.filter-select.filter-match= t('activerecord.attributes.match.time')
@@ -23,7 +24,7 @@
         %td= m.venue.name
 
 :javascript
-  $('#matchesTable').tablesorter({
+  var $table = $('#matchesTable').tablesorter({
     sortList: [[1,0]],
     headers: {
       6: { sorter: 'text'}
@@ -40,3 +41,5 @@
       },
     }
   });
+  $.tablesorter.filter.bindSearch( $table, $('.search') );
+  
