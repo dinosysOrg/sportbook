@@ -35,7 +35,7 @@ ActiveAdmin.register Match do
       link_to fa_icon('calendar'), record.calendar_link, target: :_blank if record.calendar_link
     end
     actions do |record|
-      item t('.add_to_calendar'), add_to_calendar_admin_match_path(record), method: :put, remote: true, class: 'member_link'
+      item t('add_to_calendar'), add_to_calendar_admin_match_path(record), method: :put, remote: true, class: 'member_link'
     end
   end
 
@@ -62,6 +62,6 @@ ActiveAdmin.register Match do
   end
 
   action_item :add_to_calendar, only: :show do
-    link_to t('.add_to_calendar'), add_to_calendar_admin_match_path(resource), method: :put, remote: true
+    link_to t('add_to_calendar'), add_to_calendar_admin_match_path(resource), method: :put, remote: true
   end
 end
