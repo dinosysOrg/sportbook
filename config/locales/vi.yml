@@ -1,15 +1,11 @@
 ---
 vi:
+  add_to_calendar: thêm lịch
   active_admin:
     dashboard: Dashboard
     dashboard_welcome:
       call_to_action: Call to action
       welcome: Welcome
-    resource:
-      index:
-        add_to_calendar: thêm lịch
-      show:
-        add_to_calendar: thêm lịch
   activerecord:
     attributes:
       group:

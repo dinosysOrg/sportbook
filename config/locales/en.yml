@@ -1,15 +1,68 @@
 ---
 en:
+  add_to_calendar: Add To Calendar
   active_admin:
     dashboard: Dashboard
     dashboard_welcome:
       call_to_action: Call to action
       welcome: Welcome
-    resource:
-      index:
-        add_to_calendar: Add To Calendar
-      show:
-        add_to_calendar: Add To Calendar
+  activerecord:
+    attributes:
+      group:
+        name: name
+        team: team
+        teams: teams
+        tournament: tournament
+      groups_team:
+        group: group
+        order: order
+        team: team
+      match:
+        code: code
+        group: group
+        name: name
+        point: point
+        point_a: point_a
+        point_b: point_b
+        score: score
+        score_a: score_a
+        score_b: score_b
+        team_a: team_a
+        team_b: team_b
+        time: time
+        tournament: tournament
+        venue: venue
+        calendar_link: calendar_link
+      player:
+        name: Name
+        phone_number: Phone number
+        tournament: tournament
+        user: user
+      team:
+        draws: draws
+        group: group
+        groups: groups
+        losses: losses
+        name: name
+        phone_number: phone_number
+        points: points
+        score_difference: score_difference
+        tournament: tournament
+        wins: wins
+      tournament:
+        name: name
+      venue:
+        name: name
+        calendar: calendar
+    models:
+      group: group
+      groups_team: groups_team
+      match: match
+      player: player
+      team: team
+      tournament: tournament
+      user: user
+      venue: venue
   date:
     formats:
       long: "%Y-%m-%d"
