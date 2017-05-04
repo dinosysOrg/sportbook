@@ -50,12 +50,15 @@ ActiveAdmin.register Match do
   end
 
   member_action :add_to_calendar, method: :put do
-    match = Match.find params[:id]
-    result = GoogleCalendarService.instance.create_match_event(match)
-    match.calendar_link = result.html_link
-    match.save!
+    @match = Match.find params[:id]
+    result = GoogleCalendarService.instance.create_match_event(@match)
+    @match.calendar_link = result.html_link
+    @match.save!
 
-    redirect_to collection_url
+    respond_to do |format|
+      format.html { redirect_to collection_url }
+      format.js
+    end
   end
 
   action_item :add_to_calendar, only: :show do
