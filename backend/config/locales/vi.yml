@@ -71,6 +71,7 @@ vi:
     formats:
       long: "%d-%m-%Y"
   show_all: hiện tất cả
+  search_by_name: "tìm theo tên"
   time:
     formats:
       long: "%d-%m-%Y %H:%M"
