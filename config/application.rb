@@ -29,6 +29,8 @@ module Backend
 
     config.action_controller.allow_forgery_protection = false
 
+    config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
+
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
