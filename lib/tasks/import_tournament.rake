@@ -69,6 +69,7 @@ namespace :sb do
               if row[:score] =~ /\-/
                 match.score = row[:score]
               elsif row[:score] =~ /bỏ cuộc|bị xử thua/
+                match.note = row[:score]
                 lost_team_names = row[:score].gsub(/bỏ cuộc|bị xử thua/, '').split('&')
                 if lost_team_names.size == 1
                   lost_team_name = lost_team_names.first.strip
