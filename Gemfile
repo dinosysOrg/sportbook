@@ -32,6 +32,7 @@ gem 'grape_devise_token_auth'
 
 gem 'ffaker' # to generate sample data
 gem 'rollbar'
+gem 'newrelic_rpm'
 
 gem 'roo'
 gem 'friendly_id'

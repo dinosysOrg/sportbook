@@ -278,6 +278,7 @@ GEM
       tool (~> 0.2)
     mustermann-grape (0.4.0)
       mustermann (= 0.4.0)
+    newrelic_rpm (4.1.0.333)
     nio4r (2.0.0)
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
@@ -480,6 +481,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   listen (~> 3.0.5)
+  newrelic_rpm
   overcommit
   pg (~> 0.18)
   pg_search
