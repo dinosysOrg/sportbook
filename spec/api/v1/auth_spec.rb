@@ -77,4 +77,49 @@ describe 'Auth' do
       end
     end
   end
+
+  describe 'signing out' do
+    it 'works' do
+      user = create(:user, email: 'zi@dinosys.com', password: 'password')
+      auth_headers = user.create_new_auth_token
+
+      delete '/api/v1/auth/sign_out', params: {}, headers: request_headers.merge(auth_headers)
+
+      expect(response.status).to eq(200)
+      expect(response.header['access-token']).to be_nil
+
+      delete '/api/v1/auth/sign_out', params: {}, headers: request_headers.merge(auth_headers)
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe 'request password reset' do
+    context 'when user exists' do
+      before { create(:user, email: 'zi@dinosys.com', password: 'password') }
+
+      it 'works' do
+        post '/api/v1/auth/password', params: { email: 'zi@dinosys.com', redirect_url: 'redirect_url' }.to_json,
+                                      headers: request_headers
+        expect(response.status).to eq(200)
+      end
+
+      it 'send reset password email' do
+        mock_token = 'conmeomatreocaycau'
+        expect(Devise).to receive(:friendly_token).and_return(mock_token)
+
+        ActionMailer::Base.deliveries.clear
+
+        post '/api/v1/auth/password', params: { email: 'zi@dinosys.com', redirect_url: 'redirect_url' }.to_json,
+                                      headers: request_headers
+
+        expect(response.status).to eq(200)
+
+        expect(ActionMailer::Base.deliveries.size).to be(1)
+
+        email = ActionMailer::Base.deliveries[0]
+        expect(email.to).to include('zi@dinosys.com')
+        expect(email.body).to match(mock_token)
+      end
+    end
+  end
 end
