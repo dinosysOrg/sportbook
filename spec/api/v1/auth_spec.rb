@@ -61,5 +61,20 @@ describe 'Auth' do
         expect(json_response[:errors]).to be_present
       end
     end
+
+    describe 'signing out' do
+      it 'works' do
+        user = create(:user, email: 'zi@dinosys.com', password: 'password')
+        auth_headers = user.create_new_auth_token
+
+        delete '/api/v1/auth/sign_out', params: {}, headers: request_headers.merge(auth_headers)
+        
+        expect(response.status).to eq(200)
+        expect(response.header['access-token']).to be_nil
+
+        delete '/api/v1/auth/sign_out', params: {}, headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq(404)
+      end
+    end
   end
 end
