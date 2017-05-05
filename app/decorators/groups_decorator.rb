@@ -1,6 +1,9 @@
 class GroupsDecorator < Draper::CollectionDecorator
   def as_pairs
-    group_pairs.map do |group_pair|
+    @group_pairs = group_pairs
+    return [] if @group_pairs.empty?
+
+    @group_pairs.map do |group_pair|
       group_a = group_pair[0]
       group_b = group_pair[1]
 
