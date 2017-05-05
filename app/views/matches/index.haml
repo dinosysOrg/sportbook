@@ -16,12 +16,12 @@
       %tr
         %td= m.group.name
         %td= m.code
-        %td= m.team_a.name
-        %td= m.team_b.name
+        %td= m.team_a.name if m.team_a
+        %td= m.team_b.name if m.team_b
         %td= m.score
         %td= m.point
-        %td= l(m.time, format: :long)
-        %td= m.venue.name
+        %td= l(m.time, format: :long) if m.time
+        %td= m.venue.name if m.venue
 
 :javascript
   var $table = $('#matchesTable').tablesorter({
@@ -42,4 +42,4 @@
     }
   });
   $.tablesorter.filter.bindSearch( $table, $('.search') );
-  
+
