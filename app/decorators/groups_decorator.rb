@@ -19,6 +19,8 @@ class GroupsDecorator < Draper::CollectionDecorator
   private
 
   def group_pairs
+    return [] if object.empty?
+
     half_size = (object.size / 2.0).ceil
     left, right = object.each_slice(half_size).to_a
     left.zip(right)
