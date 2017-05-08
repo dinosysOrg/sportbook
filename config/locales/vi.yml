@@ -27,8 +27,8 @@ vi:
         score: tỉ số
         score_a: số đội nhà
         score_b: số đội khách
-        team_a: đội nhà
-        team_b: đội khách
+        team_a: cơ thủ 1
+        team_b: cơ thủ 2
         time: thời gian
         tournament: giải đấu
         venue: địa điểm
