@@ -25,4 +25,8 @@
 
 # Ignore lock files
 .~lock*
+
+# Ignore idea file
+
+.idea/
 ~*
