@@ -68,7 +68,7 @@ describe 'Auth' do
         auth_headers = user.create_new_auth_token
 
         delete '/api/v1/auth/sign_out', params: {}, headers: request_headers.merge(auth_headers)
-        
+
         expect(response.status).to eq(200)
         expect(response.header['access-token']).to be_nil
 
@@ -119,6 +119,20 @@ describe 'Auth' do
         email = ActionMailer::Base.deliveries[0]
         expect(email.to).to include('zi@dinosys.com')
         expect(email.body).to match(mock_token)
+      end
+    end
+  end
+
+  describe 'updating user' do
+    context 'updates address' do
+      it 'returns token' do
+        user = create(:user, email: 'zi@dinosys.com', password: 'password')
+        auth_headers = user.create_new_auth_token
+
+        put '/api/v1/auth', params: { address: 'Hanoi' }.to_json, headers: request_headers.merge(auth_headers)
+
+        expect(response.status).to eq(200)
+        expect(user.reload.address).to eq('Hanoi')
       end
     end
   end
