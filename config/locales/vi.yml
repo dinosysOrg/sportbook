@@ -34,8 +34,8 @@ vi:
         venue: địa điểm
         calendar_link: lịch
       player:
-        name: Name
-        phone_number: Phone number
+        name: tên
+        phone_number: số điện thoại
         tournament: giải đấu
         user: người dùng
       team:
