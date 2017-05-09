@@ -128,29 +128,13 @@ describe 'Auth' do
       it 'returns token' do
         user = create(:user, email: 'zi@dinosys.com', password: 'password')
         auth_headers = user.create_new_auth_token
-
         put '/api/v1/auth', params: { address: 'Hanoi', name: "HuanNguyen", phone_number: "01664152723" }.to_json, headers: request_headers.merge(auth_headers)
-
         expect(response.status).to eq(200)
-        expect(user.reload.address).to eq('Hanoi')
-        expect(user.reload.name).to eq('HuanNguyen')
-        expect(user.reload.phone_number).to eq('01664152723')
+        user = user.reload
+        expect(user.address).to eq('Hanoi')
+        expect(user.name).to eq('HuanNguyen')
+        expect(user.phone_number).to eq('01664152723')
       end
     end
   end
-
-
-  # describe 'updating name' do
-  #   context 'updates address' do
-  #     it 'returns token' do
-  #       user = create(:user, email: 'zi@dinosys.com', password: 'password')
-  #       auth_headers = user.create_new_auth_token
-
-  #       put '/api/v1/auth', params: { name: 'Nguyen Van Huan' }.to_json, headers: request_headers.merge(auth_headers)
-
-  #       expect(response.status).to eq(200)
-  #       expect(user.reload.name).to eq('Nguyen Van Huan')
-  #     end
-  #   end
-  # end
 end
