@@ -123,27 +123,76 @@ describe 'Auth' do
   end
 
   describe 'signing in with Facebook' do
-    context 'when email does not exist' do
-      it 'creates an user with that email' do
-        access_token = 'uruiwqyriwqurio'
-        long_term_token = '7587325357823583'
-        facebook_uid = '123243545'
-        profile = { 'id' => facebook_uid, 'email' => 'zi@dinosys.vn' }
-        mock_api = double(:mock_api, exchange_access_token_info: long_term_token)
-        mock_graph_api = double(:mock_graph_api, get_object: profile)
+    let(:run_request) { post '/api/v1/auth/sign_in_with_facebook', params: { access_token: '434343243' }.to_json, headers: request_headers }
+    let(:long_term_token) { '7587325357823583' }
+    let(:facebook_uid) { '123243545' }
 
-        expect(Koala::Facebook::OAuth).to receive(:new).and_return mock_api
-        expect(Koala::Facebook::API).to receive(:new).and_return mock_graph_api
+    before do
+      mock_api = double(:mock_api, exchange_access_token_info: long_term_token)
+      mock_graph_api = double(:mock_graph_api, get_object: profile)
 
-        post '/api/v1/auth/sign_in_with_facebook', params: { access_token: access_token }.to_json, headers: request_headers
+      expect(Koala::Facebook::OAuth).to receive(:new).and_return mock_api
+      expect(Koala::Facebook::API).to receive(:new).and_return mock_graph_api
+    end
 
+    context 'when profile does not contain email' do
+      let(:profile) { { 'id' => facebook_uid } }
+
+      it 'creates user without email' do
+        create(:user, email: nil, password: 'password', provider: 'facebook', uid: '43423423532')
+
+        expect { run_request }.to change(User, :count).by(1)
+        expect(response.status).to eq(200)
+        created_user = User.find_by_facebook_uid(facebook_uid)
+        expect(created_user.provider).to eq('facebook')
+        expect(created_user.uid).to eq(facebook_uid)
+        expect(created_user.facebook_uid).to eq(facebook_uid)
+        expect(created_user.facebook_credentials).to be_present
+        expect(response.header['access-token']).to be_present
+      end
+
+      it 'logins user' do
+        existing_user = create(:user, provider: 'facebook', uid: facebook_uid, email: nil, facebook_uid: facebook_uid)
+
+        expect { run_request }.to_not change(User, :count)
+        expect(response.status).to eq(200)
+
+        returned_token = response.header['access-token']
+        returned_client = response.header['client']
+        expect(existing_user.reload.valid_token?(returned_token, returned_client)).to eq(true)
+      end
+    end
+
+    context 'profile has email' do
+      let(:profile) { { 'id' => facebook_uid, 'email' => 'zi@dinosys.vn' } }
+
+      it 'creates user with email if user does not exist' do
+        expect { run_request }.to change(User, :count).by(1)
         expect(response.status).to eq(200)
 
         created_user = User.find_by_email('zi@dinosys.vn')
-        expect(created_user).to be_present
         expect(created_user.provider).to eq('facebook')
         expect(created_user.uid).to eq(facebook_uid)
+        expect(created_user.facebook_uid).to eq(facebook_uid)
+        expect(created_user.facebook_credentials).to be_present
         expect(response.header['access-token']).to be_present
+      end
+
+      it 'saves to existing user if user already exists' do
+        create(:user, email: 'zi@dinosys.vn', password: 'password')
+
+        expect { run_request }.to_not change(User, :count)
+        expect(response.status).to eq(200)
+
+        existing_user = User.find_by_email('zi@dinosys.vn')
+        expect(existing_user.provider).to eq('email')
+        expect(existing_user.uid).to eq('zi@dinosys.vn')
+        expect(existing_user.facebook_uid).to eq(facebook_uid)
+        expect(existing_user.facebook_credentials).to be_present
+
+        returned_token = response.header['access-token']
+        returned_client = response.header['client']
+        expect(existing_user.reload.valid_token?(returned_token, returned_client)).to eq(true)
       end
     end
   end
