@@ -12,7 +12,7 @@ describe 'Auth' do
 
     context 'when email already exists' do
       it 'returns error' do
-        create(:user, email: 'zi@dinosys.com')
+        create(:api_user, email: 'zi@dinosys.com')
         post '/api/v1/auth', params: { email: 'zi@dinosys.com', password: 'password', password_confirmation: 'password' }
 
         expect(response.status).to eq(422)
@@ -42,7 +42,7 @@ describe 'Auth' do
   describe 'signing in' do
     context 'signin to an existing user' do
       it 'returns token' do
-        user = create(:user, email: 'zi@dinosys.com', password: 'password')
+        user = create(:api_user, email: 'zi@dinosys.com', password: 'password')
         user.confirm
 
         post '/api/v1/auth/sign_in', params: { email: 'zi@dinosys.com', password: 'password' }
@@ -53,7 +53,7 @@ describe 'Auth' do
 
     context 'signin to an existing user with wrong password' do
       it 'returns errors' do
-        user = create(:user, email: 'zi@dinosys.com', password: 'password')
+        user = create(:api_user, email: 'zi@dinosys.com', password: 'password')
         user.confirm
 
         post '/api/v1/auth/sign_in', params: { email: 'zi@dinosys.com', password: 'password1234' }
@@ -64,11 +64,11 @@ describe 'Auth' do
 
     describe 'signing out' do
       it 'works' do
-        user = create(:user, email: 'zi@dinosys.com', password: 'password')
+        user = create(:api_user, email: 'zi@dinosys.com', password: 'password')
         auth_headers = user.create_new_auth_token
 
         delete '/api/v1/auth/sign_out', params: {}, headers: request_headers.merge(auth_headers)
-        
+
         expect(response.status).to eq(200)
         expect(response.header['access-token']).to be_nil
 
@@ -80,7 +80,7 @@ describe 'Auth' do
 
   describe 'signing out' do
     it 'works' do
-      user = create(:user, email: 'zi@dinosys.com', password: 'password')
+      user = create(:api_user, email: 'zi@dinosys.com', password: 'password')
       auth_headers = user.create_new_auth_token
 
       delete '/api/v1/auth/sign_out', params: {}, headers: request_headers.merge(auth_headers)
@@ -95,7 +95,7 @@ describe 'Auth' do
 
   describe 'request password reset' do
     context 'when user exists' do
-      before { create(:user, email: 'zi@dinosys.com', password: 'password') }
+      before { create(:api_user, email: 'zi@dinosys.com', password: 'password') }
 
       it 'works' do
         post '/api/v1/auth/password', params: { email: 'zi@dinosys.com', redirect_url: 'redirect_url' }.to_json,
