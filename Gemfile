@@ -66,6 +66,9 @@ gem 'haml-rails', '~> 0.9'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+# Gem for facebook
+gem 'koala'
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-lodash'
   gem 'rails-assets-jquery.tablesorter'
