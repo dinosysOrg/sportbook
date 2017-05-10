@@ -140,11 +140,11 @@ describe 'Auth' do
       let(:profile) { { 'id' => facebook_uid } }
 
       it 'creates user without email' do
-        create(:user, email: nil, password: 'password', provider: 'facebook', uid: '43423423532')
+        create(:api_user, email: nil, password: 'password', provider: 'facebook', uid: '43423423532')
 
         expect { run_request }.to change(User, :count).by(1)
         expect(response.status).to eq(200)
-        created_user = User.find_by_facebook_uid(facebook_uid)
+        created_user = ApiUser.find_by_facebook_uid(facebook_uid)
         expect(created_user.provider).to eq('facebook')
         expect(created_user.uid).to eq(facebook_uid)
         expect(created_user.facebook_uid).to eq(facebook_uid)
@@ -153,7 +153,7 @@ describe 'Auth' do
       end
 
       it 'logins user' do
-        existing_user = create(:user, provider: 'facebook', uid: facebook_uid, email: nil, facebook_uid: facebook_uid)
+        existing_user = create(:api_user, provider: 'facebook', uid: facebook_uid, email: nil, facebook_uid: facebook_uid)
 
         expect { run_request }.to_not change(User, :count)
         expect(response.status).to eq(200)
@@ -171,7 +171,7 @@ describe 'Auth' do
         expect { run_request }.to change(User, :count).by(1)
         expect(response.status).to eq(200)
 
-        created_user = User.find_by_email('zi@dinosys.vn')
+        created_user = ApiUser.find_by_email('zi@dinosys.vn')
         expect(created_user.provider).to eq('facebook')
         expect(created_user.uid).to eq(facebook_uid)
         expect(created_user.facebook_uid).to eq(facebook_uid)
@@ -180,12 +180,12 @@ describe 'Auth' do
       end
 
       it 'saves to existing user if user already exists' do
-        create(:user, email: 'zi@dinosys.vn', password: 'password')
+        create(:api_user, email: 'zi@dinosys.vn', password: 'password')
 
         expect { run_request }.to_not change(User, :count)
         expect(response.status).to eq(200)
 
-        existing_user = User.find_by_email('zi@dinosys.vn')
+        existing_user = ApiUser.find_by_email('zi@dinosys.vn')
         expect(existing_user.provider).to eq('email')
         expect(existing_user.uid).to eq('zi@dinosys.vn')
         expect(existing_user.facebook_uid).to eq(facebook_uid)
@@ -197,10 +197,11 @@ describe 'Auth' do
       end
     end
   end
+
   describe 'updating user' do
     context 'updates address and name of user' do
       it 'returns token' do
-        user = create(:user, email: 'zi@dinosys.com', password: 'password')
+        user = create(:api_user, email: 'zi@dinosys.com', password: 'password')
         auth_headers = user.create_new_auth_token
         put '/api/v1/auth', params: { address: 'Hanoi', name: "HuanNguyen", phone_number: "01664152723" }.to_json, headers: request_headers.merge(auth_headers)
         expect(response.status).to eq(200)
