@@ -31,6 +31,8 @@ module Backend
 
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
 
+    config.time_zone = 'Hanoi'
+
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
