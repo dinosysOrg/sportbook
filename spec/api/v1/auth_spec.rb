@@ -148,6 +148,7 @@ describe 'Auth' do
                                                password_confirmation: 'abcd1234' }.merge(returned_params).to_json,
                                      headers: request_headers
         expect(response.status).to eq(200)
+        user = User.find_by_email('zi@dinosys.com')
         check_user = user.reload
         expect(check_user.valid_password?('abcd1234')).to eq(true)
       end
