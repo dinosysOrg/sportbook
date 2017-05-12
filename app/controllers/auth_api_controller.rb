@@ -2,7 +2,7 @@ class AuthApiController < ApplicationController
   before_action :set_long_term_token, :set_profile
 
   def create
-    user = User.find_or_create_by(query_params) do |u|
+    user = ApiUser.find_or_create_by(query_params) do |u|
       u.provider = 'facebook'
       u.uid = profile['id']
       u.name = profile['name']
