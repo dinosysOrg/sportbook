@@ -6,6 +6,6 @@ class TimeSlot < ApplicationRecord
     time = self.time
     venue_id = self.venue_id
     time_slots = TimeSlot.where('time=? and venue_id=?', time, venue_id)
-    errors.add(:time, 'This time has been full') if time_slots.count == 2
+    errors.add(:time, :slot_full) if time_slots.count >= Venue::CAPACITY
   end
 end

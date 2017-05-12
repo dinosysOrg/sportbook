@@ -14,13 +14,12 @@ class Tournament < ApplicationRecord
 
   def generate_time_slots
     return unless start_date && end_date
-    date_range = start_date..end_date
-    hour_range = 9..24
-    date_range.each do |date|
+    hour_range = Venue::OPENING_HOUR..Venue::CLOSING_HOUR
+    (start_date..end_date).each do |date|
       Venue.find_each do |v|
         hour_range.each do |hour|
           new_time = Time.new(date.year, date.month, date.day, hour)
-          2.times do
+          Venue::CAPACITY.times do
             v.time_slots.create(time: new_time, available: true)
           end
         end

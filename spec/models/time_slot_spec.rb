@@ -1,21 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe Tournament, type: :model do
-  describe 'before_create' do
+RSpec.describe TimeSlot, type: :model do
+  describe 'Validation' do
     describe 'generating TimeSlot' do
       it 'just generate 2 timeslots for each venue' do
-        expect(TimeSlot.count).to eq(0)
-
-        venues_count = 1
-        create_list(:venue, venues_count)
-        new_time = Time.new(Date.today.year, Date.today.month, Date.today.day, 9)
-        Venue.find_each do |v|
-          3.times do
-            v.time_slots.create(time: new_time, available: true)
-          end
-        end
-        time_slots = TimeSlot.where('time = ?', new_time)
-        expect(time_slots.count).to eq(2)
+        full_venue = create(:venue)
+        create_list(:time_slot, 2, venue: full_venue)
+        extra_time_slot = full_venue.time_slots.build time: DateTime.now.at_beginning_of_hour
+        expect(extra_time_slot).to_not be_valid
+        expect(extra_time_slot.errors[:time]).to include('There can be only 2 timeslot per time for 1 venue')
       end
     end
   end
