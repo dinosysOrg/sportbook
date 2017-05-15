@@ -10,7 +10,8 @@ class Team < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
   validates :status, presence: true
-
+  validates :tournament, presence: true
+  
   enum status: { 0 => :registered, 1 => :paid }
 
   def phone_numbers
