@@ -32,6 +32,7 @@ gem 'grape_devise_token_auth'
 
 gem 'ffaker' # to generate sample data
 gem 'rollbar'
+gem 'newrelic_rpm'
 
 gem 'roo'
 gem 'friendly_id'
@@ -64,6 +65,9 @@ gem 'haml-rails', '~> 0.9'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+
+# Gem for facebook
+gem 'koala'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-lodash'

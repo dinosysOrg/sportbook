@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users, ActiveAdmin::Devise.config
+  devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
   mount ApplicationApi => '/'
@@ -12,7 +12,8 @@ Rails.application.routes.draw do
 
   namespace :api do
     scope :v1 do
-      mount_devise_token_auth_for 'User', at: 'auth'
+      post 'auth/sign_in_with_facebook', to: '/auth_api#create'
+      mount_devise_token_auth_for 'ApiUser', at: 'auth', controllers: { passwords: 'passwords' }
     end
   end
 end

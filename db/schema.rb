@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20170515044853) do
+=======
+ActiveRecord::Schema.define(version: 20170511095339) do
+>>>>>>> develop
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +57,7 @@ ActiveRecord::Schema.define(version: 20170515044853) do
     t.integer  "point_a",       default: 0
     t.integer  "point_b",       default: 0
     t.text     "calendar_link"
+    t.text     "note"
     t.index ["group_id"], name: "index_matches_on_group_id", using: :btree
     t.index ["team_a_id"], name: "index_matches_on_team_a_id", using: :btree
     t.index ["team_b_id"], name: "index_matches_on_team_b_id", using: :btree
@@ -78,10 +83,21 @@ ActiveRecord::Schema.define(version: 20170515044853) do
     t.index ["tournament_id"], name: "index_teams_on_tournament_id", using: :btree
   end
 
+  create_table "time_slots", force: :cascade do |t|
+    t.datetime "time"
+    t.boolean  "available"
+    t.integer  "venue_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["venue_id"], name: "index_time_slots_on_venue_id", using: :btree
+  end
+
   create_table "tournaments", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date     "start_date"
+    t.date     "end_date"
   end
 
   create_table "users", force: :cascade do |t|
@@ -112,6 +128,8 @@ ActiveRecord::Schema.define(version: 20170515044853) do
     t.text     "address"
     t.text     "note"
     t.string   "slug"
+    t.string   "facebook_uid"
+    t.json     "facebook_credentials"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree

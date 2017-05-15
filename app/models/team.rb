@@ -9,6 +9,7 @@ class Team < ApplicationRecord
   accepts_nested_attributes_for :groups_teams, allow_destroy: true
 
   validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
+  validates :tournament, presence: true
 
   def phone_numbers
     players.map(&:phone_number).join(', ')

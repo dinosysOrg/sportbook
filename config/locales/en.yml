@@ -64,6 +64,13 @@ en:
       tournament: tournament
       user: user
       venue: venue
+      time_slot: time_slot
+    errors:
+      models:
+        time_slot:
+          attributes:
+            time:
+              slot_full: There can be only 2 timeslot per time for 1 venue
   date:
     formats:
       long: "%Y-%m-%d"

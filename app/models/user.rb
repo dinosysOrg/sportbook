@@ -3,7 +3,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :trackable, :validatable,
           :confirmable
-  include DeviseTokenAuth::Concerns::User
 
   include FriendlyId
   friendly_id :slug_info, use: [:slugged, :finders]
