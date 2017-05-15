@@ -16,6 +16,7 @@ ActiveAdmin.register Group do
     attributes_table do
       row :tournament
       row :name
+      row :start_date
       row :teams do |object|
         object.teams.pluck(:name).join(', ')
       end
@@ -26,6 +27,7 @@ ActiveAdmin.register Group do
     f.inputs 'Admin Details' do
       f.input :tournament, input_html: { disabled: true }
       f.input :name
+      f.input :start_date
 
       if f.object.tournament
         f.has_many :groups_teams do |groups_team|
@@ -37,5 +39,5 @@ ActiveAdmin.register Group do
     f.actions
   end
 
-  permit_params :name, :tournament_id, groups_teams_attributes: [:id, :team_id, :order, :_destroy]
+  permit_params :name, :tournament_id, :start_date, groups_teams_attributes: [:id, :team_id, :order, :_destroy]
 end
