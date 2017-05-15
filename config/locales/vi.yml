@@ -63,6 +63,13 @@ vi:
       tournament: giải đấu
       user: người dùng
       venue: địa điểm
+      time_slot: Time Slot
+    errors:
+      models:
+        time_slot:
+          attributes:
+            time:
+              slot_full: Chỉ được 2 slot time cho mỗi địa điểm
   date:
     formats:
       long: "%d-%m-%Y"
