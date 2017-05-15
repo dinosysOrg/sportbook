@@ -6,7 +6,7 @@ FactoryGirl.define do
   factory :team do
     tournament
     name { generate(:team_name) }
-    status Team.statuses.key(:registered)
+    status Team.statuses[:registered]
     trait :has_players do
       after(:create) do |team|
         create_list :player, 1, team: team
