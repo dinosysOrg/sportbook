@@ -35,13 +35,14 @@ namespace :sb do
 
           phone_number = row[:phone_number].squish
           phone_number = "0#{phone_number}" if phone_number.starts_with?('0')
-          user = User.find_or_create_by!(name: row[:name].squish, phone_number: phone_number) do |u|
+          user = ApiUser.find_or_create_by!(name: row[:name].squish, phone_number: phone_number) do |u|
             u.skill_level = row[:skill_level].gsub(/\s+/, '').downcase.underscore
             u.address = row[:address].try(:squish)
             u.note = row[:note].try(:squish)
 
             u.password = FFaker::Internet.password
             u.email = FFaker::Internet.email
+            u.uid = u.email
           end
 
           tournament_names = row[:tournaments].split(',').map(&:squish)
