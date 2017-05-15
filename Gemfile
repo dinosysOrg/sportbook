@@ -98,6 +98,8 @@ end
 
 group :test do
   gem 'shoulda-matchers'
+  gem 'capybara'
+  gem 'site_prism'
 end
 
 group :development do

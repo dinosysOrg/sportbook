@@ -1,5 +1,10 @@
 ---
 vi:
+  welcome: Xin chào
+  home: lời nói đầu
+  tournaments: các giải đấu
+  vietnamese: tiếng Việt
+  english: english
   add_to_calendar: thêm lịch
   active_admin:
     dashboard: Dashboard

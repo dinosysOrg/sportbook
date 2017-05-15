@@ -16,4 +16,6 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for 'ApiUser', at: 'auth', controllers: { passwords: 'passwords' }
     end
   end
+
+  root 'pages#home'
 end
