@@ -7,4 +7,27 @@
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   %body
+    %nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
+      .container
+        %button.navbar-toggler.navbar-toggler-right{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+          %span.navbar-toggler-icon
+        %a.navbar-brand{:href => "#"} Sportbook
+        .collapse.navbar-collapse
+          %ul.navbar-nav
+            %li.nav-item.active
+              = link_to(root_path, class: 'nav-link') do
+                = t('home')
+                %span.sr-only (current)
+            %li.nav-item.dropdown
+              %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "http://example.com"}
+                = t('tournaments')
+              .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
+                - Tournament.all.each do |tournament|
+                  = link_to tournament.name, tournament_path(tournament), class: 'dropdown-item'
+            %li.nav-item.float-right
+              = link_to({ locale: :vi }, class: 'nav-link', data: { test: 'locale-vi' }) do
+                = t('vietnamese')
+            %li.nav-item.float-right
+              = link_to({ locale: :en }, class: 'nav-link', data: { test: 'locale-en' }) do
+                = t('english')
     = yield

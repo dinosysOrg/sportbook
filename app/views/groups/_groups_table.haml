@@ -1,0 +1,19 @@
+%table#groupsTable.tablesorter-blue
+  %thead
+    - 2.times do
+      %th= t('activerecord.attributes.team.name')
+      %th= t('activerecord.attributes.team.phone_number')
+      %th= t('activerecord.attributes.team.points')
+      %th= t('activerecord.attributes.team.wins')
+      %th= t('activerecord.attributes.team.draws')
+      %th= t('activerecord.attributes.team.losses')
+      %th= t('activerecord.attributes.team.score_difference')
+  %tbody
+    - groups.as_pairs.each do |pair|
+      %tr
+        %td.groupsTable-groupName(colspan="7")= pair.group_a
+        %td.groupsTable-groupName(colspan="7")= pair.group_b
+      - pair.team_pairs.each do |team_pair|
+        %tr
+          = render 'groups_team', groups_team: team_pair[0] if team_pair[0]
+          = render 'groups_team', groups_team: team_pair[1] if team_pair[1]

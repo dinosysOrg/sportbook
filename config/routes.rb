@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   mount ApplicationApi => '/'
 
-  resources :tournaments, only: [] do
+  resources :tournaments, only: [:show] do
     resources :matches, only: [:index]
     resources :players, only: [:index]
     resources :groups, only: [:index]
