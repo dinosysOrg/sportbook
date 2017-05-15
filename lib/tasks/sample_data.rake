@@ -5,9 +5,10 @@ namespace :generate do
       { name: 'Duy Nguyen', email: 'duy.nguyen@dinosys.vn' },
       { name: 'Zi', email: 'hungryzi@gmail.com' }
     ].each do |admin|
-      u = User.find_or_create_by!(email: admin[:email], name: admin[:name]) do |new_user|
+      u = AdminUser.find_or_create_by!(email: admin[:email], name: admin[:name]) do |new_user|
         new_user.password = 'password'
         new_user.confirmed_at = Time.now
+        new_user.uid = new_user.email
       end
 
       # u.roles << Role.admin_role
@@ -16,7 +17,10 @@ namespace :generate do
     [
       '9 Ball', '10 Ball'
     ].each do |tournament_name|
-      Tournament.find_or_create_by!(name: tournament_name)
+      Tournament.find_or_create_by!(name: tournament_name) do |tournament|
+        tournament.start_date = Date.today
+        tournament.end_date = 3.weeks.ago
+      end
     end
 
     [
