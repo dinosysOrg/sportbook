@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require jquery.tablesorter
 //= require lodash
+//= require tether
+//= require bootstrap-sprockets
 
 $.extend($.tablesorter.characterEquivalents, {
   'a' : '\u00e1\u00e0\u1ea3\u1ea1\u00e3\u0103\u1eaf\u1eb1\u1eb3\u1eb7\u1eb5\u00e2\u1ea5\u1ea7\u1ea9\u1ead\u1eab\u00e4\u0105\u00e5', // aáàảạãăắằẳặẵâấầẩậẫäąå
