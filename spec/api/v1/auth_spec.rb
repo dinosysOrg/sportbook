@@ -94,9 +94,17 @@ describe 'Auth' do
   end
 
   describe 'request password reset' do
+    context 'when user provider is facebook' do
+      it 'send email with provider facebook' do
+        create(:user, provider: 'facebook', uid: '123243545', email: 'zi@dinosys.vn', facebook_uid: '123243545')
+        post '/api/v1/auth/password', params: { email: 'zi@dinosys.vn',
+                                                redirect_url: 'redirect_url' }.to_json, headers: request_headers
+
+        expect(response.status).to eq(404)
+      end
+    end
     context 'when user exists' do
       before { create(:api_user, email: 'zi@dinosys.com', password: 'password') }
-
       it 'works' do
         post '/api/v1/auth/password', params: { email: 'zi@dinosys.com', redirect_url: 'redirect_url' }.to_json,
                                       headers: request_headers
@@ -113,12 +121,44 @@ describe 'Auth' do
                                       headers: request_headers
 
         expect(response.status).to eq(200)
-
         expect(ActionMailer::Base.deliveries.size).to be(1)
 
         email = ActionMailer::Base.deliveries[0]
         expect(email.to).to include('zi@dinosys.com')
         expect(email.body).to match(mock_token)
+      end
+      it 'changes password' do
+        post '/api/v1/auth/password', params: { email: 'zi@dinosys.com', redirect_url: 'redirect_url' }.to_json,
+                                      headers: request_headers
+
+        expect(response.status).to eq(200)
+        expect(ActionMailer::Base.deliveries.size).to be(1)
+        @mail = ActionMailer::Base.deliveries.last
+        @mail_redirect_url = CGI.unescape(@mail.body.match(/redirect_url=([^&]*)&/)[1])
+        @mail_reset_token = @mail.body.match(/reset_password_token=(.*)\"/)[1]
+
+        get '/api/v1/auth/password/edit', params: { reset_password_token: @mail_reset_token,
+                                                    redirect_url:  @mail_redirect_url },
+                                          headers: request_headers
+
+        returned_params = Rack::Utils.parse_query(URI.parse(response.location).query)
+        returned_params['access-token'] = returned_params['token']
+        returned_params['client'] = returned_params['client_id']
+        put '/api/v1/auth/password', params: { password: 'abcd1234',
+                                               password_confirmation: 'abcd1234' }.merge(returned_params).to_json,
+                                     headers: request_headers
+        expect(response.status).to eq(200)
+        user = User.find_by_email('zi@dinosys.com')
+        check_user = user.reload
+        expect(check_user.valid_password?('abcd1234')).to eq(true)
+      end
+    end
+
+    context 'when user not exist' do
+      it 'work' do
+        put '/api/v1/auth/password', params: { password: 'abcd1234',
+                                               password_confirmation: 'abcd1234' }.to_json, headers: request_headers
+        expect(response.status).to eq(401)
       end
     end
   end
@@ -203,7 +243,8 @@ describe 'Auth' do
       it 'returns token' do
         user = create(:api_user, email: 'zi@dinosys.com', password: 'password')
         auth_headers = user.create_new_auth_token
-        put '/api/v1/auth', params: { address: 'Hanoi', name: "HuanNguyen", phone_number: "01664152723" }.to_json, headers: request_headers.merge(auth_headers)
+        put '/api/v1/auth', params: { address: 'Hanoi', name: 'HuanNguyen', phone_number: '01664152723' }.to_json,
+                            headers: request_headers.merge(auth_headers)
         expect(response.status).to eq(200)
         user = user.reload
         expect(user.address).to eq('Hanoi')
