@@ -13,7 +13,6 @@ class Team < ApplicationRecord
   validates :tournament, presence: true
 
   enum status: { registered: 0, paid: 1 }
-  enum status: { 0 => :registered, 1 => :paid }
 
   def phone_numbers
     players.map(&:phone_number).join(', ')
