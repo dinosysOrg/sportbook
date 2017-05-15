@@ -3,17 +3,13 @@
   %ul.nav.nav-tabs{:role => "tablist"}
     %li.nav-item{:role => "rules_and_regulations"}
       %a.nav-link.active{"aria-controls" => "rules_and_regulations", "data-toggle" => "tab", :href => "#rules_and_regulations", :role => "tab"}= t('.rules_and_regulations')
-      -# = @tournament.pages(:rules_and_regulations, I18n.locale)
     %li.nav-item{:role => "register"}
       %a.nav-link{"aria-controls" => "register", "data-toggle" => "tab", :href => "#register", :role => "tab"}= t('.register')
     %li.nav-item{:role => "detail"}
       %a.nav-link{"aria-controls" => "detail", "data-toggle" => "tab", :href => "#", :role => "tab"}= t('.detail')
 
   .tab-content
-    %br/
     #rules_and_regulations.tab-pane.active{:role => "tabpanel"}
-      %h5= t('.rules_and_regulations')
+      != @tournament.rules_and_regulations_page.html_content
     #register.tab-pane{:role => "tabpanel"}
-      %h5= t('.register')
-      %iframe{:frameborder => "0", :height => "2000", :marginheight => "0", :marginwidth => "0", :src => "https://docs.google.com/forms/d/e/1FAIpQLSdjIflWw-dJuJGfRAa7t7IwnY8-iLd7CKub4cDhQHywuX5U8Q/viewform?embedded=true", :width => "100%"}
-        Loading...
+      != @tournament.register_page.html_content
