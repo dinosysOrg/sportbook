@@ -10,6 +10,7 @@ vi:
     attributes:
       group:
         name: tên
+        start_date: ngày bắt đầu
         team: đội
         teams: các đội
         tournament: giải đấu

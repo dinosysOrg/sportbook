@@ -11,11 +11,12 @@ namespace :sb do
       ActiveRecord::Base.transaction do
         matches = []
 
-        file = Roo::Spreadsheet.open(Rails.root.join('import_data', "tournament_#{tournament_id}.xlsx").to_s)
+        file = Roo::Spreadsheet.open(Rails.root.join('import_data', "tournament_#{tournament_id}_edited.xlsx").to_s)
         players_sheet = file.sheet('Danh sách các trận đấu')
         players_sheet.parse(
           stt: 'STT',
           group: 'Bảng đấu',
+          start_date: 'Ngày bắt đầu',
           match_code: 'Mã trận',
           team_a: 'Cơ thủ 1',
           team_b: 'Cơ thủ 2',
@@ -36,7 +37,10 @@ namespace :sb do
             next
           end
 
-          group = tournament.groups.find_or_create_by!(name: row[:group].squish)
+          group = tournament.groups.find_or_create_by!(name: row[:group].squish) do |g|
+            g.start_date = row[:start_date].squish
+          end
+
           venue = row[:venue] ? Venue.find_or_create_by!(name: row[:venue].squish) : nil
           _, team_a_order, team_b_order = row[:match_code].split('-')
 
