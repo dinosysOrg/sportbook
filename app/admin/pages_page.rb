@@ -17,7 +17,7 @@ ActiveAdmin.register Page do
       f.input :tournament
       f.input :name
       f.input :locale, as: :select, collection: [:vi, :en]
-      render 'page_content'
+      f.input :html_content, input_html: { class: 'summernote' }
     end
     f.actions
   end
