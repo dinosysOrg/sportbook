@@ -15,7 +15,7 @@ module V1
     default_format :hal_json
 
     mount TournamentsApi
-
+    mount TeamsApi
     add_swagger_documentation \
       info: {
         title: 'The API title to be displayed on the API homepage.',

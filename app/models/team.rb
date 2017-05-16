@@ -10,7 +10,10 @@ class Team < ApplicationRecord
   accepts_nested_attributes_for :groups_teams, allow_destroy: true
 
   validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
+  validates :status, presence: true
   validates :tournament, presence: true
+
+  enum status: { registered: 0, paid: 1 }
 
   def phone_numbers
     players.map(&:phone_number).join(', ')
