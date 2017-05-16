@@ -4,6 +4,8 @@ describe 'TeamsApi' do
   let!(:user1) { create(:api_user, email: 'abc@dinosys.com', password: 'password') }
   let!(:user2) { create(:api_user, email: 'def@dinosys.com', password: 'password') }
   let!(:venue_ranking) { (1..4).to_a }
+  let!(:hour_range) { (9..12).to_a }
+  let!(:auth_headers) { user.create_new_auth_token }
 
   it 'sign up tournament without login' do
     post "/api/v1/tournaments/#{tour.id}/teams"
@@ -12,8 +14,7 @@ describe 'TeamsApi' do
 
   context 'sign up tournament' do
     it 'sign up tournament without array user' do
-      auth_headers = user.create_new_auth_token
-      post "/api/v1/tournaments/#{tour.id}/teams", params: { venue_ranking: venue_ranking, name: 'TeamA' }.to_json,
+      post "/api/v1/tournaments/#{tour.id}/teams", params: { hour_range: hour_range, venue_ranking: venue_ranking, name: 'TeamA' }.to_json,
                                                    headers: request_headers.merge(auth_headers)
       team = Team.find_by(name: 'TeamA', tournament_id: tour.id)
       expect(team).to be_present
@@ -22,9 +23,8 @@ describe 'TeamsApi' do
     end
 
     it 'sign up tournament with array user' do
-      auth_headers = user.create_new_auth_token
       user_id_array = [user1.id, user2.id]
-      post "/api/v1/tournaments/#{tour.id}/teams", params: { venue_ranking: venue_ranking, user_ids: user_id_array,
+      post "/api/v1/tournaments/#{tour.id}/teams", params: { hour_range: hour_range, venue_ranking: venue_ranking, user_ids: user_id_array,
                                                              name: 'TeamA' }.to_json,
                                                    headers: request_headers.merge(auth_headers)
       team = Team.find_by(name: 'TeamA', tournament_id: tour.id)
@@ -37,8 +37,7 @@ describe 'TeamsApi' do
     end
 
     it 'define rank venue for team' do
-      auth_headers = user.create_new_auth_token
-      post "/api/v1/tournaments/#{tour.id}/teams", params: { venue_ranking: venue_ranking, name: 'TeamA' }.to_json,
+      post "/api/v1/tournaments/#{tour.id}/teams", params: { hour_range: hour_range, venue_ranking: venue_ranking, name: 'TeamA' }.to_json,
                                                    headers: request_headers.merge(auth_headers)
       team = Team.find_by(name: 'TeamA', tournament_id: tour.id)
       expect(team).to be_present
@@ -46,6 +45,17 @@ describe 'TeamsApi' do
       expect(team['venue_ranking']).to be_present
       expect(team['venue_ranking'].count).to eq(venue_ranking.count)
       expect(team.status).to eq('registered')
+    end
+
+    it 'define timeblock for team' do
+      post "/api/v1/tournaments/#{tour.id}/teams", params: { hour_range: hour_range, venue_ranking: venue_ranking, name: 'TeamA' }.to_json,
+                                                   headers: request_headers.merge(auth_headers)
+      team = Team.find_by(name: 'TeamA', tournament_id: tour.id)
+      expect(TimeSlot.find_by(object_type: 'Team')).to be_present
+      expect(team).to be_present
+      expect(response.status).to eq(201)
+      expect(TimeSlot.find_by_object_id(team.id)['object_id']).to eq(team.id)
+      expect(TimeSlot.find_by_object_id(team.id)['object_type']).to eq(team.class.name)
     end
   end
 end
