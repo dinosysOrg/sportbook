@@ -10,10 +10,6 @@ Rails.application.routes.draw do
     resources :groups, only: [:index]
   end
 
-  namespace :api do
-    scope :v1 do
-      post 'auth/sign_in_with_facebook', to: '/auth_api#create'
-      mount_devise_token_auth_for 'ApiUser', at: 'auth', controllers: { passwords: 'passwords' }
-    end
-  end
+  post 'api/v1/auth/sign_in_with_facebook', to: 'auth_api#create'
+  mount_devise_token_auth_for 'ApiUser', at: 'api/v1/auth', controllers: { passwords: 'passwords' }
 end
