@@ -42,6 +42,9 @@ gem 'auto_strip_attributes'
 gem 'google-api-client'
 gem 'dotenv-rails'
 
+# Add Summernote for HTML edit
+gem 'summernote-rails', '0.8.3'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 gem 'rails-i18n'
@@ -52,7 +55,7 @@ gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 
-gem 'bootstrap', '~> 4.0.0.alpha6'
+gem 'bootstrap-sass'
 gem 'font-awesome-rails'
 
 # Use Uglifier as compressor for JavaScript assets

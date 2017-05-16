@@ -17,7 +17,7 @@ ActiveAdmin.register Page do
       f.input :tournament
       f.input :name
       f.input :locale, as: :select, collection: [:vi, :en]
-      f.input :html_content
+      render 'page_content'
     end
     f.actions
   end
