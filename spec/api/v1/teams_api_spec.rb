@@ -33,5 +33,18 @@ describe 'TeamsApi' do
       expect(team.players.find_by_user_id(user1.id)['user_id']).to eq(user1.id)
       expect(team.players.find_by_user_id(user2.id)['user_id']).to eq(user2.id)
     end
+
+    it 'define rank venue for team' do
+      auth_headers = user.create_new_auth_token
+      venue_ranking = [1, 2, 3, 4]
+      post "/api/v1/tournaments/#{tour.id}/teams", params: { venue_ranking: venue_ranking, name: 'TeamA' }.to_json,
+                                                   headers: request_headers.merge(auth_headers)
+      team = Team.find_by(name: 'TeamA', tournament_id: tour.id)
+      expect(team).to be_present
+      expect(response.status).to eq(201)
+      expect(team['venue_ranking']).to be_present
+      expect(team['venue_ranking'].count).to eq(venue_ranking.count)
+      expect(team.status).to eq('registered')
+    end
   end
 end

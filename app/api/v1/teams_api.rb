@@ -10,7 +10,7 @@ module V1
 
     desc 'Sign up tournament'
     post 'tournaments/:tournament_id/teams' do
-      team = Team.create(name: params[:name], tournament_id: params[:tournament_id], status: :registered)
+      team = Team.create(name: params[:name], tournament_id: params[:tournament_id], status: :registered, venue_ranking: params[:venue_ranking])
       user_ids = params[:user_ids] || []
       user_ids << current_api_user.id
       user_ids.each do |user_id|
