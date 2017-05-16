@@ -6,6 +6,7 @@
 
 # Ignore mac files
 .DS_Store
+*.numbers
 
 # Ignore bundler config.
 /.bundle
@@ -27,6 +28,5 @@
 .~lock*
 
 # Ignore idea file
-
 .idea/
 ~*
