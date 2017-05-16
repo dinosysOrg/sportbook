@@ -13,6 +13,7 @@ en:
     attributes:
       group:
         name: name
+        start_date: start date
         team: team
         teams: teams
         tournament: tournament

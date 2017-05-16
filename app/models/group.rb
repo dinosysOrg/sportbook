@@ -9,6 +9,8 @@ class Group < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
   validates :tournament, presence: true
 
+  validates :start_date, presence: true
+
   scope :round_robin, (-> { where('name NOT ILIKE ?', 'DE%') })
 
   default_scope { order(:name) }
