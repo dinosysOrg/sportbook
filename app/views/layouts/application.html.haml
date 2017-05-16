@@ -16,11 +16,11 @@
           %ul.navbar-nav
             %li.nav-item.active
               = link_to(root_path, class: 'nav-link') do
-                = t('home')
+                = t('.home')
                 %span.sr-only (current)
             %li.nav-item.dropdown
               %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "http://example.com"}
-                = t('tournaments')
+                = t('.tournaments')
               .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
                 - Tournament.all.each do |tournament|
                   = link_to tournament.name, tournament_path(tournament), class: 'dropdown-item'

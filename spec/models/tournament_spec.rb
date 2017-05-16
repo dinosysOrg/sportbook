@@ -8,6 +8,17 @@ RSpec.describe Tournament, type: :model do
   it { is_expected.to validate_uniqueness_of(:name) }
 
   describe 'after_create' do
+    it 'generates pages' do
+      tournament = create(:tournament)
+      Tournament::PAGE_NAMES.each do |p|
+        I18n.available_locales.each do |l|
+          expect(tournament.pages.where(name: p, locale: l).first).to be_present
+        end
+      end
+
+      expect { tournament.update(name: 'Updated') }.to_not change(Page, :count)
+    end
+
     describe 'generating TimeSlot' do
       it 'generates all TimeSlot' do
         expect(TimeSlot.count).to eq(0)

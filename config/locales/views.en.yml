@@ -1,0 +1,11 @@
+---
+en:
+  layouts:
+    application:
+      home: home
+      tournaments: tournaments
+  tournaments:
+    show:
+      details: details
+      rules_and_regulations: rules and regulations
+      register: register
