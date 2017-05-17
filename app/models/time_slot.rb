@@ -6,6 +6,11 @@ class TimeSlot < ApplicationRecord
     time = self.time
     venue_id = self.venue_id
     time_slots = TimeSlot.where('time=? and venue_id=?', time, venue_id)
-    errors.add(:time, :slot_full) if time_slots.count >= Venue::CAPACITY
+    return unless time_slots.count >= Venue::CAPACITY
+
+    errors.add(:time,
+               :slot_full,
+               capacity: Venue::CAPACITY,
+               class: I18n.t("activerecord.models.#{Venue.name.downcase}").downcase)
   end
 end
