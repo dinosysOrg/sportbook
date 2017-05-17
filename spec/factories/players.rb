@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :player do
-    user
+    user { create(:api_user) }
     tournament
   end
 end
