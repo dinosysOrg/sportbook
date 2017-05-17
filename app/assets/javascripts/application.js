@@ -14,7 +14,6 @@
 //= require jquery_ujs
 //= require jquery.tablesorter
 //= require lodash
-//= require tether
 //= require bootstrap-sprockets
 
 $.extend($.tablesorter.characterEquivalents, {

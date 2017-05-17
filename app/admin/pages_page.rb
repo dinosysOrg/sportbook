@@ -1,5 +1,5 @@
 ActiveAdmin.register Page do
-  # actions :index, :edit, :update, :show, :destroy
+  actions :index, :edit, :update, :show, :destroy
   filter :tournament
 
   index do
