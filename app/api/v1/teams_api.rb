@@ -12,8 +12,10 @@ module V1
     post 'tournaments/:tournament_id/teams' do
       tour = Tournament.find_by_id(params[:tournament_id])
       team = Team.create(name: params[:name], tournament_id: params[:tournament_id], status: :registered, venue_ranking: params[:venue_ranking])
+
       date_range = (tour['start_date']..tour['end_date']).to_a
-      TimeSlotService.instance.generate_time_slots([team], params[:hour_range], date_range)
+      TimeSlotService.instance.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
+
       user_ids = params[:user_ids] || []
       user_ids << current_api_user.id
       user_ids.each do |user_id|

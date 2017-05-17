@@ -16,7 +16,6 @@ class Tournament < ApplicationRecord
     return unless start_date && end_date
     hour_range = Venue::OPENING_HOUR..Venue::CLOSING_HOUR
     date_range = start_date..end_date
-    # debugger
-    TimeSlotService.instance.generate_time_slots(Venue.all.to_a, hour_range, date_range)
+    TimeSlotService.instance.create_from_date_and_hour_range(Venue.all.to_a, hour_range, date_range)
   end
 end
