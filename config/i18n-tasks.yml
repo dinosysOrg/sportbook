@@ -95,7 +95,7 @@ ignore_unused:
 - 'activerecord.*'
 - 'date.formats.*'
 - 'time.formats.*'
-- '{devise,kaminari,active_admin}.*'
+- '{devise,kaminari,active_admin,errors}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'
 # - 'simple_form.{error_notification,required}.:'

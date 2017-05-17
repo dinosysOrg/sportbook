@@ -7,34 +7,36 @@
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   %body
-%nav.navbar.navbar-default
-  .container-fluid
-    / Brand and toggle get grouped for better mobile display
-    .navbar-header
-      %button.navbar-toggle.collapsed{"aria-expanded" => "false", "data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", :type => "button"}
-        %span.sr-only Toggle navigation
-      %a.navbar-brand{:href => "#"} Sportbook
-    / Collect the nav links, forms, and other content for toggling
-    #bs-example-navbar-collapse-1.collapse.navbar-collapse
-      %ul.nav.navbar-nav
-        %li.active
-          = link_to(root_path, class: 'nav-link') do
-            = t('.home')
-            %span.sr-only (current)
-        %li.dropdown
-          %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-            = t('.tournaments')
-            %span.caret
-          %ul.dropdown-menu
-            - Tournament.all.each do |tournament|
-              %li
-                = link_to tournament.name, tournament_path(tournament), class: 'dropdown-item'
-      %ul.nav.navbar-nav.navbar-right
-        %li
-          = link_to({ locale: :vi }, class: 'nav-link', data: { test: 'locale-vi' }) do
-            = t('vietnamese')
-      %ul.nav.navbar-nav.navbar-right
-        %li
-          = link_to({ locale: :en }, class: 'nav-link', data: { test: 'locale-en' }) do
-            = t('english')
-    = yield
+    %nav.navbar.navbar-default
+      .container
+        / Brand and toggle get grouped for better mobile display
+        .navbar-header
+          %button.navbar-toggle.collapsed{"aria-expanded" => "false", "data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", :type => "button"}
+            %span.sr-only Toggle navigation
+          %a.navbar-brand{:href => "#"} Sportbook
+        / Collect the nav links, forms, and other content for toggling
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          %ul.nav.navbar-nav
+            %li.active
+              = link_to(root_path, class: 'nav-link') do
+                = t('.home')
+                %span.sr-only (current)
+            %li.dropdown
+              %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                = t('.tournaments')
+                %span.caret
+              %ul.dropdown-menu
+                - Tournament.all.each do |tournament|
+                  %li
+                    = link_to tournament.name, tournament_path(tournament), class: 'dropdown-item'
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              = link_to({ locale: :vi }, class: 'nav-link', data: { test: 'locale-vi' }) do
+                = t('vietnamese')
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              = link_to({ locale: :en }, class: 'nav-link', data: { test: 'locale-en' }) do
+                = t('english')
+
+    .container
+      = yield
