@@ -16,6 +16,7 @@ module V1
 
     mount TournamentsApi
     mount TeamsApi
+
     add_swagger_documentation \
       info: {
         title: 'The API title to be displayed on the API homepage.',

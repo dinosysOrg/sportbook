@@ -9,6 +9,9 @@ module V1
     end
 
     desc 'Sign up tournament'
+    params do
+      requires :name, type: String
+    end
     post 'tournaments/:tournament_id/teams' do
       tour = Tournament.find_by_id(params[:tournament_id])
       team = Team.create(name: params[:name], tournament_id: params[:tournament_id], status: :registered, venue_ranking: params[:venue_ranking])

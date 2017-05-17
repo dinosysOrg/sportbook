@@ -10,7 +10,7 @@ describe 'TeamsApi' do
     end
 
     context 'when signed in' do
-      let(:params) { { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: 'TeamA' } }
+      let(:params) { { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: name } }
       let(:make_request) do
         auth_headers = user.create_new_auth_token
         post "/api/v1/tournaments/#{tour.id}/teams", params: params.to_json,
@@ -20,6 +20,7 @@ describe 'TeamsApi' do
       let(:tour) { create(:tournament, start_date: Date.new(2017, 5, 15), end_date: Date.new(2017, 5, 24)) }
       let(:user) { create(:api_user, email: 'zi@dinosys.com', password: 'password') }
       let(:venue_ranking) { (1..4).to_a }
+      let(:name) { 'TeamA' }
       let(:preferred_time_blocks) { { monday: [[9, 10, 11]] } }
 
       context 'when user_ids is emtpy' do
@@ -27,7 +28,7 @@ describe 'TeamsApi' do
           make_request
 
           expect(response.status).to eq(201)
-          team = tour.teams.find_by(name: 'TeamA')
+          team = tour.teams.find_by(name: name)
           expect(team).to be_present
           expect(team.players.size).to eq(1)
           expect(team.players.first.user_id).to eq(user.id)
@@ -45,7 +46,7 @@ describe 'TeamsApi' do
           make_request
 
           expect(response.status).to eq(201)
-          team = tour.teams.find_by(name: 'TeamA')
+          team = tour.teams.find_by(name: name)
           expect(team).to be_registered
           expect(team.players.size).to eq(3)
           expect(team.players.pluck(:user_id)).to match_array([user.id, user1.id, user2.id])
@@ -57,7 +58,7 @@ describe 'TeamsApi' do
           make_request
 
           expect(response.status).to eq(201)
-          team = tour.teams.find_by(name: 'TeamA')
+          team = tour.teams.find_by(name: name)
           expect(team.venue_ranking).to match_array(venue_ranking)
         end
       end
@@ -68,7 +69,7 @@ describe 'TeamsApi' do
 
         it 'generates correct TimeSlots for team' do
           make_request
-          team = tour.teams.find_by(name: 'TeamA')
+          team = tour.teams.find_by(name: name)
           expect(team.time_slots.pluck(:time)).to match_array(
             [
               Time.new(2017, 5, 15, 9),
@@ -79,6 +80,15 @@ describe 'TeamsApi' do
               Time.new(2017, 5, 22, 11)
             ]
           )
+        end
+      end
+
+      context 'when fails to save' do
+        let(:name) { '' }
+
+        it 'returns error' do
+          make_request
+          expect(response.status).to eq(422)
         end
       end
     end
