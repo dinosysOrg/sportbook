@@ -21,6 +21,7 @@ require 'rspec/rails'
 # require only the support files necessary.
 #
 Dir[Rails.root.join('spec/support/sections/*.rb')].each { |f| require f }
+require 'spec/support/pages/application_page'
 Dir[Rails.root.join('spec/support/pages/*.rb')].each { |f| require f }
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
