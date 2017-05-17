@@ -15,5 +15,5 @@
         %td.groupsTable-groupName(colspan="7")= pair.group_b
       - pair.team_pairs.each do |team_pair|
         %tr
-          = render 'groups_team', groups_team: team_pair[0] if team_pair[0]
-          = render 'groups_team', groups_team: team_pair[1] if team_pair[1]
+          = render 'groups/groups_team', groups_team: team_pair[0] if team_pair[0]
+          = render 'groups/groups_team', groups_team: team_pair[1] if team_pair[1]

@@ -11,10 +11,10 @@
 .tab-content
   %br/
   #players.tab-pane{:role => "tabpanel"}
-    %iframe{:frameborder => "0", :height => "1500", :src => "https://sportbook-staging.herokuapp.com/tournaments/2/players", :width => "100%"}
+    = render 'players/players_table', players: tournament.players
   #groups.tab-pane{:role => "tabpanel"}
-    %iframe{:frameborder => "0", :height => "800", :src => "https://sportbook-staging.herokuapp.com/tournaments/2/groups", :width => "100%"}
+    = render 'groups/groups_table', groups: tournament.groups_data
   #matches.tab-pane{:role => "tabpanel"}
-    %iframe{:frameborder => "0", :height => "4500", :src => "https://sportbook-staging.herokuapp.com/tournaments/2/matches", :width => "100%"}
+    = render 'matches/matches_table', matches: tournament.matches
   #de.tab-pane{:role => "tabpanel"}
     %iframe{:frameborder => "0", :height => "500", :src => "https://docs.google.com/spreadsheets/d/1gt6f_-ZAvp0k6Jpk0GwHfxdT-GPb80XAoiZ-hj7ZHrw/pubhtml?gid=1400074640&single=true&widget=true&headers=false", :width => "100%"}
