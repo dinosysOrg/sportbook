@@ -4,6 +4,9 @@ describe 'MyTournamentsApi' do
   let!(:api_user) { my_team.users.first.becomes ApiUser }
 
   it 'show all tournaments that I signed up for' do
+    create(:tournament, start_date: 2.days.from_now, end_date: 3.weeks.from_now)
+    create(:tournament, start_date: 3.days.from_now, end_date: 4.weeks.from_now)
+
     auth_headers = api_user.create_new_auth_token
 
     get '/api/v1/my-tournaments', headers: request_headers.merge(auth_headers)
