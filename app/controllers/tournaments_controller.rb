@@ -3,6 +3,4 @@ class TournamentsController < ApplicationController
     tournament = Tournament.find(params[:id])
     @tournament = TournamentDecorator.decorate tournament
   end
-
-  def detail; end
 end

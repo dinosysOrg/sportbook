@@ -14,4 +14,4 @@
     #register.tab-pane{:role => "tabpanel"}
       != @tournament.register_page.html_content
     #details.tab-pane{:role => "tabpanel"}
-      = render partial: 'tournaments/detail', locals: { tournament: @tournament }
+      = render 'detail', tournament: @tournament
