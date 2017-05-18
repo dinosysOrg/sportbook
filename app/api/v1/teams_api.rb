@@ -18,6 +18,8 @@ module V1
       tour = Tournament.find_by_id(params[:tournament_id])
       team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered, venue_ranking: params[:venue_ranking])
 
+      current_api_user.update_attributes!(skill_id: params[:skill_id])
+
       date_range = (tour['start_date']..tour['end_date']).to_a
       TimeSlotService.instance.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
 
@@ -26,6 +28,7 @@ module V1
       user_ids.each do |user_id|
         Player.create(user_id: user_id, tournament_id: params[:tournament_id], team_id: team.id)
       end
+      present team, with: Representers::TeamRepresenter
     end
   end
 end

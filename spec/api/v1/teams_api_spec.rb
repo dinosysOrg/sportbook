@@ -10,7 +10,7 @@ describe 'TeamsApi' do
     end
 
     context 'when signed in' do
-      let(:params) { { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: name } }
+      let(:params) { { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: name, skill_id: skill.id } }
       let(:make_request) do
         auth_headers = user.create_new_auth_token
         post "/api/v1/tournaments/#{tour.id}/teams", params: params.to_json,
@@ -22,6 +22,7 @@ describe 'TeamsApi' do
       let(:venue_ranking) { (1..4).to_a }
       let(:name) { 'TeamA' }
       let(:preferred_time_blocks) { { monday: [[9, 10, 11]] } }
+      let(:skill) { create(:skill, name: 'professinal') }
 
       context 'when user_ids is emtpy' do
         it 'creates team with only the current user' do
@@ -39,7 +40,8 @@ describe 'TeamsApi' do
         let(:user1) { create(:api_user) }
         let(:user2) { create(:api_user) }
         let(:params) do
-          { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: 'TeamA', user_ids: [user1.id, user2.id] }
+          { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: 'TeamA',
+            user_ids: [user1.id, user2.id] }
         end
 
         it 'creates team with all the users' do
@@ -64,9 +66,6 @@ describe 'TeamsApi' do
       end
 
       context 'define timeblock for team' do
-        let(:date_range) { ((tour.start_date)..(tour.end_date)).to_a }
-        let(:preferred_time_blocks) { { monday: [[9, 10, 11]] } }
-
         it 'generates correct TimeSlots for team' do
           make_request
           team = tour.teams.find_by(name: name)
@@ -83,9 +82,16 @@ describe 'TeamsApi' do
         end
       end
 
+      context 'define skill for team' do
+        it 'adds skill for user' do
+          make_request
+          skill = user.reload.skill
+          expect(User.find(user.id)['skill_id']).to eq(skill.id)
+        end
+      end
+
       context 'when fails to save' do
         let(:name) { '' }
-
         it 'returns error' do
           make_request
           expect(response.status).to eq(422)

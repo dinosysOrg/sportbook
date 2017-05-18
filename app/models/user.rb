@@ -8,7 +8,7 @@ class User < ApplicationRecord
   friendly_id :slug_info, use: [:slugged, :finders]
 
   has_many :players
-
+  belongs_to :skill
   enum skill_level: { beginner: 100, amateur: 200, semi_professional: 300, professional: 400, master: 500 }
 
   def slug_info
