@@ -1,5 +1,8 @@
 ---
 vi:
+  welcome: Xin chào
+  vietnamese: tiếng Việt
+  english: english
   add_to_calendar: thêm lịch
   active_admin:
     dashboard: Dashboard
@@ -70,7 +73,7 @@ vi:
         time_slot:
           attributes:
             time:
-              slot_full: Chỉ được 2 slot time cho mỗi địa điểm
+              slot_full: Chỉ được %{capacity} slot cho mỗi %{class}
   date:
     formats:
       long: "%d-%m-%Y"
