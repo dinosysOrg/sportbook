@@ -27,7 +27,6 @@ describe 'TeamsApi' do
       context 'when user_ids is emtpy' do
         it 'creates team with only the current user' do
           make_request
-
           expect(response.status).to eq(201)
           team = tour.teams.find_by(name: name)
           expect(team).to be_present

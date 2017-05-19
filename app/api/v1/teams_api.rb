@@ -10,10 +10,18 @@ module V1
 
     include ExceptionHandlers
 
-    desc 'Sign up tournament'
+    desc 'Sign up tournament', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'One of require fields is missing' }
+    ]
+
     params do
-      requires :name, type: String
+      requires :name, type: String, desc: 'Team Name'
+      requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team'
+      requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
+      optional :user_ids, type: Array[Integer], desc: 'Arrays user for creating team'
     end
+
     post 'tournaments/:tournament_id/teams' do
       tour = Tournament.find_by_id(params[:tournament_id])
       team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered, venue_ranking: params[:venue_ranking])
