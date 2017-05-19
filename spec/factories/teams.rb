@@ -7,6 +7,7 @@ FactoryGirl.define do
     tournament
     name { generate(:team_name) }
     status Team.statuses[:registered]
+    venue_ranking (1..4).to_a
     trait :has_players do
       after(:create) do |team|
         create(:player, team: team, tournament: team.tournament)
