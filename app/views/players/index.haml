@@ -1,14 +1,1 @@
-%button(type="button" class="reset")= t('show_all')
-
-%table#playersTable.tablesorter-blue
-  %thead
-    %th= t('activerecord.attributes.player.name')
-    %th= t('activerecord.attributes.player.phone_number')
-  %tbody
-    - @players.each do |p|
-      %tr
-        %td= p.name
-        %td= p.phone_number
-
-:javascript
-  $('#playersTable').tablesorter({ sortList: [[0,0]] });
+= render 'players_table', players: @players
