@@ -1,0 +1,11 @@
+---
+vi:
+  layouts:
+    application:
+      home: lời nói đầu
+      tournaments: các giải đấu
+  tournaments:
+    show:
+      details: quá trình thi đấu
+      rules_and_regulations: thể lệ thi đấu
+      register: đăng kí thi đấu
