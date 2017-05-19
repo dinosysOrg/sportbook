@@ -9,7 +9,7 @@ FactoryGirl.define do
     status Team.statuses[:registered]
     trait :has_players do
       after(:create) do |team|
-        create_list :player, 1, team: team
+        create(:player, team: team, tournament: team.tournament)
       end
     end
   end
