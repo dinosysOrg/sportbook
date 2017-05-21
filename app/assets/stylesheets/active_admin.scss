@@ -18,3 +18,15 @@
 //   .status_tag { background: #6090DB; }
 
 @import 'font-awesome';
+
+@import 'bootstrap';
+@import "summernote";
+
+.label {
+  color: #000;
+}
+
+.note-editor {
+  display: inline-block;
+}
+

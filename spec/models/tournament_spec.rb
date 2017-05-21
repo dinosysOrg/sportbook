@@ -1,12 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe Tournament, type: :model do
+  it { is_expected.to have_many(:pages) }
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_presence_of(:end_date) }
   it { is_expected.to validate_presence_of(:start_date) }
   it { is_expected.to validate_uniqueness_of(:name) }
 
   describe 'after_create' do
+    it 'generates pages' do
+      tournament = create(:tournament)
+      Tournament::PAGE_NAMES.each do |p|
+        I18n.available_locales.each do |l|
+          expect(tournament.pages.where(name: p, locale: l).first).to be_present
+        end
+      end
+
+      expect { tournament.update(name: 'Updated') }.to_not change(Page, :count)
+    end
+
     describe 'generating TimeSlot' do
       it 'generates all TimeSlot' do
         expect(TimeSlot.count).to eq(0)

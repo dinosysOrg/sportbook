@@ -1,5 +1,8 @@
 ---
 en:
+  welcome: Welcome
+  vietnamese: tiếng Việt
+  english: english
   add_to_calendar: Add To Calendar
   active_admin:
     dashboard: Dashboard
@@ -70,7 +73,7 @@ en:
         time_slot:
           attributes:
             time:
-              slot_full: There can be only 2 timeslot per time for 1 venue
+              slot_full: There can be only %{capacity} time slot at a time for 1 %{class}
   date:
     formats:
       long: "%Y-%m-%d"
