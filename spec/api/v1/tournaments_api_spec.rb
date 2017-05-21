@@ -19,4 +19,10 @@ describe 'TournamentsApi' do
     expect(response.status).to eq(200)
     expect(json_response[:name]).to eq(tour.name)
   end
+
+
+  it 'user can view all upcoming component for a tour' do
+    post "/api/v1/tournaments/#{tour.id}/my-opponents", 
+    params: { namene: "Nguyễn Nhật Thanh" }
+  end
 end

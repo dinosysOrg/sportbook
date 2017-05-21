@@ -11,5 +11,14 @@ module V1
       tournament = Tournament.find_by_id(params[:id])
       present tournament, with: Representers::TournamentRepresenter
     end
+
+
+    desc 'User can all upcoming components for a tour'
+    post 'tournaments/:id/my-opponents' do
+      debugger
+      tournament = Tournament.find_by_id(params[:id])
+      present tournament, with: Representers::TournamentRepresenter
+      debugger
+    end
   end
 end
