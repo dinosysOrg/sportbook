@@ -39,8 +39,7 @@ describe 'TeamsApi' do
         let(:user1) { create(:api_user) }
         let(:user2) { create(:api_user) }
         let(:params) do
-          { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: 'TeamA',
-            user_ids: [user1.id, user2.id] }
+          { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: 'TeamA', user_ids: [user1.id, user2.id] }
         end
 
         it 'creates team with all the users' do
@@ -84,7 +83,7 @@ describe 'TeamsApi' do
       context 'define skill for team' do
         it 'adds skill for user' do
           make_request
-          expect(user.reload.skill.skill_id).to eq(skill.id)
+          expect(user.reload.skill_id).to eq(skill.id)
         end
       end
 
