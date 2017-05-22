@@ -79,11 +79,11 @@ describe 'TeamsApi' do
           )
         end
       end
-      
+
       context 'define skill for team' do
         it 'adds skill for user' do
           make_request
-          expect(user.reload.skill.skill_id).to eq(skill.id)
+          expect(user.reload.skill_id).to eq(skill.id)
         end
       end
 
