@@ -84,8 +84,38 @@ describe 'TeamsApi' do
       context 'define skill for team' do
         it 'adds skill for user' do
           make_request
-          skill = user.reload.skill
-          expect(User.find(user.id)['skill_id']).to eq(skill.id)
+          expect(user.reload.skill.skill_id).to eq(skill.id)
+        end
+      end
+
+      context 'check skill for user' do
+        let(:params) { { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: name, skill_id: another_skill.id } }
+        let(:make_request) do
+          auth_headers_user_skill = user_with_skill.create_new_auth_token
+          post "/api/v1/tournaments/#{tour.id}/teams", params: params.to_json,
+                                                       headers: request_headers.merge(auth_headers_user_skill)
+        end
+
+        let(:user_with_skill) { create(:api_user, email: 'zi@dinosys.com', password: 'password', skill_id: assigned_skill.id) }
+        let(:assigned_skill) { create(:skill, name: 'professinal') }
+        let(:another_skill) { create(:skill, name: 'good') }
+
+        it 'doesnt add skill for user if user already has skill' do
+          make_request
+          skill_reload = user_with_skill.reload.skill
+          expect(skill_reload.name).to eq('professinal')
+        end
+      end
+
+      context 'define venue ranking for team' do
+        it 'define rank venue for team' do
+          make_request
+          team = Team.find_by(name: 'TeamA', tournament_id: tour.id)
+          expect(team).to be_present
+          expect(response.status).to eq(201)
+          expect(team['venue_ranking']).to be_present
+          expect(team['venue_ranking'].count).to eq(venue_ranking.count)
+          expect(team.status).to eq('registered')
         end
       end
 
@@ -96,18 +126,6 @@ describe 'TeamsApi' do
           expect(response.status).to eq(422)
         end
       end
-    end
-
-    it 'define rank venue for team' do
-      auth_headers = user.create_new_auth_token
-      post "/api/v1/tournaments/#{tour.id}/teams", params: { venue_ranking: venue_ranking, name: 'TeamA' }.to_json,
-                                                   headers: request_headers.merge(auth_headers)
-      team = Team.find_by(name: 'TeamA', tournament_id: tour.id)
-      expect(team).to be_present
-      expect(response.status).to eq(201)
-      expect(team['venue_ranking']).to be_present
-      expect(team['venue_ranking'].count).to eq(venue_ranking.count)
-      expect(team.status).to eq('registered')
     end
   end
 end
