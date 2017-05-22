@@ -1,0 +1,11 @@
+en:
+  active_admin:
+    filters:
+      predicates:
+        contains: contains
+        eq: equal
+    search_status:
+      headline: search status
+      current_scope: scope
+      current_filters: current filter
+      no_current_filters: show all

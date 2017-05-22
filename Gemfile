@@ -32,6 +32,7 @@ gem 'grape_devise_token_auth'
 
 gem 'ffaker' # to generate sample data
 gem 'rollbar'
+gem 'newrelic_rpm'
 
 gem 'roo'
 gem 'friendly_id'
@@ -40,6 +41,9 @@ gem 'auto_strip_attributes'
 
 gem 'google-api-client'
 gem 'dotenv-rails'
+
+# Add Summernote for HTML edit
+gem 'summernote-rails', '0.8.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
@@ -51,6 +55,7 @@ gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 
+gem 'bootstrap-sass'
 gem 'font-awesome-rails'
 
 # Use Uglifier as compressor for JavaScript assets
@@ -65,9 +70,13 @@ gem 'haml-rails', '~> 0.9'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+# Gem for facebook
+gem 'koala'
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-lodash'
   gem 'rails-assets-jquery.tablesorter'
+  gem 'rails-assets-tether', '>= 1.3.3'
 end
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -92,6 +101,8 @@ end
 
 group :test do
   gem 'shoulda-matchers'
+  gem 'capybara'
+  gem 'site_prism'
 end
 
 group :development do

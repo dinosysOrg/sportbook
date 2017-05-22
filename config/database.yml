@@ -83,3 +83,9 @@ production:
   database: sportbook_backend_production
   username: sportbook_backend
   password: <%= ENV['BACKEND_DATABASE_PASSWORD'] %>
+
+staging:
+  <<: *default
+  database: sportbook_backend_staging
+  username: sportbook_backend
+  password: <%= ENV['BACKEND_DATABASE_PASSWORD'] %>

@@ -5,7 +5,7 @@ namespace :sb do
       dry_run = args[:dry_run] != 'false'
 
       tournaments_mapping = Hash[*args[:tournaments_mapping].split('|')]
-      puts "==== TOURNAMENT MAPPING ===="
+      puts '==== TOURNAMENT MAPPING ===='
       puts tournaments_mapping.inspect
 
       ActiveRecord::Base.transaction do
@@ -33,13 +33,16 @@ namespace :sb do
             next
           end
 
-          user = User.find_or_create_by!(name: row[:name].squish, phone_number: row[:phone_number].squish) do |u|
-            u.skill_level = (row[:skill_level].gsub(/\s+/, "")).downcase.underscore
+          phone_number = row[:phone_number].squish
+          phone_number = "0#{phone_number}" if phone_number.starts_with?('0')
+          user = ApiUser.find_or_create_by!(name: row[:name].squish, phone_number: phone_number) do |u|
+            u.skill_level = row[:skill_level].gsub(/\s+/, '').downcase.underscore
             u.address = row[:address].try(:squish)
             u.note = row[:note].try(:squish)
 
             u.password = FFaker::Internet.password
-            u.email = FFaker::Internet.email #todo: remove devise email requirement
+            u.email = FFaker::Internet.email
+            u.uid = u.email
           end
 
           tournament_names = row[:tournaments].split(',').map(&:squish)
@@ -60,7 +63,7 @@ namespace :sb do
 
         puts "Imported #{players.count} players without issues."
         if dry_run
-          puts "!!!!! ROLLING BACK CHANGES !!!!"
+          puts '!!!!! ROLLING BACK CHANGES !!!!'
           raise ActiveRecord::Rollback
         end
       end

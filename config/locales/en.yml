@@ -1,5 +1,8 @@
 ---
 en:
+  welcome: Welcome
+  vietnamese: tiếng Việt
+  english: english
   add_to_calendar: Add To Calendar
   active_admin:
     dashboard: Dashboard
@@ -10,6 +13,7 @@ en:
     attributes:
       group:
         name: name
+        start_date: start date
         team: team
         teams: teams
         tournament: tournament
@@ -63,6 +67,13 @@ en:
       tournament: tournament
       user: user
       venue: venue
+      time_slot: time_slot
+    errors:
+      models:
+        time_slot:
+          attributes:
+            time:
+              slot_full: There can be only %{capacity} time slot at a time for 1 %{class}
   date:
     formats:
       long: "%Y-%m-%d"

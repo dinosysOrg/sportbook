@@ -16,6 +16,7 @@ namespace :sb do
         players_sheet.parse(
           stt: 'STT',
           group: 'Bảng đấu',
+          start_date: 'Ngày bắt đầu',
           match_code: 'Mã trận',
           team_a: 'Cơ thủ 1',
           team_b: 'Cơ thủ 2',
@@ -36,7 +37,10 @@ namespace :sb do
             next
           end
 
-          group = tournament.groups.find_or_create_by!(name: row[:group].squish)
+          group = tournament.groups.find_or_create_by!(name: row[:group].squish) do |g|
+            g.start_date = row[:start_date]
+          end
+
           venue = row[:venue] ? Venue.find_or_create_by!(name: row[:venue].squish) : nil
           _, team_a_order, team_b_order = row[:match_code].split('-')
 
@@ -65,23 +69,7 @@ namespace :sb do
             match.time = time
             match.venue = venue
             match.code = row[:match_code]
-            if row[:score]
-              if row[:score] =~ /\-/
-                match.score = row[:score]
-              elsif row[:score] =~ /bỏ cuộc|bị xử thua/
-                lost_team_names = row[:score].gsub(/bỏ cuộc|bị xử thua/, '').split('&')
-                if lost_team_names.size == 1
-                  lost_team_name = lost_team_names.first.strip
-                  if team_a.name == lost_team_name
-                    match.team_b_wins
-                  elsif team_b.name == lost_team_name
-                    match.team_a_wins
-                  else
-                    raise 'Could not match lost team!!!'
-                  end
-                end
-              end
-            end
+            match = process_score(match, row) if row[:score]
           end
         end
 
@@ -91,6 +79,35 @@ namespace :sb do
           raise ActiveRecord::Rollback
         end
       end
+    end
+
+    def process_note(match, raw_score)
+      match.note = raw_score
+
+      lost_team_name = process_lost_team_name(raw_score)
+      return match unless lost_team_name
+
+      if match.team_a.name == lost_team_name
+        match.team_b_wins
+      elsif match.team_b.name == lost_team_name
+        match.team_a_wins
+      else
+        raise 'Could not match lost team!!!'
+      end
+    end
+
+    def process_lost_team_name(raw_score)
+      lost_team_names = raw_score.gsub(/bỏ cuộc|bị xử thua/, '').split('&')
+      lost_team_names.size == 1 ? lost_team_names.first.strip : nil
+    end
+
+    def process_score(match, row)
+      if row[:score] =~ /\-/
+        match.score = row[:score]
+      elsif row[:score] =~ /bỏ cuộc|bị xử thua/
+        match = process_note(match, row[:score])
+      end
+      match
     end
   end
 end

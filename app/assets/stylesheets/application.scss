@@ -14,9 +14,16 @@
 
 @import 'jquery.tablesorter/theme.blue.scss';
 @import 'font-awesome';
+@import "bootstrap-sprockets";
+@import 'bootstrap';
 
 .groupsTable-groupName {
   text-align: center;
   font-weight: bold;
   background-color: lightyellow !important;
 }
+
+th {
+  text-transform: capitalize;
+}
+

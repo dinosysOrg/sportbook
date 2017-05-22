@@ -1,5 +1,8 @@
 ---
 vi:
+  welcome: Xin chào
+  vietnamese: tiếng Việt
+  english: english
   add_to_calendar: thêm lịch
   active_admin:
     dashboard: Dashboard
@@ -10,6 +13,7 @@ vi:
     attributes:
       group:
         name: tên
+        start_date: ngày bắt đầu
         team: đội
         teams: các đội
         tournament: giải đấu
@@ -27,15 +31,15 @@ vi:
         score: tỉ số
         score_a: số đội nhà
         score_b: số đội khách
-        team_a: đội nhà
-        team_b: đội khách
+        team_a: cơ thủ 1
+        team_b: cơ thủ 2
         time: thời gian
         tournament: giải đấu
         venue: địa điểm
         calendar_link: lịch
       player:
-        name: Name
-        phone_number: Phone number
+        name: tên
+        phone_number: số điện thoại
         tournament: giải đấu
         user: người dùng
       team:
@@ -63,6 +67,13 @@ vi:
       tournament: giải đấu
       user: người dùng
       venue: địa điểm
+      time_slot: Time Slot
+    errors:
+      models:
+        time_slot:
+          attributes:
+            time:
+              slot_full: Chỉ được %{capacity} slot cho mỗi %{class}
   date:
     formats:
       long: "%d-%m-%Y"
