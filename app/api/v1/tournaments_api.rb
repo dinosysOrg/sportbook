@@ -28,7 +28,6 @@ module V1
     get 'tournaments/:id/my-opponents' do
       team = Team.where(name: params[:name]).first
       teams = []
-      # total_rating << l.rating
       matches = Match.where(team_a_id: team.id).or(Match.where(team_b_id: team.id))
       matches.each do |m|
         Team.all.each do |t|
@@ -39,6 +38,8 @@ module V1
           end
         end
       end
+      return teams.to_json
+      debugger
     end
   end
 end
