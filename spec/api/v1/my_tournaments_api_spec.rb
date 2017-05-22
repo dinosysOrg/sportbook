@@ -9,7 +9,7 @@ describe 'MyTournamentsApi' do
 
     auth_headers = api_user.create_new_auth_token
 
-    get '/api/v1/my-tournaments', headers: request_headers.merge(auth_headers)
+    get '/api/v1/tournaments/my-tournaments', headers: request_headers.merge(auth_headers)
 
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:tournaments].count).to eq(1)
@@ -17,7 +17,7 @@ describe 'MyTournamentsApi' do
   end
 
   it 'returns error when user is not signed in' do
-    get '/api/v1/my-tournaments'
+    get '/api/v1/tournaments/my-tournaments'
     expect(response.status).to eq(401)
   end
 end

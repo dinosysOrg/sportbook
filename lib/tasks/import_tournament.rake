@@ -69,7 +69,7 @@ namespace :sb do
             match.time = time
             match.venue = venue
             match.code = row[:match_code]
-            match = process_score(match, row) if row[:score]
+            process_score(match, row) if row[:score]
           end
         end
 

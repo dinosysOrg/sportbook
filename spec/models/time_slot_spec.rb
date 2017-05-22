@@ -5,7 +5,6 @@ RSpec.describe TimeSlot, type: :model do
     describe 'generating TimeSlot' do
       it 'just generate 2 timeslots for each venue' do
         full_venue = create(:venue)
-
         create_list(:time_slot, Venue::CAPACITY, object: full_venue)
         extra_time_slot = full_venue.time_slots.build time: DateTime.now.at_beginning_of_hour
         expect(extra_time_slot).to_not be_valid

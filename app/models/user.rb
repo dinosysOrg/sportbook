@@ -8,6 +8,7 @@ class User < ApplicationRecord
   friendly_id :slug_info, use: [:slugged, :finders]
 
   has_many :players
+  belongs_to :skill
   has_many :teams, through: :players
   has_many :tournaments, through: :players
 
