@@ -22,13 +22,12 @@ describe 'TournamentsApi' do
 
 
   it 'user can view all upcoming opponent for a tour' do
-    create(:tournament ,  id: 2)
-    create(:team, id: 1, tournament_id: 2, name: "Thanh Tùng")
-    create(:team, id: 2, tournament_id: 2, name: "Thái Duy")
-    create(:team, id: 3, tournament_id: 2, name: "Nguyễn Hoàng Minh Tài")
-    create(:team, id: 4, tournament_id: 2, name: "Phương Thảo")
-    create(:team, id: 5, tournament_id: 2, name: "Nguyen Hoang Lam")
-    create(:team, id: 6, tournament_id: 2, name: "Nguyễn Nhật Thanh")
+    create(:team, id: 1, tournament_id: tour.id, name: "Thanh Tùng")
+    create(:team, id: 2, tournament_id: tour.id, name: "Thái Duy")
+    create(:team, id: 3, tournament_id: tour.id, name: "Nguyễn Hoàng Minh Tài")
+    create(:team, id: 4, tournament_id: tour.id, name: "Phương Thảo")
+    create(:team, id: 5, tournament_id: tour.id, name: "Nguyen Hoang Lam")
+    create(:team, id: 6, tournament_id: tour.id, name: "Nguyễn Nhật Thanh")
     create(:match, id: 1, team_a_id: 6, team_b_id: 1)
     create(:match, id: 2, team_a_id: 6, team_b_id: 2)
     create(:match, id: 3, team_a_id: 3, team_b_id: 6)
