@@ -38,8 +38,6 @@ module V1
           end
         end
       end
-      return teams.to_json
-      debugger
     end
   end
 end

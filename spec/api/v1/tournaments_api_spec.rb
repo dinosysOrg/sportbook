@@ -36,7 +36,6 @@ describe 'TournamentsApi' do
     get "/api/v1/tournaments/#{tour.id}/my-opponents", 
     params: { name: "Nguyễn Nhật Thanh" }
     expect(response.status).to eq(200)
-    expect(response)
-    debugger
+    expect(response.body.length).to eq(57)
   end
 end
