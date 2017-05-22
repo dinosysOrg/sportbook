@@ -25,11 +25,20 @@ module V1
 
 
     desc 'User can all upcoming components for a tour'
-    post 'tournaments/:id/my-opponents' do
-      debugger
-      tournament = Tournament.find_by_id(params[:id])
-      present tournament, with: Representers::TournamentRepresenter
-      debugger
+    get 'tournaments/:id/my-opponents' do
+      team = Team.where(name: params[:name]).first
+      teams = []
+      # total_rating << l.rating
+      matches = Match.where(team_a_id: team.id).or(Match.where(team_b_id: team.id))
+      matches.each do |m|
+        Team.all.each do |t|
+          if t.id == m.team_b_id || t.id == m.team_a_id
+            if t.name != params[:name]
+              teams << t.name 
+            end
+          end
+        end
+      end
     end
   end
 end
