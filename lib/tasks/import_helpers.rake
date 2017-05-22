@@ -1,5 +1,5 @@
 namespace :sb do
-  task :require_tournament, [:tournament_id] => [:environment] do |t, args|
+  task :require_tournament, [:tournament_id] => [:environment] do |_t, args|
     tournament_id = args[:tournament_id]
     unless tournament_id
       puts 'Please provide TOURNAMENT_ID: rake "sb:import:players[TOURNAMENT_ID, DRY_RUN]"'
@@ -13,7 +13,7 @@ namespace :sb do
     end
   end
 
-  task :confirm_dry_run, [:tournament_id, :dry_run] do |t, args|
+  task :confirm_dry_run, [:tournament_id, :dry_run] do |_t, args|
     dry_run = args[:dry_run] != 'false'
     if dry_run
       puts '!!!!! THIS IS A DRY RUN !!!!!'
