@@ -1,7 +1,7 @@
 namespace :sb do
   namespace :remove do
     desc 'Remove a tournament data'
-    task :tournament, [:tournament_id, :dry_run] => [:environment, :require_tournament, :confirm_dry_run] do |t, args|
+    task :tournament, [:tournament_id, :dry_run] => [:environment, :require_tournament, :confirm_dry_run] do |_t, args|
       tournament_id = args[:tournament_id]
       dry_run = args[:dry_run] != 'false'
 
@@ -24,7 +24,7 @@ namespace :sb do
         tournament.groups.destroy_all
 
         if dry_run
-          puts "Rolling back changes."
+          puts 'Rolling back changes.'
           raise ActiveRecord::Rollback
         end
       end

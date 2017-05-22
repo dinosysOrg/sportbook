@@ -1,7 +1,7 @@
 namespace :sb do
   namespace :import do
     desc 'Import players for a tournament'
-    task :players, [:tournaments_mapping, :dry_run] => [:environment, :confirm_dry_run] do |t, args|
+    task :players, [:tournaments_mapping, :dry_run] => [:environment, :confirm_dry_run] do |_t, args|
       dry_run = args[:dry_run] != 'false'
 
       tournaments_mapping = Hash[*args[:tournaments_mapping].split('|')]

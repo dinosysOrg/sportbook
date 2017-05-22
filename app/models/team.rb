@@ -11,7 +11,6 @@ class Team < ApplicationRecord
   has_many :time_slots, as: :object
   has_many :pages
 
-
   accepts_nested_attributes_for :groups_teams, allow_destroy: true
 
   validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
