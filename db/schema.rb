@@ -9,8 +9,8 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
+ActiveRecord::Schema.define(version: 20170518085351) do
 
-ActiveRecord::Schema.define(version: 20170516075229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,12 @@ ActiveRecord::Schema.define(version: 20170516075229) do
     t.index ["user_id"], name: "index_players_on_user_id", using: :btree
   end
 
+  create_table "skills", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "teams", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at",                 null: false
@@ -94,10 +100,10 @@ ActiveRecord::Schema.define(version: 20170516075229) do
   create_table "time_slots", force: :cascade do |t|
     t.datetime "time"
     t.boolean  "available"
-    t.integer  "venue_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["venue_id"], name: "index_time_slots_on_venue_id", using: :btree
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "object_id"
+    t.string   "object_type"
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -138,6 +144,7 @@ ActiveRecord::Schema.define(version: 20170516075229) do
     t.string   "slug"
     t.string   "facebook_uid"
     t.json     "facebook_credentials"
+    t.integer  "skill_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
@@ -157,4 +164,5 @@ ActiveRecord::Schema.define(version: 20170516075229) do
   add_foreign_key "players", "tournaments"
   add_foreign_key "players", "users"
   add_foreign_key "teams", "tournaments"
+  add_foreign_key "users", "skills"
 end
