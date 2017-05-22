@@ -89,16 +89,16 @@ describe 'TeamsApi' do
       end
 
       context 'check skill for user' do
-        let(:params) { { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: name, skill_id: skill1.id } }
+        let(:params) { { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking, name: name, skill_id: another_skill.id } }
         let(:make_request) do
           auth_headers_user_skill = user_with_skill.create_new_auth_token
           post "/api/v1/tournaments/#{tour.id}/teams", params: params.to_json,
                                                        headers: request_headers.merge(auth_headers_user_skill)
         end
 
-        let(:user_with_skill) { create(:api_user, email: 'zi@dinosys.com', password: 'password', skill_id: skill.id) }
-        let(:skill) { create(:skill, name: 'professinal') }
-        let(:skill1) { create(:skill, name: 'good') }
+        let(:user_with_skill) { create(:api_user, email: 'zi@dinosys.com', password: 'password', skill_id: assigned_skill.id) }
+        let(:assigned_skill) { create(:skill, name: 'professinal') }
+        let(:another_skill) { create(:skill, name: 'good') }
 
         it 'doesnt add skill for user if user already has skill' do
           make_request
