@@ -33,7 +33,7 @@ describe 'TournamentsApi' do
     create(:match, id: 3, team_a_id: 3, team_b_id: 6)
     create(:match, id: 4, team_a_id: 4, team_b_id: 5)
     get "/api/v1/tournaments/#{tour.id}/my-opponents", 
-    params: { name: "Nguyễn Nhật Thanh" }
+    params: { team: Team.find(6) }
     expect(response.status).to eq(200)
     expect(response.body.length).to eq(57)
   end

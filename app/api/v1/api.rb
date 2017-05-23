@@ -17,6 +17,7 @@ module V1
     mount TournamentsApi
     mount TeamsApi
     mount SkillsApi
+    mount MatchesApi
 
     add_swagger_documentation \
       info: {

@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     resources :groups, only: [:index]
   end
 
+  get 'api/v1/matches', to: 'matches#index'
+
   post 'api/v1/auth/sign_in_with_facebook', to: 'auth_api#create'
   mount_devise_token_auth_for 'ApiUser', at: 'api/v1/auth', controllers: { passwords: 'passwords' }
 
