@@ -42,6 +42,16 @@ class TimeSlotService
       end
     end
 
+    def generate_invitations_for_expiring_matches
+      expiring_groups = Group.where('start_date <= ?', Date.tomorrow)
+      expiring_groups.joins(:matches).where(matches: { time: nil }).each do |group|
+        group.matches.each do |match|
+          chosen_time, chosen_venue_id = choose_time_slot match.team_a, match.team_b
+          match.update(venue_id: chosen_venue_id, time: chosen_time)
+        end
+      end
+    end
+
     private
 
     def generate_time_slots_from_preferred_time_blocks(date_range, preferred_time_blocks)

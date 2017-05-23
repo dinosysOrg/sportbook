@@ -16,7 +16,6 @@ class Team < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
   validates :status, presence: true
   validates :tournament, presence: true
-  validates :venue_ranking, presence: true
 
   enum status: { registered: 0, paid: 1 }
 
