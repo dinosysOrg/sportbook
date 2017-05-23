@@ -27,7 +27,7 @@ module V1
     end
 
 
-    desc 'User can all upcoming components for a tour'
+    desc 'User can view all the upcoming opponents for a tournament'
     get 'tournaments/:id/my-opponents' do
       team = Team.where(name: params[:name], tournament_id: params[:id]).first
       teams = []
