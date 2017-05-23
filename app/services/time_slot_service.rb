@@ -20,16 +20,26 @@ class TimeSlotService
     end
 
     def choose_time_slot(team_a, team_b)
-      general_team_time_slot = common_team_time_slot team_a, team_b
+      time_slots = common_time_slots team_a, team_b
 
-      return nil if general_team_time_slot.empty?
+      return nil if time_slots.empty?
 
-      venue_ranking = team_a.venue_ranking & team_b.venue_ranking
-      venue = Venue.find(venue_ranking.first)
+      combined_venue_ranking = combine_venue_rankings team_a.venue_ranking, team_b.venue_ranking
+      Venue.find(combined_venue_ranking).each do |venue|
+        result = find_time_slots_at_venue venue, time_slots
+        return result unless result.nil?
+      end
+    end
 
-      general_time_slot = venue.time_slots.available.where(time: general_team_time_slot).pluck(:time).uniq
-
-      [general_time_slot.first, venue.id]
+    def combine_venue_rankings(venue_ranking_a, venue_ranking_b)
+      venue_ranking_a.map.with_index do |venue_id, index|
+        index_b = venue_ranking_b.index(venue_id)
+        index_b ? [venue_id, index + venue_ranking_b.index(venue_id)] : nil
+      end.compact.sort_by do |_venue_id, point|
+        point
+      end.map do |venue_id, _point|
+        venue_id
+      end
     end
 
     private
@@ -71,11 +81,17 @@ class TimeSlotService
       end
     end
 
-    def common_team_time_slot(team_a, team_b)
-      team_a_time_slots = team_a.time_slots.available.pluck(:time)
-      team_b_time_slots = team_b.time_slots.available.pluck(:time)
+    def common_time_slots(team_a, team_b)
+      TimeSlot.joins('INNER JOIN time_slots AS time_slots_b ON time_slots.time = time_slots_b.time')
+              .where(object: team_a, available: true)
+              .where(time_slots_b: { object_type: team_b.class.name, object_id: team_b.id, available: true })
+              .pluck(:time)
+              .uniq
+    end
 
-      team_a_time_slots & team_b_time_slots
+    def find_time_slots_at_venue(venue, time_slots)
+      available_time_slot = venue.time_slots.available.where(time: time_slots).order(:time).pluck(:time).first
+      available_time_slot.nil? ? nil : [available_time_slot, venue.id]
     end
   end
 end

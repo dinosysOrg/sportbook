@@ -103,8 +103,18 @@ describe TimeSlotService do
     end
   end
 
+  describe 'combine venue ranking' do
+    it 'works' do
+      result = TimeSlotService.combine_venue_rankings([1, 2, 3], [2, 3, 1])
+      expect(result).to eq([2, 1, 3])
+
+      result = TimeSlotService.combine_venue_rankings([1, 2, 3], [2, 1])
+      expect(result).to eq([1, 2])
+    end
+  end
+
   describe 'find a time slot for a match' do
-    let(:venue) { create(:venue) }
+    let!(:venue) { create(:venue) }
     let(:tournament) { create(:tournament, start_date: today, end_date: Date.tomorrow) }
     let(:team_a) { create(:team, tournament: tournament, venue_ranking: [venue.id]) }
     let(:team_b) { create(:team, tournament: tournament, venue_ranking: [venue.id]) }
@@ -129,6 +139,48 @@ describe TimeSlotService do
 
         result = TimeSlotService.choose_time_slot team_a, team_b
         expect(result).to be_nil
+      end
+    end
+
+    context 'when many time slots match' do
+      it 'returns the earliest time slot' do
+        later_overlapping_time = Time.new(today.year, today.month, today.day, 11)
+        create(:time_slot, object: team_a, time: later_overlapping_time)
+        create(:time_slot, object: team_b, time: later_overlapping_time)
+
+        earlier_overlapping_time = Time.new(today.year, today.month, today.day, 9)
+        create(:time_slot, object: team_a, time: earlier_overlapping_time)
+        create(:time_slot, object: team_b, time: earlier_overlapping_time)
+
+        chosen_time, chosen_venue = TimeSlotService.choose_time_slot team_a, team_b
+        expect(chosen_time).to eq(earlier_overlapping_time)
+        expect(chosen_venue).to eq(venue.id)
+      end
+    end
+
+    context 'when many time slots of many venues match' do
+      let!(:venue_1) { create(:venue) }
+      let!(:venue_2) { create(:venue) }
+      let!(:venue_3) { create(:venue) }
+      let(:team_a) { create(:team, tournament: tournament, venue_ranking: [venue_1.id, venue_2.id, venue_3.id]) }
+      let(:team_b) { create(:team, tournament: tournament, venue_ranking: [venue_2.id, venue_3.id, venue_1.id]) }
+
+      it 'returns the earliest time slot' do
+        later_overlapping_time = Time.new(today.year, today.month, today.day, 11)
+        create(:time_slot, object: team_a, time: later_overlapping_time)
+        create(:time_slot, object: team_b, time: later_overlapping_time)
+
+        earlier_overlapping_time = Time.new(today.year, today.month, today.day, 9)
+        create(:time_slot, object: team_a, time: earlier_overlapping_time)
+        create(:time_slot, object: team_b, time: earlier_overlapping_time)
+
+        venue_1.time_slots.where(time: earlier_overlapping_time).update_all(available: false)
+        venue_2.time_slots.where(time: later_overlapping_time).update_all(available: false)
+        venue_2.time_slots.where(time: earlier_overlapping_time).update_all(available: false)
+
+        chosen_time, chosen_venue = TimeSlotService.choose_time_slot team_a, team_b
+        expect(chosen_time).to eq(later_overlapping_time)
+        expect(chosen_venue).to eq(venue_1.id)
       end
     end
   end
