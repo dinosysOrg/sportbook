@@ -1,16 +1,20 @@
 class TimeSlot < ApplicationRecord
-  belongs_to :venue
   validate :check_time_slots_for_each_venue
+  belongs_to :object, polymorphic: true
 
   def check_time_slots_for_each_venue
-    time = self.time
-    venue_id = self.venue_id
-    time_slots = TimeSlot.where('time=? and venue_id=?', time, venue_id)
-    return unless time_slots.count >= Venue::CAPACITY
+    current_time_slots_count = TimeSlot.where(time: time, object: object).count
+    return unless current_time_slots_count >= object.class::CAPACITY
 
+    add_slot_full_error
+  end
+
+  private
+
+  def add_slot_full_error
     errors.add(:time,
                :slot_full,
-               capacity: Venue::CAPACITY,
-               class: I18n.t("activerecord.models.#{Venue.name.downcase}").downcase)
+               capacity: object.class::CAPACITY,
+               class: I18n.t("activerecord.models.#{object.class.name.downcase}").downcase)
   end
 end

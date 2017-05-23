@@ -1,4 +1,6 @@
 class Team < ApplicationRecord
+  CAPACITY = 1
+
   belongs_to :tournament
   has_many :players, dependent: :destroy
   has_many :users, through: :players
@@ -6,6 +8,7 @@ class Team < ApplicationRecord
   has_many :matches_as_team_b, foreign_key: 'team_b_id', class_name: 'Match'
   has_many :groups_teams
   has_many :groups, through: :groups_teams
+  has_many :time_slots, as: :object
   has_many :pages
 
   accepts_nested_attributes_for :groups_teams, allow_destroy: true

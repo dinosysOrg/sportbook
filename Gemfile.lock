@@ -298,6 +298,7 @@ GEM
     nio4r (2.0.0)
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
+    oj (2.12.14)
     orm_adapter (0.5.0)
     os (0.9.6)
     overcommit (0.39.1)
@@ -509,6 +510,7 @@ DEPENDENCIES
   letter_opener
   listen (~> 3.0.5)
   newrelic_rpm
+  oj (~> 2.12.14)
   overcommit
   pg (~> 0.18)
   pg_search

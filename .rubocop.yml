@@ -7,6 +7,9 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
+Style/TrailingWhitespace:
+  Enabled: true
+
 Metrics/BlockLength:
   Enabled: false
 

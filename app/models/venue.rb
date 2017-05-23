@@ -3,7 +3,7 @@ class Venue < ApplicationRecord
   CLOSING_HOUR = 24
   CAPACITY = 2
   has_many :matches
-  has_many :time_slots
+  has_many :time_slots, as: :object
   auto_strip_attributes :google_calendar_name
 
   validates :name, presence: true, uniqueness: true

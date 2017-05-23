@@ -10,16 +10,19 @@ module V1
       present tournaments, with: Representers::TournamentsRepresenter
     end
 
-    desc 'Get all my tournaments'
-    get 'my-tournaments' do
+    desc 'Get all my tournaments', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' }
+    ]
+
+    get 'tournaments/my-tournaments' do
       authenticate_api_user!
       tournaments = current_api_user.tournaments
       present tournaments, with: Representers::TournamentsRepresenter
     end
 
     desc 'Get one tournament'
-    get 'tournaments/:id' do
-      tournament = Tournament.find_by_id(params[:id])
+    get 'tournaments/:tournament_id' do
+      tournament = Tournament.find_by_id(params[:tournament_id])
       present tournament, with: Representers::TournamentRepresenter
     end
 
