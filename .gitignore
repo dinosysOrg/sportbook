@@ -30,5 +30,3 @@
 # Ignore idea file
 .idea/
 ~*
-
-.ruby-gemset
