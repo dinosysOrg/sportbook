@@ -80,8 +80,9 @@ describe TimeSlotService do
           Time.new(today.year, today.month, today.day, 9),
           Time.new(today.year, today.month, today.day, 10),
           Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 9),
-          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10),
-        ])
+          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10)
+        ]
+      )
     end
 
     it 'excludes unavailable time slots' do
@@ -96,8 +97,39 @@ describe TimeSlotService do
         [
           Time.new(today.year, today.month, today.day, 9),
           Time.new(today.year, today.month, today.day, 10),
-          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10),
-        ])
+          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10)
+        ]
+      )
+    end
+  end
+
+  describe 'find a time slot for a match' do
+    let(:venue) { create(:venue) }
+    let(:tournament) { create(:tournament, start_date: today, end_date: Date.tomorrow) }
+    let(:team_a) { create(:team, tournament: tournament, venue_ranking: [venue.id]) }
+    let(:team_b) { create(:team, tournament: tournament, venue_ranking: [venue.id]) }
+    let(:today) { Date.today }
+
+    context 'when only 1 time slot matches' do
+      it 'returns time slot and venue' do
+        overlapping_time = Time.new(today.year, today.month, today.day, 9)
+        create(:time_slot, object: team_a, time: overlapping_time)
+        create(:time_slot, object: team_b, time: overlapping_time)
+
+        chosen_time, chosen_venue = TimeSlotService.choose_time_slot team_a, team_b
+        expect(chosen_time).to eq(overlapping_time)
+        expect(chosen_venue).to eq(venue.id)
+      end
+    end
+
+    context 'when no time slot matches' do
+      it 'returns nil' do
+        create(:time_slot, object: team_a, time: Time.new(today.year, today.month, today.day, 9))
+        create(:time_slot, object: team_b, time: Time.new(today.year, today.month, today.day, 10))
+
+        result = TimeSlotService.choose_time_slot team_a, team_b
+        expect(result).to be_nil
+      end
     end
   end
 end

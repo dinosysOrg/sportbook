@@ -19,6 +19,19 @@ class TimeSlotService
       end
     end
 
+    def choose_time_slot(team_a, team_b)
+      general_team_time_slot = common_team_time_slot team_a, team_b
+
+      return nil if general_team_time_slot.empty?
+
+      venue_ranking = team_a.venue_ranking & team_b.venue_ranking
+      venue = Venue.find(venue_ranking.first)
+
+      general_time_slot = venue.time_slots.available.where(time: general_team_time_slot).pluck(:time).uniq
+
+      [general_time_slot.first, venue.id]
+    end
+
     private
 
     def generate_time_slots_from_preferred_time_blocks(date_range, preferred_time_blocks)
@@ -56,6 +69,13 @@ class TimeSlotService
       object.class::CAPACITY.times do
         object.time_slots.create(time: time, available: true)
       end
+    end
+
+    def common_team_time_slot(team_a, team_b)
+      team_a_time_slots = team_a.time_slots.available.pluck(:time)
+      team_b_time_slots = team_b.time_slots.available.pluck(:time)
+
+      team_a_time_slots & team_b_time_slots
     end
   end
 end
