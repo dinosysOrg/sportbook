@@ -29,19 +29,17 @@ module V1
 
     desc 'User can all upcoming components for a tour'
     get 'tournaments/:id/my-opponents' do
-      team = Team.where(name: params[:name]).first
+      team = Team.where(name: params[:name], tournament_id: params[:id]).first
       teams = []
-      # total_rating << l.rating
       matches = Match.where(team_a_id: team.id).or(Match.where(team_b_id: team.id))
       matches.each do |m|
-        Team.all.each do |t|
-          if t.id == m.team_b_id || t.id == m.team_a_id
-            if t.name != params[:name]
-              teams << t.name 
-            end
-          end
+        if m.team_a.name == params[:name]
+          teams << Team.where(name: m.team_b.name).first.name
+        else
+          teams << Team.where(name: m.team_a.name).first.name
         end
       end
+      return teams.to_json
     end
   end
 end
