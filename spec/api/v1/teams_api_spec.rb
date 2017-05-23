@@ -134,7 +134,7 @@ describe 'TeamsApi' do
       auth_headers = api_user.create_new_auth_token
       team = create(:team)
 
-      expect(TimeSlotService).to receive(:possible_time_slots)
+      expect(TimeSlotService).to receive(:possible_time_slots).and_call_original
 
       get "/api/v1/teams/#{team.id}/timeslots", params: {}.to_json,
                                                 headers: request_headers.merge(auth_headers)
