@@ -3,7 +3,9 @@ namespace :generate do
   task sample_data: :environment do
     [
       { name: 'Duy Nguyen', email: 'duy.nguyen@dinosys.vn' },
-      { name: 'Zi', email: 'hungryzi@gmail.com' }
+      { name: 'Zi', email: 'hungryzi@gmail.com' },
+      { name: 'Hoan Nguyen', email: 'hoan.nguyen@dinosys.vn' },
+      { name: 'Nhat Nguyen', email: 'nhat.nguyen@dinosys.vn' }
     ].each do |admin|
       u = AdminUser.find_or_create_by!(email: admin[:email], name: admin[:name]) do |new_user|
         new_user.password = 'password'
@@ -11,7 +13,7 @@ namespace :generate do
         new_user.uid = new_user.email
       end
 
-      # u.roles << Role.admin_role
+      u.roles << Role.admin_role
     end
 
     [
