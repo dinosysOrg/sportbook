@@ -50,7 +50,8 @@ namespace :sb do
           tournament_names.each do |name|
             team = Team.find_or_create_by!(
               name: user.name,
-              tournament_id: tournaments_mapping[name]
+              tournament_id: tournaments_mapping[name],
+              status: :paid
             )
 
             players << Player.find_or_create_by!(
