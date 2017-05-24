@@ -74,6 +74,8 @@ gem 'jquery-rails'
 # Gem for facebook
 gem 'koala'
 
+# Gem for State Machine
+gem 'aasm'
 source 'https://rails-assets.org' do
   gem 'rails-assets-lodash'
   gem 'rails-assets-jquery.tablesorter'

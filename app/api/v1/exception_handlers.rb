@@ -36,6 +36,13 @@ module V1
         )
       end
 
+      rescue_from AASM::InvalidTransition do |e|
+        error!(
+          { errors: e.message, status_code: 422 },
+          422
+        )
+      end
+
       rescue_from :all do |e|
         raise e if Rails.env.development? || Rails.env.test?
 

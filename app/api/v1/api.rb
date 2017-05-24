@@ -17,7 +17,7 @@ module V1
     mount TournamentsApi
     mount TeamsApi
     mount SkillsApi
-
+    mount InvitationsApi
     add_swagger_documentation \
       info: {
         title: 'The API title to be displayed on the API homepage.',
