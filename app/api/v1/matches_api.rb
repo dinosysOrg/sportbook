@@ -6,13 +6,13 @@ module V1
 
     desc 'Player can see all upcoming confirmed matches'
     get 'matches' do
-      #Case 1: return list mathes
+      #Case 1: return list confirmed matches
       if params[:user_id] == nil && params[:tournament_id] == nil
         matches = Match.all
         return matches.to_json()
       end
       matches = []
-      #Case 2: Return list mathes with user_id
+      #Case 2: Return list confirmed matches with user_id
       if params[:user_id] == nil && params[:tournament_id] != nil || 
         params[:user_id] != nil && params[:tournament_id] != nil
         Match.all.each do |match|
@@ -22,7 +22,7 @@ module V1
           end
         end
       end
-      #Case 3: Return list matches with tournament
+      #Case 3: Return list confirmed matches with tournament
       if params[:user_id] != nil && params[:tournament_id] == nil 
         user = User.find(params[:user_id])
         if user.teams == nil

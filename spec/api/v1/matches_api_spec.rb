@@ -14,7 +14,7 @@ describe 'MatchesApi' do
     create(:match, id: 4, team_a_id: 4, team_b_id: 5)
     create(:user)
     get "/api/v1/matches", 
-    params: { user_id: user.id , tournament_id: tour.id  }
+    params: { user_id: nil , tournament_id: 4  }
     expect(response.status).to eq(200)
     expect(response.body)
   end
