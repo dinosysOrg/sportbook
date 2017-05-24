@@ -7,6 +7,8 @@ class TimeSlot < ApplicationRecord
   scope :available, -> { where(available: true) }
 
   def check_time_slots_for_each_venue
+    return unless object
+
     current_time_slots_count = TimeSlot.where(time: time, object: object).count
     return unless current_time_slots_count >= object.class::CAPACITY
 
