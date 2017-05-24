@@ -1,0 +1,6 @@
+---
+en:
+  admin_mailer:
+    notify_unconfirmed_matches:
+      subject: Matches without suitable time
+      please_arrange_these_matches_manually: Please arrange the matches manually
