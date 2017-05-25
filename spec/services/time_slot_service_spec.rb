@@ -3,7 +3,7 @@ describe TimeSlotService do
     it 'generates all time slots in that date range and hour range' do
       date_range = (Date.new(2017, 5, 15)..Date.new(2017, 5, 16)).to_a
       venues = create_list(:venue, 3)
-      TimeSlotService.instance.create_from_date_and_hour_range(venues, (9..11).to_a, date_range)
+      TimeSlotService.create_from_date_and_hour_range(venues, (9..11).to_a, date_range)
       venues.each do |venue|
         expect(venue.time_slots.pluck(:time)).to match_array(
           [
@@ -36,7 +36,7 @@ describe TimeSlotService do
 
     it 'generates time slot array' do
       team = create(:team)
-      TimeSlotService.instance.create_from_preferred_time_blocks([team], date_range, preferred_time_blocks)
+      TimeSlotService.create_from_preferred_time_blocks([team], date_range, preferred_time_blocks)
       expect(team.time_slots.pluck(:time)).to match_array(
         [
           Time.new(2017, 5, 15, 9),
@@ -55,6 +55,49 @@ describe TimeSlotService do
           Time.new(2017, 5, 23, 10)
         ]
       )
+    end
+  end
+
+  describe 'find available timeslots for team' do
+    let!(:venue) { create(:venue) }
+    let(:today) { Date.today }
+    let(:tomorrow) { Date.tomorrow }
+    let(:tournament) { create(:tournament, start_date: Date.today, end_date: 1.days.from_now) }
+    let(:team) { create(:team, tournament: tournament) }
+
+    before do
+      TimeSlotService.create_from_date_and_hour_range([team], (9..10).to_a, (tournament.start_date..tournament.end_date))
+    end
+
+    it 'returns the available time slots' do
+      returned_venues = TimeSlotService.possible_time_slots team
+      returned_venue = returned_venues[0]
+
+      expect(returned_venue.id).to eq(venue.id)
+      expect(returned_venue.name).to eq(venue.name)
+      expect(returned_venue.time_slots).to match_array(
+        [
+          Time.new(today.year, today.month, today.day, 9),
+          Time.new(today.year, today.month, today.day, 10),
+          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 9),
+          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10),
+        ])
+    end
+
+    it 'excludes unavailable time slots' do
+      venue.time_slots.where(time: Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 9)).update_all(available: false)
+
+      returned_venues = TimeSlotService.possible_time_slots team
+      returned_venue = returned_venues[0]
+
+      expect(returned_venue.id).to eq(venue.id)
+      expect(returned_venue.name).to eq(venue.name)
+      expect(returned_venue.time_slots).to match_array(
+        [
+          Time.new(today.year, today.month, today.day, 9),
+          Time.new(today.year, today.month, today.day, 10),
+          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10),
+        ])
     end
   end
 end

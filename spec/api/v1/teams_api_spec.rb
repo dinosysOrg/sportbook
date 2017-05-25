@@ -127,4 +127,20 @@ describe 'TeamsApi' do
       end
     end
   end
+
+  describe '#time_slots' do
+    it 'returns the available time slots' do
+      api_user = create(:api_user)
+      auth_headers = api_user.create_new_auth_token
+      team = create(:team)
+
+      expect(TimeSlotService).to receive(:possible_time_slots).and_call_original
+
+      get "/api/v1/teams/#{team.id}/time_slots", params: { type: 'available' }.as_json,
+                                                 headers: request_headers.merge(auth_headers)
+
+      expect(response.status).to eq(200)
+      expect(json_response[:_embedded][:venues]).to_not be_nil
+    end
+  end
 end
