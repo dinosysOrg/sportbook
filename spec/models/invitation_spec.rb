@@ -10,7 +10,7 @@ RSpec.describe Invitation, type: :model do
 
   describe 'Validation' do
     let(:venue) { create(:venue) }
-	  let(:match) { create(:match) }
+    let(:match) { create(:match) }
     let(:time_slot) { create(:time_slot, object: venue, available: true) }
 
     describe 'creating Invitation' do
@@ -20,14 +20,14 @@ RSpec.describe Invitation, type: :model do
         end
         extra_invitation = match.invitations.build
         expect(extra_invitation).to_not be_valid
-        expect(extra_invitation.errors[:match_id]).to include("There can be only 3 invitations for each match")
+        expect(extra_invitation.errors[:match_id]).to include('There can be only 3 invitations for each match')
       end
 
       it 'does not allow creating new invitation if there is already a pending one' do
         create :invitation, :pending, match: match
         new_invitation = match.invitations.build
         expect(new_invitation).to_not be_valid
-        expect(new_invitation.errors[:match_id]).to include("There is one pending invitation")
+        expect(new_invitation.errors[:match_id]).to include('There is one pending invitation')
       end
     end
 

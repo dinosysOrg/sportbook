@@ -80,8 +80,9 @@ describe TimeSlotService do
           Time.new(today.year, today.month, today.day, 9),
           Time.new(today.year, today.month, today.day, 10),
           Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 9),
-          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10),
-        ])
+          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10)
+        ]
+      )
     end
 
     it 'excludes unavailable time slots' do
@@ -96,8 +97,9 @@ describe TimeSlotService do
         [
           Time.new(today.year, today.month, today.day, 9),
           Time.new(today.year, today.month, today.day, 10),
-          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10),
-        ])
+          Time.new(tomorrow.year, tomorrow.month, tomorrow.day, 10)
+        ]
+      )
     end
   end
 end

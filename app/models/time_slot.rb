@@ -2,7 +2,7 @@ class TimeSlot < ApplicationRecord
   validate :check_time_slots_for_each_venue
   belongs_to :object, polymorphic: true
 
-  scope :available, ->{ where(available: true) }
+  scope :available, (-> { where(available: true) })
 
   def check_time_slots_for_each_venue
     current_time_slots_count = TimeSlot.where(time: time, object: object).count

@@ -16,22 +16,22 @@ class Invitation < ApplicationRecord
   validate :check_invitation_count
   validate :check_existing_pending_invitation, on: :create
 
-  aasm :column => :status, :enum => true do
-    state :created, :initial => true
+  aasm column: :status, enum: true do
+    state :created, initial: true
     state :pending
     state :accepted
     state :rejected
 
     event :tranform_pending do
-      transitions :from => :created, :to => :pending
+      transitions from: :created, to: :pending
     end
 
     event :accept do
-      transitions :from => :pending, :to => :accepted
+      transitions from: :pending, to: :accepted
     end
 
     event :reject do
-      transitions :from => :pending, :to => :rejected
+      transitions from: :pending, to: :rejected
     end
   end
 
@@ -39,7 +39,7 @@ class Invitation < ApplicationRecord
 
   def check_invitation_count
     return unless match_id
-    count_invitation = Match.find(self.match_id).invitations_count
+    count_invitation = Match.find(match_id).invitations_count
     return unless count_invitation >= Match::MAX_INVITATIONS_COUNT
 
     add_invation_error

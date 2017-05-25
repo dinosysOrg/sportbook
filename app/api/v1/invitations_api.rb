@@ -31,8 +31,8 @@ module V1
         error!('You are not in the team that is requresting to create invitation', 405)
       end
 
-      invitation = Invitation.create!( status: 'created', time: params[:time],
-													             invitee_id: invitee_id, inviter_id: inviter_id, match_id: params[:match_id], venue_id: params[:venue_id] )
+      invitation = Invitation.create!(status: 'created', time: params[:time], invitee_id: invitee_id, inviter_id: inviter_id,
+                                      match_id: params[:match_id], venue_id: params[:venue_id])
       team = Team.find(invitation.invitee_id)
       team.users.each do |user|
         ApplicationMailer.mailer(user.email).deliver_now
