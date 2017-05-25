@@ -26,7 +26,7 @@ class Invitation < ApplicationRecord
       transitions from: :created, to: :pending
     end
 
-    event :accept do
+    event :accept, after_commit: :update_time_for_match do
       transitions from: :pending, to: :accepted
     end
 
@@ -36,6 +36,11 @@ class Invitation < ApplicationRecord
   end
 
   private
+
+  def update_time_for_match
+    match = Match.find(match_id)
+    match.update_attributes!(time: time)
+  end
 
   def check_invitation_count
     return unless match_id

@@ -64,6 +64,13 @@ describe 'InvitationsApi' do
       end
     end
 
+    context 'update for this match that is belong to invitation' do
+      it 'success 200' do
+        accept_request
+        expect(pending_invitation.match.time.at_beginning_of_hour).to eq(pending_invitation.time.at_beginning_of_hour)
+      end
+    end
+
     context 'cant accept invitation that already is accepted' do
       it 'throws 422' do
         pending_invitation.accept!
