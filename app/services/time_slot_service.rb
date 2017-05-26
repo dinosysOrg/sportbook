@@ -19,6 +19,39 @@ class TimeSlotService
       end
     end
 
+    def choose_time_slot(team_a, team_b)
+      time_slots = common_time_slots team_a, team_b
+
+      return nil if time_slots.empty?
+
+      combined_venue_ranking = combine_venue_rankings team_a.venue_ranking, team_b.venue_ranking
+      Venue.find(combined_venue_ranking).each do |venue|
+        result = find_time_slots_at_venue venue, time_slots
+        return result unless result.nil?
+      end
+    end
+
+    def combine_venue_rankings(venue_ranking_a, venue_ranking_b)
+      venue_ranking_a.map.with_index do |venue_id, index|
+        index_b = venue_ranking_b.index(venue_id)
+        index_b ? [venue_id, index + venue_ranking_b.index(venue_id)] : nil
+      end.compact.sort_by do |_venue_id, point|
+        point
+      end.map do |venue_id, _point|
+        venue_id
+      end
+    end
+
+    def generate_invitations_for_expiring_matches
+      expiring_groups = Group.where('start_date <= ?', Date.tomorrow)
+      expiring_groups.joins(:matches).where(matches: { time: nil }).each do |group|
+        group.matches.each do |match|
+          chosen_time, chosen_venue_id = choose_time_slot match.team_a, match.team_b
+          match.update(venue_id: chosen_venue_id, time: chosen_time)
+        end
+      end
+    end
+
     private
 
     def generate_time_slots_from_preferred_time_blocks(date_range, preferred_time_blocks)
@@ -56,6 +89,19 @@ class TimeSlotService
       object.class::CAPACITY.times do
         object.time_slots.create(time: time, available: true)
       end
+    end
+
+    def common_time_slots(team_a, team_b)
+      TimeSlot.joins('INNER JOIN time_slots AS time_slots_b ON time_slots.time = time_slots_b.time')
+              .where(object: team_a, available: true)
+              .where(time_slots_b: { object_type: team_b.class.name, object_id: team_b.id, available: true })
+              .pluck(:time)
+              .uniq
+    end
+
+    def find_time_slots_at_venue(venue, time_slots)
+      available_time_slot = venue.time_slots.available.where(time: time_slots).order(:time).pluck(:time).first
+      available_time_slot.nil? ? nil : [available_time_slot, venue.id]
     end
   end
 end
