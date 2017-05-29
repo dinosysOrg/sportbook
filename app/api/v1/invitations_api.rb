@@ -10,7 +10,11 @@ module V1
 
     include ExceptionHandlers
 
-    desc 'create invitation'
+    desc 'create invitation', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 405, message: 'You can not create invitation for someone' },
+      { code: 422, message: 'This time slot is no longer available' }
+    ]
     params do
       requires :time, type: Time
       requires :venue_id, type: Integer
@@ -38,14 +42,33 @@ module V1
       invitation.tranform_pending!
     end
 
-    desc 'approved invitation'
+    desc 'accepted invitation', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 405, message: 'You cant accept invitation that current user is not belong accepted team' },
+      { code: 422, message: 'You cant accept invitation that already is rejected' },
+      { code: 422, message: 'You cant accept invitation that already is accepted' },
+      { code: 422, message: 'This timeslot is picked' }
+    ]
+    params do
+      requires :invitation_id, type: Integer
+    end
     put 'invitations/:invitation_id/accept' do
       invitation = Invitation.find(params[:invitation_id])
       error!('You are not in the team that can accept this invitation', 405) unless invitation.invitee.user_ids.include?(current_api_user.id)
+      available_time_slots = TimeSlot.where(time: invitation.time, object_id: invitation.venue_id, available: true)
+      error!('This time slot is picked', 422) if available_time_slots.empty?
       invitation.accept!
     end
 
-    desc 'rejected invitation'
+    desc 'rejected invitation', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 405, message: 'You cant reject invitation that current user is not belong rejected team' },
+      { code: 422, message: 'You cant reject invitation that already is rejected' },
+      { code: 422, message: 'You cant reject invitation that already is accepted' }
+    ]
+    params do
+      requires :invitation_id, type: Integer
+    end
     put 'invitations/:invitation_id/reject' do
       invitation = Invitation.find params[:invitation_id]
       error!('You are not in the team that can reject this invitation', 405) unless invitation.invitee.user_ids.include?(current_api_user.id)
