@@ -45,6 +45,7 @@ module V1
     desc 'accepted invitation', failure: [
       { code: 401, message: 'Unauthorized, missing token in header' },
       { code: 405, message: 'You cant accept invitation that current user is not belong accepted team' },
+      { code: 405, message: 'Your invitation is expired, You are forfeited' },
       { code: 422, message: 'You cant accept invitation that already is rejected' },
       { code: 422, message: 'You cant accept invitation that already is accepted' },
       { code: 422, message: 'This timeslot is picked' }
@@ -54,6 +55,10 @@ module V1
     end
     put 'invitations/:invitation_id/accept' do
       invitation = Invitation.find(params[:invitation_id])
+      if invitation.created_at + Invitation::DEADLINE <= DateTime.now
+        invitation.forfeit!
+        error!('Your invitation is expired, You are forfeited', 405)
+      end
       error!('You are not in the team that can accept this invitation', 405) unless invitation.invitee.user_ids.include?(current_api_user.id)
       available_time_slots = TimeSlot.where(time: invitation.time, object_id: invitation.venue_id, available: true)
       error!('This time slot is picked', 422) if available_time_slots.empty?
@@ -63,6 +68,7 @@ module V1
     desc 'rejected invitation', failure: [
       { code: 401, message: 'Unauthorized, missing token in header' },
       { code: 405, message: 'You cant reject invitation that current user is not belong rejected team' },
+      { code: 405, message: 'Your invitation is expired, You are forfeited' },
       { code: 422, message: 'You cant reject invitation that already is rejected' },
       { code: 422, message: 'You cant reject invitation that already is accepted' }
     ]
@@ -71,6 +77,10 @@ module V1
     end
     put 'invitations/:invitation_id/reject' do
       invitation = Invitation.find params[:invitation_id]
+      if invitation.created_at + Invitation::DEADLINE <= DateTime.now
+        invitation.forfeit!
+        error!('Your invitation is expired, You are forfeited', 405)
+      end
       error!('You are not in the team that can reject this invitation', 405) unless invitation.invitee.user_ids.include?(current_api_user.id)
       invitation.reject!
     end

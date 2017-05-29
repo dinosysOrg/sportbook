@@ -1,11 +1,10 @@
 describe 'InvitationsApi' do
   let!(:match) { create(:match) }
   let(:auth_headers) { api_user.create_new_auth_token }
-
+  let(:venue) { create(:venue) }
+  let!(:time_slot) { create(:time_slot, object: venue, available: true) }
   describe '#create' do
     let(:api_user) { match.team_b.users.first.becomes ApiUser }
-    let!(:time_slot) { create(:time_slot, object: venue, available: true) }
-    let(:venue) { create(:venue) }
     let(:make_request) { post '/api/v1/invitations/create', params: params.to_json, headers: request_headers.merge(auth_headers) }
 
     context 'when not log in' do
@@ -48,7 +47,7 @@ describe 'InvitationsApi' do
 
   describe '#accept' do
     let(:api_user) { pending_invitation.invitee.users.first.becomes ApiUser }
-    let(:pending_invitation) { create :invitation, :pending, match: match }
+    let(:pending_invitation) { create :invitation, :pending, match: match, venue: venue }
     let(:accept_request) { put "/api/v1/invitations/#{pending_invitation.id}/accept", params: {}.to_json, headers: request_headers.merge(auth_headers) }
     context 'when not log in' do
       it 'throws 401' do
@@ -95,6 +94,15 @@ describe 'InvitationsApi' do
         expect(response.status).to eq(405)
       end
     end
+
+    context 'cant accept invitation that is expired' do
+      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match }
+      it 'throws 405' do
+        accept_request
+        expect(response.status).to eq(405)
+        expect(pending_invitation.reload).to be_forfeited
+      end
+    end
   end
 
   describe '#reject' do
@@ -137,6 +145,15 @@ describe 'InvitationsApi' do
       it 'throws 405' do
         reject_request
         expect(response.status).to eq(405)
+      end
+    end
+
+    context 'cant reject invitation that is expired' do
+      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match }
+      it 'throws 405' do
+        reject_request
+        expect(response.status).to eq(405)
+        expect(pending_invitation.reload).to be_forfeited
       end
     end
   end

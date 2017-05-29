@@ -45,5 +45,22 @@ RSpec.describe Invitation, type: :model do
         expect { invitation.reject }.to raise_error(AASM::InvalidTransition)
       end
     end
+
+    describe 'validate deadline for pending inivation' do
+      let!(:rejected_invitation) { create_list(:invitation, 2, :rejected, created_at: 1.days.ago.at_beginning_of_hour) }
+      it 'check deadline with time is less than now' do
+        invitations = create_list(:invitation, 2, :pending, created_at: 1.days.ago.at_beginning_of_hour)
+        Invitation.validate_deadline
+        expect(invitations.first.reload).to be_forfeited
+        expect(invitations.last.reload).to be_forfeited
+      end
+
+      it 'check deadline with time is greater than now' do
+        invitations = create_list(:invitation, 2, :pending, created_at: 1.days.from_now.at_beginning_of_hour)
+        Invitation.validate_deadline
+        expect(invitations.first.reload).to be_pending
+        expect(invitations.last.reload).to be_pending
+      end
+    end
   end
 end

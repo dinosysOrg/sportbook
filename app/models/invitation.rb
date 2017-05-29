@@ -1,10 +1,11 @@
 class Invitation < ApplicationRecord
   include AASM
+  DEADLINE = 1.days
   belongs_to :invitee, class_name: 'Team'
   belongs_to :inviter, class_name: 'Team'
   belongs_to :match, counter_cache: true
   belongs_to :venue
-  enum status: { created: 0, pending: 1, accepted: 2, rejected: 3 }
+  enum status: { created: 0, pending: 1, accepted: 2, rejected: 3, forfeited: 4 }
 
   validates :invitee, presence: true
   validates :inviter, presence: true
@@ -21,9 +22,14 @@ class Invitation < ApplicationRecord
     state :pending
     state :accepted
     state :rejected
+    state :forfeited
 
     event :tranform_pending do
       transitions from: :created, to: :pending
+    end
+
+    event :forfeit do
+      transitions from: :pending, to: :forfeited
     end
 
     event :accept, after_commit: :update_time_for_match do
@@ -35,8 +41,15 @@ class Invitation < ApplicationRecord
     end
   end
 
-  private
+  def self.validate_deadline
+    pending_invitations = Invitation.pending
+    pending_invitations.each do |invitation|
+      invitation.forfeit! if invitation.created_at + DEADLINE <= DateTime.now
+    end
+  end
 
+  private
+  
   def update_time_for_match
     match = Match.find(match_id)
     match.update_attributes!(time: time)

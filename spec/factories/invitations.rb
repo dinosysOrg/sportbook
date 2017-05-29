@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :invitation do
     match
     venue
-    time { Time.now }
+    time { Time.now.at_beginning_of_hour }
     invitee { match.team_a }
     inviter { match.team_b }
 
