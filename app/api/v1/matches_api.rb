@@ -14,8 +14,11 @@ module V1
 	get 'matches/:tournament_id' do
 		matches = []
 		Match.all.each do |match|
-			if Team.find(match.team_a_id).tournament_id == params[:tournament_id].to_i
-				matches << match
+			if match.team_a_id != nil
+				team = Team.find(match.team_a_id)
+				if team.tournament_id == params[:tournament_id].to_i
+					matches << match
+				end
 			end
 		end
 	 	matches.to_json()
