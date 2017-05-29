@@ -8,6 +8,6 @@ ActiveAdmin.register Tournament do
   end
 
   permit_params do
-    [:name]
+    [:name, :start_date, :end_date]
   end
 end
