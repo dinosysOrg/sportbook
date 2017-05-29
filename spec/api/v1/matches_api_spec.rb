@@ -7,7 +7,7 @@ describe 'MatchesApi' do
         get "/api/v1/matches", 
         params: { user_id: nil , tournament_id: nil }
         expect(response.status).to eq(200)
-        expect(JSON.parse(json_response).count).to eq(5)
+        expect(json_response[:_embedded][:matches].count).to eq(5)
       end
     end
     context 'Player can view their upcoming confirmed matches' do
@@ -16,7 +16,7 @@ describe 'MatchesApi' do
         get "/api/v1/matches/#{tour.id+1}", 
         params: {tournament_id: tour.id + 1 }
         expect(response.status).to eq(200)
-        expect(JSON.parse(json_response).count).to eq(1)
+        expect(json_response[:_embedded][:matches].count).to eq(1)
       end
     end
     context 'Player can view their upcoming confirmed matches' do
@@ -25,7 +25,7 @@ describe 'MatchesApi' do
         get "/api/v1/matches/#{user.id}/user", 
         params: { user_id: user.id }
         expect(response.status).to eq(200)
-        expect(JSON.parse(json_response).count).to eq(5)
+        expect(json_response[:_embedded][:matches].count).to eq(5)
       end
     end
 end

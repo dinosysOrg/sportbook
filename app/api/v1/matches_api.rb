@@ -8,7 +8,7 @@ module V1
     desc 'Player can see all upcoming confirmed matches'
 	get 'matches' do
 		matches = Match.all
-		matches.to_json()
+		present matches, with: Representers::MatchesRepresenter
 	end
 	desc 'Player can see all upcoming confirmed matches with tournament_id'
 	get 'matches/:tournament_id' do
@@ -21,12 +21,12 @@ module V1
 				end
 			end
 		end
-	 	matches.to_json()
+	 	present matches, with: Representers::MatchesRepresenter
 	end
 	desc 'Player can see all upcoming confirmed matches with user_id'
 	get 'matches/:user_id/user' do
 		matches = Match.all
-		matches.to_json()
+		present matches, with: Representers::MatchesRepresenter
 	end
   end
 end
