@@ -1,31 +1,21 @@
 describe 'MatchesApi' do
-  let!(:tour) { create(:tournament) }
   let!(:user) { create(:user) }
-    context 'Player can view their upcoming confirmed matches' do
-      it 'When tournament_id is nil. There are 5 matches.' do
-        create_list(:match, 5)
-        get "/api/v1/matches", 
-        params: { user_id: nil , tournament_id: nil }
-        expect(response.status).to eq(200)
-        expect(json_response[:_embedded][:matches].count).to eq(5)
-      end
+  context 'Player can view their upcoming confirmed matches' do
+    it 'When not found user in matches' do
+      create_list(:match, 5)
+      get "/api/v1/user/#{user.id}/matches"
+      expect(response.status).to eq(200)
+      expect(json_response[:_embedded][:matches].count).to eq(0)
     end
-    context 'Player can view their upcoming confirmed matches' do
-      it 'When tournament_id != nil.There are 1 match.' do
-        create_list(:match, 5)
-        get "/api/v1/matches/#{tour.id+1}", 
-        params: {tournament_id: tour.id + 1 }
-        expect(response.status).to eq(200)
-        expect(json_response[:_embedded][:matches].count).to eq(1)
-      end
+    it 'When found user in matches' do
+      team_a = create(:team)
+      team_b = create(:team)
+      api_user = create(:api_user)
+      create(:player, team: team_a, user: api_user)
+      matches = create(:match, team_a: team_a, team_b: team_b)
+      get "/api/v1/user/#{api_user.id}/matches"
+      expect(response.status).to eq(200)
+      expect(json_response[:_embedded][:matches][0][:id]).to eq(matches.id)
     end
-    context 'Player can view their upcoming confirmed matches' do
-      it 'When user_id != nil.There are 5 matches.' do
-        create_list(:match, 5)
-        get "/api/v1/matches/#{user.id}/user", 
-        params: { user_id: user.id }
-        expect(response.status).to eq(200)
-        expect(json_response[:_embedded][:matches].count).to eq(5)
-      end
-    end
+  end
 end
