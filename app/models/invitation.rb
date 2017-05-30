@@ -1,11 +1,11 @@
 class Invitation < ApplicationRecord
   include AASM
-  DEADLINE = 1.days
+  TIME_TO_RESPOND = 1.days
   belongs_to :invitee, class_name: 'Team'
   belongs_to :inviter, class_name: 'Team'
   belongs_to :match, counter_cache: true
   belongs_to :venue
-  enum status: { created: 0, pending: 1, accepted: 2, rejected: 3, forfeited: 4 }
+  enum status: { created: 0, pending: 1, accepted: 2, rejected: 3, expired: 4 }
 
   validates :invitee, presence: true
   validates :inviter, presence: true
@@ -16,20 +16,21 @@ class Invitation < ApplicationRecord
 
   validate :check_invitation_count
   validate :check_existing_pending_invitation, on: :create
+  validate :check_time_slot_avaible, on: [:create, :update]
 
   aasm column: :status, enum: true do
     state :created, initial: true
     state :pending
     state :accepted
     state :rejected
-    state :forfeited
+    state :expired
 
-    event :tranform_pending do
+    event :sent do
       transitions from: :created, to: :pending
     end
 
-    event :forfeit do
-      transitions from: :pending, to: :forfeited
+    event :expire, after_commit: :raise_error do
+      transitions from: :pending, to: :expired
     end
 
     event :accept, after_commit: :update_time_for_match do
@@ -44,12 +45,28 @@ class Invitation < ApplicationRecord
   def self.validate_deadline
     pending_invitations = Invitation.pending
     pending_invitations.each do |invitation|
-      invitation.forfeit! if invitation.created_at + DEADLINE <= DateTime.now
+      invitation.expire! if invitation.created_at + TIME_TO_RESPOND <= Time.zone.now
     end
   end
 
+  def validate_deadline_for_api
+    expire! if created_at + Invitation::TIME_TO_RESPOND <= Time.zone.now
+  end
+
+  def check_time_slot_avaible
+    return unless time && venue_id
+    available_time_slots = TimeSlot.where(time: time, object_id: venue_id, available: true)
+    return unless available_time_slots.empty?
+
+    add_time_slot_pick_error
+  end
+
   private
-  
+
+  def raise_error
+    errors.add(:status, :expired)
+  end
+
   def update_time_for_match
     match = Match.find(match_id)
     match.update_attributes!(time: time)
@@ -76,5 +93,9 @@ class Invitation < ApplicationRecord
     errors.add(:match_id,
                :count_full,
                max: Match::MAX_INVITATIONS_COUNT)
+  end
+
+  def add_time_slot_pick_error
+    errors.add(:time, :slot_picked)
   end
 end

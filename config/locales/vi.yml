@@ -79,6 +79,12 @@ vi:
             match_id:
               count_full: Chỉ được %{max} invitation cho mỗi match
               pending_invitation_exists: Đang có một pending invitation
+            time:
+              slot_picked: Thời gian này đã được chọn
+            status:
+              expired: Thư mời đã hết hạn
+            team:
+              wrong_team: Bạn không có quyền thực hiện. 
   date:
     formats:
       long: "%d-%m-%Y"

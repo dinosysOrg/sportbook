@@ -38,8 +38,8 @@ module V1
 
       rescue_from AASM::InvalidTransition do |e|
         error!(
-          { errors: e.message, status_code: 422 },
-          422
+          { errors: e.message, status_code: 405 },
+          405
         )
       end
 

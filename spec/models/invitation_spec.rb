@@ -11,12 +11,12 @@ RSpec.describe Invitation, type: :model do
   describe 'Validation' do
     let(:venue) { create(:venue) }
     let(:match) { create(:match) }
-    let(:time_slot) { create(:time_slot, object: venue, available: true) }
+    let!(:time_slot) { create(:time_slot, object: venue, available: true) }
 
     describe 'creating Invitation' do
       it 'does not allow more than max invitations for each match' do
         Match::MAX_INVITATIONS_COUNT.times do
-          create :invitation, :created, match: match
+          create :invitation, :created, match: match, venue: venue
         end
         extra_invitation = match.invitations.build
         expect(extra_invitation).to_not be_valid
@@ -24,7 +24,7 @@ RSpec.describe Invitation, type: :model do
       end
 
       it 'does not allow creating new invitation if there is already a pending one' do
-        create :invitation, :pending, match: match
+        create :invitation, :pending, match: match, venue: venue
         new_invitation = match.invitations.build
         expect(new_invitation).to_not be_valid
         expect(new_invitation.errors[:match_id]).to include('There is one pending invitation')
@@ -41,22 +41,22 @@ RSpec.describe Invitation, type: :model do
       end
 
       it 'will raise error when trying to update status when its already rejected/approved' do
-        invitation = create :invitation, :accepted
+        invitation = create :invitation, :accepted, venue: venue
         expect { invitation.reject }.to raise_error(AASM::InvalidTransition)
       end
     end
 
     describe 'validate deadline for pending inivation' do
-      let!(:rejected_invitation) { create_list(:invitation, 2, :rejected, created_at: 1.days.ago.at_beginning_of_hour) }
+      let!(:rejected_invitation) { create_list(:invitation, 2, :rejected, created_at: 1.days.ago.at_beginning_of_hour, venue: venue) }
       it 'check deadline with time is less than now' do
-        invitations = create_list(:invitation, 2, :pending, created_at: 1.days.ago.at_beginning_of_hour)
+        invitations = create_list(:invitation, 2, :pending, created_at: 1.days.ago.at_beginning_of_hour, venue: venue)
         Invitation.validate_deadline
-        expect(invitations.first.reload).to be_forfeited
-        expect(invitations.last.reload).to be_forfeited
+        expect(invitations.first.reload).to be_expired
+        expect(invitations.last.reload).to be_expired
       end
 
       it 'check deadline with time is greater than now' do
-        invitations = create_list(:invitation, 2, :pending, created_at: 1.days.from_now.at_beginning_of_hour)
+        invitations = create_list(:invitation, 2, :pending, created_at: 1.days.from_now.at_beginning_of_hour, venue: venue)
         Invitation.validate_deadline
         expect(invitations.first.reload).to be_pending
         expect(invitations.last.reload).to be_pending

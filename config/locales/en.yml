@@ -79,6 +79,12 @@ en:
             match_id:
               count_full: There can be only %{max} invitations for each match
               pending_invitation_exists: There is one pending invitation
+            time:
+              slot_picked: This time slot is picked
+            status:
+              expired: This invitation is expired
+            team:
+              wrong_team: You are not in the team that can do this operation
   date:
     formats:
       long: "%Y-%m-%d"

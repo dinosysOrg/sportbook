@@ -71,19 +71,19 @@ describe 'InvitationsApi' do
     end
 
     context 'cant accept invitation that already is accepted' do
-      it 'throws 422' do
+      it 'throws 405' do
         pending_invitation.accept!
         accept_request
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(405)
       end
     end
 
     context 'cant accept invitation that already is rejected' do
       let(:params) { { time: time_slot.time, invitee_id: match.team_b.id, inviter_id: match.team_a.id, match_id: match.id, venue_id: venue.id } }
-      it 'throws 422' do
+      it 'throws 405' do
         pending_invitation.reject!
         accept_request
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(405)
       end
     end
 
@@ -96,18 +96,18 @@ describe 'InvitationsApi' do
     end
 
     context 'cant accept invitation that is expired' do
-      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match }
+      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match, venue: venue }
       it 'throws 405' do
         accept_request
         expect(response.status).to eq(405)
-        expect(pending_invitation.reload).to be_forfeited
+        expect(pending_invitation.reload).to be_expired
       end
     end
   end
 
   describe '#reject' do
     let(:api_user) { pending_invitation.invitee.users.first.becomes ApiUser }
-    let(:pending_invitation) { create :invitation, :pending, match: match }
+    let(:pending_invitation) { create :invitation, :pending, match: match, venue: venue }
     let(:reject_request) { put "/api/v1/invitations/#{pending_invitation.id}/reject", params: {}.to_json, headers: request_headers.merge(auth_headers) }
 
     context 'when not log in' do
@@ -125,18 +125,18 @@ describe 'InvitationsApi' do
     end
 
     context 'cant reject invitation that already is rejected' do
-      it 'throws 422' do
+      it 'throws 405' do
         pending_invitation.reject!
         reject_request
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(405)
       end
     end
 
     context 'cant reject invitation that already is accepted' do
-      it 'throws 422' do
+      it 'throws 405' do
         pending_invitation.accept!
         reject_request
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(405)
       end
     end
 
@@ -149,11 +149,11 @@ describe 'InvitationsApi' do
     end
 
     context 'cant reject invitation that is expired' do
-      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match }
+      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match, venue: venue }
       it 'throws 405' do
         reject_request
         expect(response.status).to eq(405)
-        expect(pending_invitation.reload).to be_forfeited
+        expect(pending_invitation.reload).to be_expired
       end
     end
   end

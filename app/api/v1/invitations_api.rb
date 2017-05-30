@@ -21,9 +21,6 @@ module V1
       requires :match_id, type: Integer
     end
     post 'invitations/create' do
-      available_time_slots = TimeSlot.where(time: params[:time], object_id: params[:venue_id], available: true)
-      error!('This time slot is picked', 422) if available_time_slots.empty?
-
       match = Match.find params[:match_id]
       if match.team_a.user_ids.include?(current_api_user.id)
         inviter_id = match.team_a_id
@@ -32,20 +29,20 @@ module V1
         inviter_id = match.team_b_id
         invitee_id = match.team_a_id
       else
-        error!('You are not in the team that is requresting to create invitation', 405)
+        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405)
       end
 
       invitation = Invitation.create!(status: 'created', time: params[:time], invitee_id: invitee_id, inviter_id: inviter_id,
                                       match_id: params[:match_id], venue_id: params[:venue_id])
       team = Team.find(invitation.invitee_id)
       ApplicationMailer.invitation_mail(team.users.pluck(:email)).deliver_now
-      invitation.tranform_pending!
+      invitation.sent!
     end
 
     desc 'accepted invitation', failure: [
       { code: 401, message: 'Unauthorized, missing token in header' },
       { code: 405, message: 'You cant accept invitation that current user is not belong accepted team' },
-      { code: 405, message: 'Your invitation is expired, You are forfeited' },
+      { code: 405, message: 'Your invitation is expired, You are expired' },
       { code: 422, message: 'You cant accept invitation that already is rejected' },
       { code: 422, message: 'You cant accept invitation that already is accepted' },
       { code: 422, message: 'This timeslot is picked' }
@@ -55,20 +52,17 @@ module V1
     end
     put 'invitations/:invitation_id/accept' do
       invitation = Invitation.find(params[:invitation_id])
-      if invitation.created_at + Invitation::DEADLINE <= DateTime.now
-        invitation.forfeit!
-        error!('Your invitation is expired, You are forfeited', 405)
+      invitation.validate_deadline_for_api
+      unless invitation.invitee.user_ids.include?(current_api_user.id)
+        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405) 
       end
-      error!('You are not in the team that can accept this invitation', 405) unless invitation.invitee.user_ids.include?(current_api_user.id)
-      available_time_slots = TimeSlot.where(time: invitation.time, object_id: invitation.venue_id, available: true)
-      error!('This time slot is picked', 422) if available_time_slots.empty?
       invitation.accept!
     end
 
     desc 'rejected invitation', failure: [
       { code: 401, message: 'Unauthorized, missing token in header' },
       { code: 405, message: 'You cant reject invitation that current user is not belong rejected team' },
-      { code: 405, message: 'Your invitation is expired, You are forfeited' },
+      { code: 405, message: 'Your invitation is expired, You are expired' },
       { code: 422, message: 'You cant reject invitation that already is rejected' },
       { code: 422, message: 'You cant reject invitation that already is accepted' }
     ]
@@ -77,11 +71,10 @@ module V1
     end
     put 'invitations/:invitation_id/reject' do
       invitation = Invitation.find params[:invitation_id]
-      if invitation.created_at + Invitation::DEADLINE <= DateTime.now
-        invitation.forfeit!
-        error!('Your invitation is expired, You are forfeited', 405)
+      invitation.validate_deadline_for_api
+      unless invitation.invitee.user_ids.include?(current_api_user.id)
+        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405) 
       end
-      error!('You are not in the team that can reject this invitation', 405) unless invitation.invitee.user_ids.include?(current_api_user.id)
       invitation.reject!
     end
   end
