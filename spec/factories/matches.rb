@@ -5,5 +5,6 @@ FactoryGirl.define do
     team_b { create(:groups_team, group: group).team }
     time { DateTime.now }
     venue
+    code { "#{('A'..'Z').to_a.sample}-#{(1..9).to_a.sample}-#{(1..9).to_a.sample}" }
   end
 end
