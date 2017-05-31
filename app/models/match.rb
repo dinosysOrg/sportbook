@@ -5,13 +5,14 @@ class Match < ApplicationRecord
     draw: 1
   }.freeze
 
+  MAX_INVITATIONS_COUNT = 3
   belongs_to :group
   belongs_to :venue
   belongs_to :team_a, class_name: 'Team'
   belongs_to :team_b, class_name: 'Team'
-
   validates :group, presence: true
 
+  has_many :invitations
   after_save :recalculate_groups_teams_statistics
   after_destroy :recalculate_groups_teams_statistics
 
