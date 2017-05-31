@@ -62,5 +62,17 @@ RSpec.describe Invitation, type: :model do
         expect(invitations.last.reload).to be_pending
       end
     end
+
+    describe 'update match status' do
+      it 'updates match when invitation is expired' do
+        team_a = create :team
+        team_b = create :team
+        match = create :match, team_a: team_a, team_b: team_b
+        invitation = create :invitation, :pending, venue: venue, match: match, invitee: team_a, inviter: team_b
+        invitation.expire!
+        expect(match.reload.point_b).to eq(3)
+        expect(match.reload.point_a).to eq(0)
+      end
+    end
   end
 end

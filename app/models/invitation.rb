@@ -29,7 +29,7 @@ class Invitation < ApplicationRecord
       transitions from: :created, to: :pending
     end
 
-    event :expire, after_commit: :raise_error do
+    event :expire, after_commit: :update_point_for_winner do
       transitions from: :pending, to: :expired
     end
 
@@ -63,7 +63,12 @@ class Invitation < ApplicationRecord
 
   private
 
-  def raise_error
+  def update_point_for_winner
+    if match.team_a_id == invitee_id
+      match.update_attributes!(point_b: 3)
+    elsif match.team_b_id == invitee_id
+      match.update_attribute!(point_a: 3)
+    end
     errors.add(:status, :expired)
   end
 
