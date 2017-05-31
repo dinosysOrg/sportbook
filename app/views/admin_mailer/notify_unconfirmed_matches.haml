@@ -1,0 +1,6 @@
+%p= t('.please_arrange_these_matches_manually')
+
+- @groups.each do |group, matches|
+  = group.name
+  - matches.each do |match|
+    = match.code

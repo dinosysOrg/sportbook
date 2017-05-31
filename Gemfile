@@ -105,6 +105,7 @@ group :test do
   gem 'shoulda-matchers'
   gem 'capybara'
   gem 'site_prism'
+  gem 'email_spec'
 end
 
 group :development do

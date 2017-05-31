@@ -1,0 +1,6 @@
+---
+vi:
+  admin_mailer:
+    notify_unconfirmed_matches:
+      subject: Thông báo các trận đấu không tìm được thời gian thích hợp
+      please_arrange_these_matches_manually: Hệ thống cần hỗ trợ để tìm thời gian thích hợp cho các trận đấu sau

@@ -105,10 +105,10 @@ describe TimeSlotService do
 
   describe 'combine venue ranking' do
     it 'works' do
-      result = TimeSlotService.combine_venue_rankings([1, 2, 3], [2, 3, 1])
+      result = TimeSlotService.send(:combine_venue_rankings, [1, 2, 3], [2, 3, 1])
       expect(result).to eq([2, 1, 3])
 
-      result = TimeSlotService.combine_venue_rankings([1, 2, 3], [2, 1])
+      result = TimeSlotService.send(:combine_venue_rankings, [1, 2, 3], [2, 1])
       expect(result).to eq([1, 2])
     end
   end
@@ -182,50 +182,6 @@ describe TimeSlotService do
         expect(chosen_time).to eq(later_overlapping_time)
         expect(chosen_venue).to eq(venue_1.id)
       end
-    end
-  end
-
-  describe 'generate default invitation for matches' do
-    let(:group) { create :group, start_date: Date.tomorrow }
-    let(:match) { create :match, group: group, time: nil, venue: nil }
-
-    it 'updates matches time' do
-      mock_time = Time.now.beginning_of_hour
-      mock_venue = create :venue
-      allow(TimeSlotService).to receive(:choose_time_slot).and_return [mock_time, mock_venue.id]
-
-      expect(match.time).to eq(nil)
-      expect(match.venue).to eq(nil)
-      TimeSlotService.generate_invitations_for_expiring_matches
-
-      match.reload
-      expect(match.time).to eq(mock_time)
-      expect(match.venue).to eq(mock_venue)
-    end
-
-    it 'does not update matches that are not expiring' do
-      not_expiring_group = create :group, start_date: Date.today + 5
-      not_expiring_match = create :match, group: not_expiring_group, time: nil, venue: nil
-
-      expect(not_expiring_match.time).to eq(nil)
-      expect(not_expiring_match.venue).to eq(nil)
-      TimeSlotService.generate_invitations_for_expiring_matches
-
-      not_expiring_match.reload
-      expect(not_expiring_match.time).to eq(nil)
-      expect(not_expiring_match.venue).to eq(nil)
-    end
-
-    it 'when it does not find any time slot' do
-      allow(TimeSlotService).to receive(:choose_time_slot).and_return nil
-
-      expect(match.time).to eq(nil)
-      expect(match.venue).to eq(nil)
-      TimeSlotService.generate_invitations_for_expiring_matches
-
-      match.reload
-      expect(match.time).to eq(nil)
-      expect(match.venue).to eq(nil)
     end
   end
 end
