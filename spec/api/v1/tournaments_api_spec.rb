@@ -19,4 +19,22 @@ describe 'TournamentsApi' do
     expect(response.status).to eq(200)
     expect(json_response[:name]).to eq(tour.name)
   end
+
+
+  it 'user can view all upcoming opponent for a tour' do
+    create(:team, id: 1, tournament_id: tour.id, name: "Thanh Tùng")
+    create(:team, id: 2, tournament_id: tour.id, name: "Thái Duy")
+    create(:team, id: 3, tournament_id: tour.id, name: "Nguyễn Hoàng Minh Tài")
+    create(:team, id: 4, tournament_id: tour.id, name: "Phương Thảo")
+    create(:team, id: 5, tournament_id: tour.id, name: "Nguyen Hoang Lam")
+    create(:team, id: 6, tournament_id: tour.id, name: "Nguyễn Nhật Thanh")
+    create(:match, id: 1, team_a_id: 6, team_b_id: 1)
+    create(:match, id: 2, team_a_id: 6, team_b_id: 2)
+    create(:match, id: 3, team_a_id: 3, team_b_id: 6)
+    create(:match, id: 4, team_a_id: 4, team_b_id: 5)
+    get "/api/v1/tournaments/#{tour.id}/my-opponents", 
+    params: { team: Team.find(6) }
+    expect(response.status).to eq(200)
+    expect(response.body.length).to eq(57)
+  end
 end

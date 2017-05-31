@@ -25,5 +25,21 @@ module V1
       tournament = Tournament.find_by_id(params[:tournament_id])
       present tournament, with: Representers::TournamentRepresenter
     end
+
+
+    desc 'User can view all the upcoming opponents for a tournament'
+    get 'tournaments/:id/my-opponents' do
+      team = Team.where(name: params[:name], tournament_id: params[:id]).first
+      teams = []
+      matches = Match.where(team_a_id: team.id).or(Match.where(team_b_id: team.id))
+      matches.each do |m|
+        if m.team_a.name == params[:name]
+          teams << Team.where(name: m.team_b.name).first.name
+        else
+          teams << Team.where(name: m.team_a.name).first.name
+        end
+      end
+      return teams.to_json
+    end
   end
 end
