@@ -33,7 +33,7 @@ class Invitation < ApplicationRecord
       transitions from: :pending, to: :expired
     end
 
-    event :accept, after_commit: :update_status_venue_time_match do
+    event :accept, after_commit: :update_timeslot_and_match do
       transitions from: :pending, to: :accepted
     end
 
@@ -72,7 +72,7 @@ class Invitation < ApplicationRecord
     errors.add(:status, :expired)
   end
 
-  def update_status_venue_time_match
+  def update_timeslot_and_match
     venue.time_slots.first.update_attribute('available', false)
     update_status_timeslot(time, invitee, false)
     update_status_timeslot(time, inviter, false)
