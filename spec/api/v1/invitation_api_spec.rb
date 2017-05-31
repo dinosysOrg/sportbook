@@ -3,6 +3,8 @@ describe 'InvitationsApi' do
   let(:auth_headers) { api_user.create_new_auth_token }
   let(:venue) { create(:venue) }
   let!(:time_slot) { create(:time_slot, object: venue, available: true) }
+  let!(:time_slot_team_a) { create(:time_slot, object: match.team_a, available: true) }
+  let!(:time_slot_team_b) { create(:time_slot, object: match.team_b, available: true) }
   describe '#create' do
     let(:api_user) { match.team_b.users.first.becomes ApiUser }
     let(:make_request) { post '/api/v1/invitations/create', params: params.to_json, headers: request_headers.merge(auth_headers) }
@@ -47,7 +49,7 @@ describe 'InvitationsApi' do
 
   describe '#accept' do
     let(:api_user) { pending_invitation.invitee.users.first.becomes ApiUser }
-    let(:pending_invitation) { create :invitation, :pending, match: match, venue: venue }
+    let(:pending_invitation) { create :invitation, :pending, match: match, venue: venue, invitee: match.team_a, inviter: match.team_b }
     let(:accept_request) { put "/api/v1/invitations/#{pending_invitation.id}/accept", params: {}.to_json, headers: request_headers.merge(auth_headers) }
     context 'when not log in' do
       it 'throws 401' do
@@ -60,6 +62,9 @@ describe 'InvitationsApi' do
       it 'success 200' do
         accept_request
         expect(pending_invitation.reload).to be_accepted
+        expect(venue.time_slots[0].reload.available).to be false
+        expect(time_slot_team_a.reload.available).to be false
+        expect(time_slot_team_b.reload.available).to be false
       end
     end
 

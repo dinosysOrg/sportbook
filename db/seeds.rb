@@ -5,5 +5,5 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Skill.create([{ name: 'Professinal' }, { name: 'Good' }, { name: 'Amateur' }, { name: 'Bad' }, { name: 'Ordinary' }])
+Skill.create([{ name: 'Professional' }, { name: 'Good' }, { name: 'Amateur' }, { name: 'Bad' }, { name: 'Ordinary' }])
 Role.create([{ name: 'Admin' }])

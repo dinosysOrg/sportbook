@@ -33,7 +33,7 @@ class Invitation < ApplicationRecord
       transitions from: :pending, to: :expired
     end
 
-    event :accept, after_commit: :update_time_for_match do
+    event :accept, after_commit: :update_status_venue_time_match do
       transitions from: :pending, to: :accepted
     end
 
@@ -65,16 +65,18 @@ class Invitation < ApplicationRecord
 
   def update_point_for_winner
     if match.team_a_id == invitee_id
-      match.update_attributes!(point_b: 3)
+      match.update_attribute('point_b', 3)
     elsif match.team_b_id == invitee_id
-      match.update_attribute!(point_a: 3)
+      match.update_attribute('point_a', 3)
     end
     errors.add(:status, :expired)
   end
 
-  def update_time_for_match
-    match = Match.find(match_id)
-    match.update_attributes!(time: time)
+  def update_status_venue_time_match
+    venue.time_slots.first.update_attribute('available', false)
+    update_status_timeslot(time, invitee, false)
+    update_status_timeslot(time, inviter, false)
+    Match.find(match_id).update_attribute('time', time)
   end
 
   def check_invitation_count
@@ -92,6 +94,13 @@ class Invitation < ApplicationRecord
     return unless last_invitation
 
     errors.add(:match_id, :pending_invitation_exists)
+  end
+
+  private
+
+  def update_status_timeslot(time, object, status)
+    TimeSlot.find_by(time: time, object: object)
+            .update_attribute('available', status)
   end
 
   def add_invation_error
