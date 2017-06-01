@@ -109,6 +109,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
+    commander (4.4.3)
+      highline (~> 1.7.2)
     concurrent-ruby (1.0.5)
     declarative (0.0.9)
     declarative-option (0.1.0)
@@ -162,6 +164,9 @@ GEM
     formtastic_i18n (0.6.0)
     friendly_id (5.2.1)
       activerecord (>= 4.0.0)
+    gcm (0.1.1)
+      httparty
+      json
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     google-api-client (0.11.1)
@@ -222,12 +227,17 @@ GEM
     hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
     highline (1.7.8)
+    houston (2.2.4)
+      commander (~> 4.4)
+      json
     html2haml (2.1.0)
       erubis (~> 2.7.0)
       haml (~> 4.0)
       nokogiri (>= 1.6.0)
       ruby_parser (~> 3.5)
     htmlentities (4.3.4)
+    httparty (0.15.5)
+      multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     i18n (0.8.1)
     i18n-tasks (0.9.13)
@@ -513,6 +523,7 @@ DEPENDENCIES
   ffaker
   font-awesome-rails
   friendly_id
+  gcm
   google-api-client
   grape
   grape-cancan
@@ -523,6 +534,7 @@ DEPENDENCIES
   grape_devise_token_auth
   haml-rails (~> 0.9)
   hashie-forbidden_attributes
+  houston
   i18n-tasks (~> 0.9.13)
   jbuilder (~> 2.5)
   jquery-rails
