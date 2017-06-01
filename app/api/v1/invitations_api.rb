@@ -54,7 +54,7 @@ module V1
       invitation = Invitation.find(params[:invitation_id])
       invitation.validate_deadline_for_api
       unless invitation.invitee.user_ids.include?(current_api_user.id)
-        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405) 
+        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405)
       end
       invitation.accept!
     end
@@ -73,7 +73,7 @@ module V1
       invitation = Invitation.find params[:invitation_id]
       invitation.validate_deadline_for_api
       unless invitation.invitee.user_ids.include?(current_api_user.id)
-        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405) 
+        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405)
       end
       invitation.reject!
     end

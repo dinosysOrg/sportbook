@@ -7,7 +7,7 @@ describe 'DevicesApi' do
     let(:make_request) do
       auth_headers = user.create_new_auth_token
       post '/api/v1/devices/create', params: params.to_json,
-                                      headers: request_headers.merge(auth_headers)
+                                     headers: request_headers.merge(auth_headers)
     end
 
     context 'when not signed in' do
