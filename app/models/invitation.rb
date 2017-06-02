@@ -16,7 +16,7 @@ class Invitation < ApplicationRecord
 
   validate :check_invitation_count
   validate :check_existing_pending_invitation, on: :create
-  validate :check_time_slot_avaible, on: [:create, :update]
+  validate :check_time_slot_avaible
 
   aasm column: :status, enum: true do
     state :created, initial: true
@@ -73,9 +73,9 @@ class Invitation < ApplicationRecord
   end
 
   def update_timeslot_and_match
-    venue.time_slots.first.update_attribute('available', false)
+    update_status_timeslot(time, venue, false)
     update_status_timeslot(time, invitee, false)
-    update_status_timeslot(time, inviter, false)
+    TimeSlot.create!(time: time, object: inviter, available: false, match_id: match_id)
     Match.find(match_id).update_attribute('time', time)
   end
 
@@ -99,8 +99,8 @@ class Invitation < ApplicationRecord
   private
 
   def update_status_timeslot(time, object, status)
-    TimeSlot.find_by(time: time, object: object)
-            .update_attribute('available', status)
+    TimeSlot.find_by(time: time, object: object, available: true)
+            .update_attributes!(available: status, match_id: match_id)
   end
 
   def add_invation_error

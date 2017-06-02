@@ -2,9 +2,8 @@ describe 'InvitationsApi' do
   let!(:match) { create(:match) }
   let(:auth_headers) { api_user.create_new_auth_token }
   let(:venue) { create(:venue) }
-  let!(:time_slot) { create(:time_slot, object: venue, available: true) }
+  let(:time_slot) { create(:time_slot, object: venue, available: true) }
   let!(:time_slot_team_a) { create(:time_slot, object: match.team_a, available: true) }
-  let!(:time_slot_team_b) { create(:time_slot, object: match.team_b, available: true) }
   describe '#create' do
     let(:api_user) { match.team_b.users.first.becomes ApiUser }
     let(:make_request) { post '/api/v1/invitations/create', params: params.to_json, headers: request_headers.merge(auth_headers) }
@@ -31,6 +30,7 @@ describe 'InvitationsApi' do
     context 'when time slot is no longer available' do
       let(:params) { { time: time_slot.time, match_id: match.id, venue_id: venue.id } }
       it 'throws 422' do
+        time_slot
         TimeSlot.update_all available: false
         expect { make_request }.to_not change(Invitation, :count)
         expect(response.status).to eq(422)
@@ -49,7 +49,7 @@ describe 'InvitationsApi' do
 
   describe '#accept' do
     let(:api_user) { pending_invitation.invitee.users.first.becomes ApiUser }
-    let(:pending_invitation) { create :invitation, :pending, match: match, venue: venue, invitee: match.team_a, inviter: match.team_b }
+    let(:pending_invitation) { create :invitation, :pending, time: time_slot.time, match: match, venue: venue, invitee: match.team_a, inviter: match.team_b }
     let(:accept_request) { put "/api/v1/invitations/#{pending_invitation.id}/accept", params: {}.to_json, headers: request_headers.merge(auth_headers) }
     context 'when not log in' do
       it 'throws 401' do
@@ -59,12 +59,24 @@ describe 'InvitationsApi' do
     end
 
     context 'accept invitation' do
-      it 'success 200' do
+      it 'success 200, update status for invitation' do
         accept_request
         expect(pending_invitation.reload).to be_accepted
-        expect(venue.time_slots[0].reload.available).to be false
+      end
+
+      it 'update status timeslot for invitee, inviter, venue' do
+        create(:time_slot, time: 1.days.from_now, object: venue, available: true)
+        create(:time_slot, object: venue, available: false)
+        accept_request
+        expect(time_slot.reload.available).to be false
         expect(time_slot_team_a.reload.available).to be false
-        expect(time_slot_team_b.reload.available).to be false
+        time_slot = TimeSlot.where(time: pending_invitation.time, available: false, object: match.team_b)
+        expect(time_slot.size).to eq(1)
+      end
+
+      it 'update match id for inv' do
+        accept_request
+        expect(time_slot.reload.match_id).to eq(match.id)
       end
     end
 
@@ -101,7 +113,7 @@ describe 'InvitationsApi' do
     end
 
     context 'cant accept invitation that is expired' do
-      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match, venue: venue }
+      let(:pending_invitation) { create :invitation, :pending, time: time_slot.time, created_at: 1.days.ago.at_beginning_of_hour, match: match, venue: venue }
       it 'throws 405' do
         accept_request
         expect(response.status).to eq(405)
@@ -112,7 +124,7 @@ describe 'InvitationsApi' do
 
   describe '#reject' do
     let(:api_user) { pending_invitation.invitee.users.first.becomes ApiUser }
-    let(:pending_invitation) { create :invitation, :pending, match: match, venue: venue }
+    let(:pending_invitation) { create :invitation, :pending, time:time_slot.time, match: match, venue: venue }
     let(:reject_request) { put "/api/v1/invitations/#{pending_invitation.id}/reject", params: {}.to_json, headers: request_headers.merge(auth_headers) }
 
     context 'when not log in' do
@@ -154,7 +166,7 @@ describe 'InvitationsApi' do
     end
 
     context 'cant reject invitation that is expired' do
-      let(:pending_invitation) { create :invitation, :pending, created_at: 1.days.ago.at_beginning_of_hour, match: match, venue: venue }
+      let(:pending_invitation) { create :invitation, :pending, time: time_slot.time, created_at: 1.days.ago.at_beginning_of_hour, match: match, venue: venue }
       it 'throws 405' do
         reject_request
         expect(response.status).to eq(405)
