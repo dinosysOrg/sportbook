@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: ENV['SMTP_USER_NAME'].presence || 'from@example.com'
+  default from: 'noreply@sportbook.vn'
   layout 'mailer'
 
   def invitation_mail(emails)
