@@ -2,7 +2,7 @@ describe 'DevicesApi' do
   describe '#create' do
     let(:user) { create(:api_user) }
     let(:token) { SecureRandom.uuid }
-    let(:platform) { 'iOS' }
+    let(:platform) { 0 }
     let(:params) { { user_id: user.id, token: token, platform: platform } }
     let(:make_request) do
       auth_headers = user.create_new_auth_token
@@ -23,7 +23,7 @@ describe 'DevicesApi' do
           params[:user_id] = nil
           expect(Device.count).to eq(0)
           make_request
-          expect(response.status).to eq(201)
+          expect(response.status).to eq(422)
           expect(Device.count).to eq(0)
         end
 
@@ -31,7 +31,7 @@ describe 'DevicesApi' do
           params[:token] = nil
           expect(Device.count).to eq(0)
           make_request
-          expect(response.status).to eq(201)
+          expect(response.status).to eq(422)
           expect(Device.count).to eq(0)
         end
 
@@ -39,7 +39,15 @@ describe 'DevicesApi' do
           params[:platform] = nil
           expect(Device.count).to eq(0)
           make_request
-          expect(response.status).to eq(201)
+          expect(response.status).to eq(422)
+          expect(Device.count).to eq(0)
+        end
+
+        it 'platform is not valid' do
+          params[:platform] = 2
+          expect(Device.count).to eq(0)
+          make_request
+          expect(response.status).to eq(422)
           expect(Device.count).to eq(0)
         end
       end
@@ -56,7 +64,7 @@ describe 'DevicesApi' do
           create(:device, user_id: user.id, token: token, platform: platform)
           expect(Device.count).to eq(1)
           make_request
-          expect(response.status).to eq(201)
+          expect(response.status).to eq(422)
           expect(Device.count).to eq(1)
         end
       end

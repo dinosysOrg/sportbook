@@ -2,6 +2,6 @@ FactoryGirl.define do
   factory :device do
     user
     token SecureRandom.uuid
-    platform %w[iOS Android].sample
+    platform [0, 1].sample
   end
 end
