@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: ENV.fetch('SMTP_USER_NAME')
+  default from: ENV['SMTP_USER_NAME'].presence || 'from@example.com'
   layout 'mailer'
 
   def invitation_mail(emails)
