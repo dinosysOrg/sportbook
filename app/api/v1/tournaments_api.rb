@@ -10,7 +10,7 @@ module V1
 
     desc 'Get all tournaments'
     get 'tournaments' do
-      tournaments = Tournament.where('start_date > ? ', DateTime.now)
+      tournaments = Tournament.where('start_date > ? ', Time.zone.now)
       present tournaments, with: Representers::TournamentsRepresenter
     end
 
