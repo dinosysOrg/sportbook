@@ -9,7 +9,7 @@ namespace :generate do
     ].each do |admin|
       u = AdminUser.find_or_create_by!(email: admin[:email], name: admin[:name]) do |new_user|
         new_user.password = 'password'
-        new_user.confirmed_at = Time.now
+        new_user.confirmed_at = Time.zone.now
         new_user.uid = new_user.email
       end
 

@@ -4,7 +4,7 @@ describe MatchesService do
     let(:match) { create :match, group: group, time: nil, venue: nil }
 
     it 'updates matches time' do
-      mock_time = Time.now.beginning_of_hour
+      mock_time = Time.zone.now.beginning_of_hour
       mock_venue = create :venue
       allow(TimeSlotService).to receive(:choose_time_slot).and_return [mock_time, mock_venue.id]
 
