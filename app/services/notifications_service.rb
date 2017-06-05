@@ -14,7 +14,7 @@ class NotificationsService
 
     def ios_push_notification(tokens, message)
       apn = Houston::Client.development
-      apn.certificate = File.read(ENV['APPLE_CERTIFICATE']) # certificate from prerequisites
+      apn.certificate = File.read(ENV.fetch('APPLE_CERTIFICATE')) # certificate from prerequisites
       tokens.each do |token|
         notification = Houston::Notification.new(device: token)
         notification.alert = message
@@ -25,7 +25,7 @@ class NotificationsService
     end
 
     def android_push_notification(tokens, message)
-      gcm = GCM.new(ENV['API_KEY']) # an api key from prerequisites
+      gcm = GCM.new(ENV.fetch('GOOGLE_API_KEY')) # an api key from prerequisites
       options = {
         data: {
           message: message
