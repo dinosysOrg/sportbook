@@ -75,4 +75,51 @@ RSpec.describe Invitation, type: :model do
       end
     end
   end
+
+  describe 'accept' do
+    let(:match) { create :match, time: nil, venue: nil }
+    let(:pending_invitation) do
+      create :invitation, :pending, time: time_slot_venue.time, match: match, venue: venue, invitee: match.team_a, inviter: match.team_b
+    end
+    let(:venue) { create(:venue) }
+    let!(:time_slot_venue) { create(:time_slot, object: venue, available: true) }
+    let!(:time_slot_invitee) { create(:time_slot, object: match.team_a, available: true) }
+
+    it 'updates time slots' do
+      time_slot_inviter = create(:time_slot, object: pending_invitation.inviter, available: true)
+
+      pending_invitation.accept!
+
+      time_slot_venue.reload
+      time_slot_invitee.reload
+      time_slot_inviter.reload
+
+      expect(time_slot_venue).to_not be_available
+      expect(time_slot_venue.match_id).to eq(match.id)
+
+      expect(time_slot_invitee).to_not be_available
+      expect(time_slot_invitee.match_id).to eq(match.id)
+
+      expect(time_slot_inviter).to_not be_available
+      expect(time_slot_inviter.match_id).to eq(match.id)
+    end
+
+    it 'updates match' do
+      pending_invitation.accept!
+
+      match.reload
+      expect(match.time).to eq(pending_invitation.time)
+      expect(match.venue).to eq(venue)
+    end
+
+    context 'when inviter does not have a time slot' do
+      it 'creates a new time slot for inviter' do
+        expect { pending_invitation.accept! }.to change(TimeSlot, :count).by(1)
+
+        inviter = pending_invitation.inviter
+        time_slot_inviter = inviter.time_slots.find_by(time: pending_invitation.time)
+        expect(time_slot_inviter).to_not be_available
+      end
+    end
+  end
 end

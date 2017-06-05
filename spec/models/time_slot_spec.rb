@@ -2,7 +2,10 @@ require 'rails_helper'
 
 RSpec.describe TimeSlot, type: :model do
   describe 'Validation' do
-    it { is_expected.to validate_presence_of(:available) }
+    it { is_expected.to allow_value(true).for(:available) }
+    it { is_expected.to allow_value(false).for(:available) }
+    it { is_expected.to allow_value('true').for(:available) }
+    it { is_expected.to allow_value('false').for(:available) }
 
     describe 'generating TimeSlot' do
       it 'just generate 2 timeslots for each venue' do

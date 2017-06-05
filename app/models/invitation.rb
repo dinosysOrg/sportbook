@@ -16,7 +16,7 @@ class Invitation < ApplicationRecord
 
   validate :check_invitation_count
   validate :check_existing_pending_invitation, on: :create
-  validate :check_time_slot_avaible, on: [:create, :update]
+  validate :check_time_slot_avaible
 
   aasm column: :status, enum: true do
     state :created, initial: true
@@ -33,7 +33,7 @@ class Invitation < ApplicationRecord
       transitions from: :pending, to: :expired
     end
 
-    event :accept, after_commit: :update_time_for_match do
+    event :accept, after_commit: :update_time_slot_and_match do
       transitions from: :pending, to: :accepted
     end
 
@@ -65,21 +65,31 @@ class Invitation < ApplicationRecord
 
   def update_point_for_winner
     if match.team_a_id == invitee_id
-      match.update_attributes!(point_b: 3)
+      match.update_attribute('point_b', 3)
     elsif match.team_b_id == invitee_id
-      match.update_attribute!(point_a: 3)
+      match.update_attribute('point_a', 3)
     end
     errors.add(:status, :expired)
   end
 
-  def update_time_for_match
-    match = Match.find(match_id)
-    match.update_attributes!(time: time)
+  def update_time_slot_and_match
+    create_inviter_time_slot_if_necessary
+
+    update_status_time_slot(venue)
+    update_status_time_slot(invitee)
+    update_status_time_slot(inviter)
+    match.update_attributes!(time: time, venue: venue)
+  end
+
+  def create_inviter_time_slot_if_necessary
+    TimeSlot.find_or_create_by!(time: time, object: inviter) do |t|
+      t.available = true
+    end
   end
 
   def check_invitation_count
     return unless match_id
-    count_invitation = Match.find(match_id).invitations_count
+    count_invitation = match.invitations_count
     return unless count_invitation >= Match::MAX_INVITATIONS_COUNT
 
     add_invation_error
@@ -92,6 +102,11 @@ class Invitation < ApplicationRecord
     return unless last_invitation
 
     errors.add(:match_id, :pending_invitation_exists)
+  end
+
+  def update_status_time_slot(object)
+    object.time_slots.find_by(time: time, available: true)
+          .update_attributes!(available: false, match_id: match_id)
   end
 
   def add_invation_error
