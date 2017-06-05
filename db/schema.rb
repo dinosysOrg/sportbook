@@ -141,6 +141,7 @@ ActiveRecord::Schema.define(version: 20170602080413) do
     t.datetime "updated_at",  null: false
     t.integer  "object_id"
     t.string   "object_type"
+    t.integer  "match_id"
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -208,5 +209,6 @@ ActiveRecord::Schema.define(version: 20170602080413) do
   add_foreign_key "roles_users", "roles"
   add_foreign_key "roles_users", "users"
   add_foreign_key "teams", "tournaments"
+  add_foreign_key "time_slots", "matches"
   add_foreign_key "users", "skills"
 end

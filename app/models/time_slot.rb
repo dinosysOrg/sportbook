@@ -1,7 +1,9 @@
 class TimeSlot < ApplicationRecord
-  validate :check_time_slots_for_each_venue
+  belongs_to :match
+  validate :check_time_slots_for_each_venue, on: :create
   belongs_to :object, polymorphic: true
-  validates :available, presence: true
+
+  validates :available, inclusion: { in: [true, false] }
   scope :available, (-> { where(available: true) })
 
   def check_time_slots_for_each_venue

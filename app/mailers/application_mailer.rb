@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: ENV.fetch('SMTP_USER_NAME')
+  default from: 'noreply@sportbook.vn'
   layout 'mailer'
 
   def invitation_mail(emails)

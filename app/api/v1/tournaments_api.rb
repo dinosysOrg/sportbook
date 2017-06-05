@@ -4,9 +4,13 @@ module V1
 
     helpers GrapeDeviseTokenAuth::AuthHelpers
 
+    before do
+      authenticate_api_user!
+    end
+
     desc 'Get all tournaments'
     get 'tournaments' do
-      tournaments = Tournament.where('start_date > ? ', DateTime.now)
+      tournaments = Tournament.where('start_date > ? ', Time.zone.now)
       present tournaments, with: Representers::TournamentsRepresenter
     end
 
@@ -15,7 +19,6 @@ module V1
     ]
 
     get 'tournaments/my-tournaments' do
-      authenticate_api_user!
       tournaments = current_api_user.tournaments
       present tournaments, with: Representers::TournamentsRepresenter
     end
@@ -24,6 +27,20 @@ module V1
     get 'tournaments/:tournament_id' do
       tournament = Tournament.find_by_id(params[:tournament_id])
       present tournament, with: Representers::TournamentRepresenter
+    end
+
+    desc 'get all upcoming tournaments'
+    get 'tournaments/my-tournaments/upcoming-tournaments' do
+      tournaments = current_api_user.tournaments.where('start_date > ?', Time.zone.now)
+      present tournaments, with: Representers::TournamentsRepresenter
+    end
+
+    desc 'get all upcoming matches'
+    get 'tournaments/my-tournaments/upcoming-matches' do
+      matches_team_a = Match.where('team_a_id = ? And time > ?', current_api_user.team_ids, Time.zone.now)
+      matches_team_b = Match.where('team_b_id = ? And time > ?', current_api_user.team_ids, Time.zone.now)
+      upcoming_matches = matches_team_a.or(matches_team_b)
+      present upcoming_matches, with: Representers::MatchesRepresenter
     end
   end
 end

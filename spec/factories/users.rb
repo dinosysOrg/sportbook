@@ -5,7 +5,7 @@ FactoryGirl.define do
     email { FFaker::Internet.email }
     nickname { FFaker::Name.name }
     password 'password'
-    confirmed_at { Time.now }
+    confirmed_at { Time.zone.now }
 
     after(:build) do |u|
       u.uid = u.email unless u.uid
