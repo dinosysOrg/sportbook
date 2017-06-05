@@ -18,8 +18,7 @@ class NotificationsService
       tokens.each do |token|
         notification = Houston::Notification.new(device: token)
         notification.alert = message
-        # take a look at the docs about these params
-        # notification.badge = 0
+        notification.badge = 1
         notification.sound = 'sosumi.aiff'
         apn.push(notification)
       end

@@ -17,7 +17,7 @@ module V1
     params do
       requires :user_id, type: Integer, desc: 'User register push notification'
       requires :token, type: String, desc: 'Device token from mobile'
-      # requires :platform, type: Integer, desc: "Platform of device. Input value is '0 - iOS' or '1 - Android'"
+      requires :platform, type: Integer, desc: "Platform of device. Input value is '0 - iOS' or '1 - Android'"
     end
     post 'devices/create' do
       Device.create!(user_id: params[:user_id],
