@@ -82,6 +82,10 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 
+# Gem for push notification
+gem 'houston'
+gem 'gcm'
+
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 # gem 'turbolinks', '~> 5'
 
@@ -124,7 +128,7 @@ group :development do
 end
 
 # cron tab
-gem 'whenever', :require => false
+gem 'whenever', require: false
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

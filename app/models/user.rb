@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :tournaments, through: :players
   has_many :roles_users
   has_many :roles, through: :roles_users
+  has_many :devices
 
   enum skill_level: { beginner: 100, amateur: 200, semi_professional: 300, professional: 400, master: 500 }
 
