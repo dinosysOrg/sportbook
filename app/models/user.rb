@@ -20,4 +20,12 @@ class User < ApplicationRecord
   def slug_info
     "#{name} #{phone_number ? phone_number[-3..-1] : ''}"
   end
+
+  def role?(role)
+    roles.pluck(:name).include?(role)
+  end
+
+  def active_for_authentication?
+    super && roles.present?
+  end
 end
