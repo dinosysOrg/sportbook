@@ -42,9 +42,40 @@ module V1
       requires :type, type: String, default: 'available', values: ['available']
     end
     get 'teams/:id/time_slots' do
-      team = Team.find params[:id]
+      team = Team.find_by_id params[:id]
       venue_time_slots = TimeSlotService.possible_time_slots team
       present venue_time_slots, with: Representers::PossibleTimeSlotsRepresenter
+    end
+
+    desc 'Updates timeslot for team', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'One of require fields is missing' }
+    ]
+    params do
+      requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
+    end
+    put 'teams/:id/time_slots' do
+      team = Team.find_by_id params[:id]
+      tour = team.tournament
+      date_range = (tour['start_date']..tour['end_date']).to_a
+      team.time_slots.where(available: true).each do |time_slot|
+        time_slot(&:destroy)
+      end
+      TimeSlotService.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
+      present team, with: Representers::TeamRepresenter
+    end
+
+    desc 'Updates venue ranking for team', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'One of require fields is missing' }
+    ]
+    params do
+      requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team'
+    end
+    put 'teams/:id/venue_ranking' do
+      team = Team.find params[:id]
+      team.update_attributes!(venue_ranking: params[:venue_ranking])
+      present team, with: Representers::TeamRepresenter
     end
   end
 end
