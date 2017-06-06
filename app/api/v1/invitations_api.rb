@@ -77,5 +77,17 @@ module V1
       end
       invitation.reject!
     end
+
+    desc 'show detail invitation', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'Missing Invitation Id' }
+    ]
+    params do
+      requires :invitation_id, type: Integer
+    end
+    get 'invitations/:invitation_id' do
+      invitation = Invitation.find(params[:invitation_id])
+      present invitation, with: Representers::InvitationRepresenter
+    end
   end
 end
