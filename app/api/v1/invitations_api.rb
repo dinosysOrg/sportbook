@@ -80,6 +80,7 @@ module V1
 
     desc 'show detail invitation', failure: [
       { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 405, message: 'You cant do this operation that current user is not belong invitee team' },
       { code: 422, message: 'Missing Invitation Id' }
     ]
     params do
@@ -87,6 +88,9 @@ module V1
     end
     get 'invitations/:invitation_id' do
       invitation = Invitation.find(params[:invitation_id])
+      unless invitation.invitee.user_ids.include?(current_api_user.id)
+        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405)
+      end
       present invitation, with: Representers::InvitationRepresenter
     end
   end

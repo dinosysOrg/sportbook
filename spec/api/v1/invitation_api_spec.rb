@@ -198,16 +198,27 @@ describe 'InvitationsApi' do
         expect(pending_invitation.reload).to be_expired
       end
     end
+  end
 
+  describe 'show detail invitation' do
+    let(:pending_invitation) do
+      create :invitation, :pending,
+             time: time_slot_venue.time, match: match, venue: venue, invitee: match.team_a, inviter: match.team_b
+    end
+    let(:api_user) { pending_invitation.invitee.users.first.becomes ApiUser }
+    let(:show_request) { get "/api/v1/invitations/#{pending_invitation.id}", headers: request_headers.merge(auth_headers) }
     context 'view invitation details' do
-      let(:pending_invitation) do
-        create :invitation, :pending,
-               time: time_slot_venue.time, match: match, venue: venue, invitee: match.team_a, inviter: match.team_b
-      end
       it 'return detail invitation' do
-        get "/api/v1/invitations/#{pending_invitation.id}", headers: request_headers.merge(auth_headers)
+        show_request
         expect(response.status).to eq(200)
         expect(json_response[:invitee][:name]).to eq(pending_invitation.invitee.name)
+      end
+    end
+    context 'show error when current is not belong to invitee team' do
+      let(:api_user) { pending_invitation.inviter.users.first.becomes ApiUser }
+      it 'throws 405' do
+        show_request
+        expect(response.status).to eq(405)
       end
     end
   end
