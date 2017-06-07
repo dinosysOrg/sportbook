@@ -4,6 +4,10 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_locale
 
+  def access_denied(exception)
+    redirect_to destroy_admin_user_session_path, method: :delete, alert: exception.message
+  end
+
   protected
 
   def configure_permitted_parameters
