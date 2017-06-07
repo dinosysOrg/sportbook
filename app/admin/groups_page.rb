@@ -27,7 +27,7 @@ ActiveAdmin.register Group do
     f.inputs 'Admin Details' do
       f.input :tournament, input_html: { disabled: true }
       f.input :name
-      f.input :start_date
+      f.input :start_date, as: :date_picker
 
       if f.object.tournament
         f.has_many :groups_teams do |groups_team|

@@ -45,6 +45,24 @@ ActiveAdmin.register Match do
     end
   end
 
+  form do |f|
+    f.inputs do
+      f.input :group
+      f.input :venue
+      f.input :team_a
+      f.input :team_a
+      f.input :time, as: :datetime_picker
+      f.input :code
+      f.input :score_a
+      f.input :score_b
+      f.input :point_a
+      f.input :point_b
+      f.input :calendar_link
+      f.input :note
+    end
+    f.actions
+  end
+
   permit_params do
     [:name, :tournament_id]
   end
