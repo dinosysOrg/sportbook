@@ -42,5 +42,23 @@ module V1
       upcoming_matches = matches_team_a.or(matches_team_b)
       present upcoming_matches, with: Representers::MatchesRepresenter
     end
+
+    desc 'view opponent'
+    get 'tournaments/:tournament_id/view_opponents' do
+      team = current_api_user.teams.find_by(tournament_id: params[:tournament_id])
+      group = team.groups.max_by(&:created_at)
+      opponent_teams = group.teams.reject { |t| t == team }
+      opponent_with_status_invitation = opponent_teams.map do |t|
+        invitatee = team.invitations_as_invitee.where(inviter_id: t.id)
+        invitater = team.invitations_as_inviter.where(invitee_id: t.id)
+        list_invitations = invitatee.empty? ? invitater : invitatee
+        invitation_max = list_invitations.max_by(&:created_at)
+        OpenStruct.new team_id: t.id, team_name: t.name, invitation_id: invitation_max.try(:id),
+                       invitation_status: invitation_max.try(:status),
+                       invitation_invitee_id: invitation_max.try(:invitee_id),
+                       invitation_inviter_id: invitation_max.try(:inviter_id)
+      end
+      present opponent_with_status_invitation, with: Representers::OpponentsRepresenter
+    end
   end
 end
