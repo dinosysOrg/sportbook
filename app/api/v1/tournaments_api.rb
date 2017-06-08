@@ -42,5 +42,23 @@ module V1
       upcoming_matches = matches_team_a.or(matches_team_b)
       present upcoming_matches, with: Representers::MatchesRepresenter
     end
+
+    desc 'update infomations for profile player'
+    params do
+      requires :first_name, type: String, desc: "Player's First Name"
+      requires :last_name, type: String, desc: "Player's Last Name"
+      requires :email, type: String, desc: "Player's Email"
+      requires :password, type: String, desc: "Player's Password"
+      requires :password_confirmation, type: String, desc: "Player's Password confirmation"
+      requires :address, type: String, desc: "Player's Address"
+      requires :birthday, type: String, desc: "Player's Birthday"
+      requires :club, type: String, desc: "Player's Club"
+    end
+    put 'tournaments/:tournament_id/players/:player_id' do
+      Player.update_infomations(params)
+      player = Player.find_by_id(params[:player_id])
+      player = player.update_attributes!(club: params[:club])
+      present player, with: Representers::PlayerRepresenter
+    end
   end
 end

@@ -4,6 +4,18 @@ describe 'TournamentsApi' do
   let!(:api_user) { my_team.users.first.becomes ApiUser }
   let(:my_started_tournament) { create(:tournament, start_date: 1.days.ago, end_date: 2.weeks.from_now) }
   let(:auth_headers) { api_user.create_new_auth_token }
+  let(:user) { FactoryGirl.create(:user) }
+  let(:player) { create(:player, user: user, tournament: my_tournament1, team: my_team) }
+  let(:params) do
+    { first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      password: user.password,
+      password_confirmation: user.password,
+      address: user.address,
+      birthday: user.birthday,
+      club: 'Chelsea' }
+  end
 
   it 'show all tournaments' do
     create(:tournament, start_date: 2.days.from_now, end_date: 3.weeks.from_now)
@@ -62,5 +74,17 @@ describe 'TournamentsApi' do
     expect(json_response[:_embedded][:matches].count).to eq(1)
     expect(json_response[:_embedded][:matches][0][:team_b][:name]).to eq(match1.team_b.name)
     expect(Time.parse(json_response[:_embedded][:matches][0][:time])).to eq(match1.time)
+  end
+
+  it 'update infomations for profile player' do
+    put "/api/v1/tournaments/#{my_tournament1.id}/players/#{player.id}", params: params.to_json,
+                                                                         headers: request_headers.merge(auth_headers)
+    expect(response.status).to eq(200)
+    expect(json_response[:email]).to match(params[:email])
+    expect(json_response[:first_name]).to match(params[:first_name])
+    expect(json_response[:last_name]).to match(params[:last_name])
+    expect(json_response[:address]).to match(params[:address])
+    expect(json_response[:birthday]).to match(params[:birthday])
+    expect(json_response[:club]).to match(params[:club])
   end
 end
