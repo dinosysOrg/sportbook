@@ -523,7 +523,6 @@ DEPENDENCIES
   aasm
   activeadmin (~> 1.0.0.pre5)
   activeadmin-globalize!
-  activemodel-serializers-xml
   api-pagination
   arctic_admin
   auto_strip_attributes
