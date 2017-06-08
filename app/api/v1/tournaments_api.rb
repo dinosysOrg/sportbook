@@ -56,7 +56,9 @@ module V1
         matches_team_a = Match.where('team_a_id IN (?)', team_ids)
         matches_team_b = Match.where('team_b_id IN (?)', team_ids)
       end
-      upcoming_matches = matches_team_a.or(matches_team_b).page(params[:page]).limit(params[:limit])
+      page = params[:page].present? ? params[:page] : 1
+      limit = params[:limit].present? ? params[:limit] : 5
+      upcoming_matches = matches_team_a.or(matches_team_b).page(page).limit(limit)
       present upcoming_matches, with: Representers::MatchesRepresenter
     end
   end
