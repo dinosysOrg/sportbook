@@ -132,3 +132,8 @@ gem 'whenever', require: false
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Multi language in DB
+gem 'globalize', git: 'https://github.com/globalize/globalize'
+gem 'activemodel-serializers-xml'
+gem "activeadmin-globalize", github: 'anthony-robin/activeadmin-globalize'
