@@ -57,7 +57,7 @@ module V1
     put 'tournaments/:tournament_id/players/:player_id' do
       Player.update_infomations(params)
       player = Player.find_by_id(params[:player_id])
-      player = player.update_attributes!(club: params[:club])
+      player.update_attributes!(club: params[:club])
       present player, with: Representers::PlayerRepresenter
     end
   end
