@@ -8,6 +8,7 @@ module V1
       include Roar::Hypermedia
       include Grape::Roar::Representer
 
+      property :id
       property :time
       property :team_a
       property :team_b
