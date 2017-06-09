@@ -7,13 +7,13 @@ describe 'TournamentsApi' do
   let(:user) { FactoryGirl.create(:user) }
   let(:player) { create(:player, user: user, tournament: my_tournament1, team: my_team) }
   let(:params) do
-    { first_name: user.first_name,
-      last_name: user.last_name,
+    { first_name: 'Jeny',
+      last_name: 'Kim',
       email: user.email,
-      password: user.password,
-      password_confirmation: user.password,
-      address: user.address,
-      birthday: user.birthday,
+      password: '12345678',
+      password_confirmation: '12345678',
+      address: '33 Paster, Q3, HCM',
+      birthday: '1990-01-01',
       club: 'Chelsea' }
   end
 
@@ -80,11 +80,12 @@ describe 'TournamentsApi' do
     put "/api/v1/tournaments/#{my_tournament1.id}/players/#{player.id}", params: params.to_json,
                                                                          headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
-    expect(json_response[:email]).to match(params[:email])
+    p json_response
+    expect(json_response[:user][:email]).to match(params[:email])
     expect(json_response[:first_name]).to match(params[:first_name])
     expect(json_response[:last_name]).to match(params[:last_name])
-    expect(json_response[:address]).to match(params[:address])
-    expect(json_response[:birthday]).to match(params[:birthday])
-    expect(json_response[:club]).to match(params[:club])
+    expect(json_response[:user][:address]).to match(params[:address])
+    expect(json_response[:user][:birthday]).to match(params[:birthday])
+    expect(json_response[:user][:club]).to match(params[:club])
   end
 end

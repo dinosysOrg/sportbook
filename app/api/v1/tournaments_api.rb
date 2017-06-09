@@ -55,9 +55,7 @@ module V1
       requires :club, type: String, desc: "Player's Club"
     end
     put 'tournaments/:tournament_id/players/:player_id' do
-      Player.update_infomations(params)
-      player = Player.find_by_id(params[:player_id])
-      player.update_attributes!(club: params[:club])
+      player = Player.update_infomations(current_api_user, params)
       present player, with: Representers::PlayerRepresenter
     end
   end

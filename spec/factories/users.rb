@@ -8,6 +8,7 @@ FactoryGirl.define do
     password 'password'
     birthday { FFaker::Time.datetime }
     address { FFaker::Address.street_address }
+    club { FFaker::Name.name }
     confirmed_at { Time.zone.now }
 
     after(:build) do |u|

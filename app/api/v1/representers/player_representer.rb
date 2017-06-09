@@ -10,10 +10,7 @@ module V1
 
       property :first_name
       property :last_name
-      property :email
-      property :address
-      property :birthday
-      property :club
+      property :user
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
