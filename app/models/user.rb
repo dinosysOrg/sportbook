@@ -21,6 +21,10 @@ class User < ApplicationRecord
     "#{name} #{phone_number ? phone_number[-3..-1] : ''}"
   end
 
+  def admin?
+    role? 'Admin'
+  end
+
   def role?(role)
     roles.pluck(:name).include?(role)
   end
