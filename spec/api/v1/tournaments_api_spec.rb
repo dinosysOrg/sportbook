@@ -55,10 +55,14 @@ describe 'TournamentsApi' do
   end
 
   it 'limit for matches by upcoming and belong to current_user' do
-    create(:match, time: 1.days.ago.at_beginning_of_hour, team_a: my_team)
-    match1 = create(:match, time: 2.days.from_now.at_beginning_of_hour, team_b: my_team)
+    tournament2 = create(:tournament, start_date: 1.days.ago, end_date: 2.weeks.from_now)
+    my_player2 = create(:player, user: api_user, tournament: tournament2)
+    my_team2 = create(:team, players: [my_player2], tournament: tournament2)
+    match1 = create(:match, time: 1.days.from_now.at_beginning_of_hour, team_b: my_team)
+    match2 = create(:match, time: 1.days.from_now.at_beginning_of_hour, team_b: my_team2)
 
-    get '/api/v1/matches', params: { type: 'upcoming', tournament_id: nil, limit: 1, page: 1 }.as_json, headers: request_headers.merge(auth_headers)
+    get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 2, page: 1 }.as_json,
+                           headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:matches].count).to eq(request.params[:limit].to_i)
     expect(json_response[:_embedded][:matches][0][:team_b][:name]).to eq(match1.team_b.name)
@@ -66,10 +70,14 @@ describe 'TournamentsApi' do
   end
 
   it 'limit for matches by history and belong to current_user' do
+    tournament2 = create(:tournament, start_date: 1.days.ago, end_date: 2.weeks.from_now)
+    my_player2 = create(:player, user: api_user, tournament: tournament2)
+    my_team2 = create(:team, players: [my_player2], tournament: tournament2)
     match1 = create(:match, time: 2.days.ago.at_beginning_of_hour, team_a: my_team)
-    match2 = create(:match, time: 3.days.ago.at_beginning_of_hour, team_b: my_team)
+    match2 = create(:match, time: 3.days.ago.at_beginning_of_hour, team_b: my_team2)
 
-    get '/api/v1/matches', params: { type: 'history', tournament_id: nil, limit: 2, page: 1 }.as_json, headers: request_headers.merge(auth_headers)
+    get '/api/v1/matches', params: { type: 'my_historical', tournament_id: nil, limit: 2, page: 1 }.as_json,
+                           headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:matches].count).to eq(request.params[:limit].to_i)
     expect(json_response[:_embedded][:matches][0][:team_a][:name]).to eq(match1.team_a.name)
@@ -82,30 +90,39 @@ describe 'TournamentsApi' do
     match1 = create(:match, time: 5.days.from_now.at_beginning_of_hour, team_b: my_team)
     match2 = create(:match, time: 4.days.ago.at_beginning_of_hour, team_a: my_team)
     match3 = create(:match, time: 3.days.from_now.at_beginning_of_hour, team_a: my_team)
-    get '/api/v1/matches', params: { type: '', tournament_id: tour_id, limit: 3, page: 1 }.as_json, headers: request_headers.merge(auth_headers)
+    get '/api/v1/matches', params: { type: '', tournament_id: tour_id, limit: 3, page: 1 }.as_json,
+                           headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:matches].count).to eq(request.params[:limit].to_i)
     expect(json_response[:_embedded][:matches][0][:team_b][:name]).to eq(match1.team_b.name)
     expect(Time.parse(json_response[:_embedded][:matches][0][:time])).to eq(match1.time)
+    expect(json_response[:_embedded][:matches][0][:team_b][:tournament_id]).to eq(request.params[:tournament_id].to_i)
   end
 
   it 'page for matches by upcoming and belong to current_user' do
     create(:match, time: 1.days.from_now.at_beginning_of_hour, team_a: my_team)
-    get '/api/v1/matches', params: { type: 'upcoming', tournament_id: nil, limit: 5, page: 2 }.as_json, headers: request_headers.merge(auth_headers)
+    get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 5, page: 2 }.as_json,
+                           headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:matches].count).to eq(0)
   end
 
   it 'page for matches by history and belong to current_user' do
     create(:match, time: 2.days.from_now.at_beginning_of_hour, team_a: my_team)
-    get '/api/v1/matches', params: { type: 'history', tournament_id: nil, limit: 5, page: 3 }.as_json, headers: request_headers.merge(auth_headers)
+    get '/api/v1/matches', params: { type: 'my_historical', tournament_id: nil, limit: 5, page: 3 }.as_json,
+                           headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:matches].count).to eq(0)
   end
 
   it 'page for matches by belong to tournament' do
-    create(:match, time: 3.days.from_now.at_beginning_of_hour, team_a: my_team)
-    get '/api/v1/matches', params: { type: '', tournament_id: tour_id, limit: 50, page: 4 }.as_json, headers: request_headers.merge(auth_headers)
+    tournament2 = create(:tournament, start_date: 1.days.ago, end_date: 2.weeks.from_now)
+    my_player2 = create(:player, user: api_user, tournament: tournament2)
+    my_team2 = create(:team, players: [my_player2], tournament: tournament2)
+    match1 = create(:match, time: 3.days.from_now.at_beginning_of_hour, team_b: my_team)
+    match2 = create(:match, time: 4.days.from_now.at_beginning_of_hour, team_b: my_team2)
+    get '/api/v1/matches', params: { type: '', tournament_id: tour_id, limit: 50, page: 4 }.as_json,
+                           headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:matches].count).to eq(0)
   end
