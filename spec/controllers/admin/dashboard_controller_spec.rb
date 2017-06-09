@@ -31,7 +31,7 @@ describe Admin::DashboardController, type: :controller do
         sign_in @user
         get :index
         assert_response :redirect
-        expect(response).to redirect_to destroy_admin_user_session_path
+        expect(response).to redirect_to new_admin_user_session_path
       end
 
       it 'user has more roles without admin role' do
@@ -41,7 +41,7 @@ describe Admin::DashboardController, type: :controller do
         sign_in @user
         get :index
         assert_response :redirect
-        expect(response).to redirect_to destroy_admin_user_session_path
+        expect(response).to redirect_to new_admin_user_session_path
       end
     end
   end
