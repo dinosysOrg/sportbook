@@ -55,8 +55,8 @@ module V1
       requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
       requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team'
     end
-    put 'teams/:id/information' do
-      team = Team.find params[:id]
+    put 'teams/:team_id/information' do
+      team = Team.find params[:team_id]
       tour = team.tournament
       date_range = (tour['start_date']..tour['end_date']).to_a
       if params[:preferred_time_blocks].present?
