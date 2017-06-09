@@ -13,17 +13,13 @@ ActiveAdmin.register Tournament do
       row :name
       row :start_date
       row :end_date
-      Globalize.with_locale(:en) do
-        row("#{I18n.t('activerecord.attributes.tournament.competition_mode')} (EN)", &:competition_mode)
-        row("#{I18n.t('activerecord.attributes.tournament.competition_fee')} (EN)", &:competition_fee)
-        row("#{I18n.t('activerecord.attributes.tournament.competition_schedule')} (EN)", &:competition_schedule)
+
+      I18n.available_locales.each do |locale|
+        row("#{I18n.t('activerecord.attributes.tournament.competition_mode')} (#{locale.to_s.upcase})", &:competition_mode)
+        row("#{I18n.t('activerecord.attributes.tournament.competition_fee')} (#{locale.to_s.upcase})", &:competition_fee)
+        row("#{I18n.t('activerecord.attributes.tournament.competition_schedule')} (#{locale.to_s.upcase})", &:competition_schedule)
       end
 
-      Globalize.with_locale(:vi) do
-        row("#{I18n.t('activerecord.attributes.tournament.competition_mode')} (VI)", &:competition_mode)
-        row("#{I18n.t('activerecord.attributes.tournament.competition_fee')} (VI)", &:competition_fee)
-        row("#{I18n.t('activerecord.attributes.tournament.competition_schedule')} (VI)", &:competition_schedule)
-      end
       row :created_at
       row :updated_at
     end
