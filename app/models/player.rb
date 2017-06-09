@@ -6,7 +6,7 @@ class Player < ApplicationRecord
   delegate :name, :phone_number, :email, to: :user
 
   validates :user_id, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
-  def self.update_infomations(current_api_user, params)
+  def self.update_infomations(params)
     name = [params[:first_name], params[:last_name]].reject(&:empty?).join(' ')
     player = Player.find_by_id(params[:player_id])
     player.user.update_attributes!(name: name, password: params[:password],
