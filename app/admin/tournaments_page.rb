@@ -15,9 +15,11 @@ ActiveAdmin.register Tournament do
       row :end_date
 
       I18n.available_locales.each do |locale|
-        row("#{I18n.t('activerecord.attributes.tournament.competition_mode')} (#{locale.to_s.upcase})", &:competition_mode)
-        row("#{I18n.t('activerecord.attributes.tournament.competition_fee')} (#{locale.to_s.upcase})", &:competition_fee)
-        row("#{I18n.t('activerecord.attributes.tournament.competition_schedule')} (#{locale.to_s.upcase})", &:competition_schedule)
+        Globalize.with_locale(locale) do
+          row("#{I18n.t('activerecord.attributes.tournament.competition_mode')} (#{locale.to_s.upcase})", &:competition_mode)
+          row("#{I18n.t('activerecord.attributes.tournament.competition_fee')} (#{locale.to_s.upcase})", &:competition_fee)
+          row("#{I18n.t('activerecord.attributes.tournament.competition_schedule')} (#{locale.to_s.upcase})", &:competition_schedule)
+        end
       end
 
       row :created_at
