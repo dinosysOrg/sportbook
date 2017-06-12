@@ -4,7 +4,7 @@ describe 'TournamentsApi' do
   let!(:api_user) { my_team.users.first.becomes ApiUser }
   let(:my_started_tournament) { create(:tournament, start_date: 1.days.ago, end_date: 2.weeks.from_now) }
   let(:auth_headers) { api_user.create_new_auth_token }
-  describe 'have many tuornaments' do
+  describe "get '/api/v1/tournaments'" do
     it 'show all tournaments' do
       create(:tournament, start_date: 2.days.from_now, end_date: 3.weeks.from_now)
       create(:tournament, start_date: 3.days.from_now, end_date: 4.weeks.from_now)
@@ -59,43 +59,62 @@ describe 'TournamentsApi' do
     end
   end
 
-  describe 'choose one tournament' do
-    let!(:my_group) { create(:group, tournament: my_tournament1, created_at: 2.days.ago) }
-    let!(:other_group) { create(:group, tournament: my_tournament1, created_at: 1.days.ago) }
-    let!(:other_team) { create(:team, :has_players, tournament: my_tournament1) }
-    let!(:other_team_1) { create(:team, :has_players, tournament: my_tournament1) }
-    let!(:group_a_myteam) { create(:groups_team, group: my_group, team: my_team) }
-    let!(:group_a_other_team) { create(:groups_team, group: my_group, team: other_team) }
-    let!(:group_b_myteam) { create(:groups_team, group: other_group, team: my_team) }
-    let!(:group_b_other_team) { create(:groups_team, group: other_group, team: other_team_1) }
-    let!(:match_1) { create(:match, group: my_group, team_a: my_team, team_b: other_team) }
-    let!(:match_2) { create(:match, group: other_group, team_a: my_team, team_b: other_team_1) }
-    let!(:invitation_a) { create(:invitation, :accepted, invitee: match_1.team_a, inviter: match_1.team_b, venue: match_1.venue) }
-    it 'show one tournaments' do
-      get "/api/v1/tournaments/#{my_tournament1.id}", headers: request_headers.merge(auth_headers)
-      expect(response.status).to eq(200)
-      expect(json_response[:name]).to eq(my_tournament1.name)
+  describe "get '/api/v1/tournaments/:tournament_id'" do
+    describe 'return current tournament detail' do
+      it 'show detail' do
+        get "/api/v1/tournaments/#{my_tournament1.id}", headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq(200)
+        expect(json_response[:name]).to eq(my_tournament1.name)
+      end
     end
+    describe 'return all groups that belong to current tournament' do
+      let(:group_api_request) { get "/api/v1/tournaments/#{my_tournament1.id}/groups", headers: request_headers.merge(auth_headers) }
 
-    it 'view opponments when no one doesnt have any invitation' do
-      invitation_b = create(:invitation, :accepted, invitee: match_2.team_b, inviter: match_2.team_a, venue: match_2.venue)
-      get "/api/v1/tournaments/#{my_tournament1.id}/view_opponents", headers: request_headers.merge(auth_headers)
-      expect(response.status).to eq(200)
-      teams_in_group = other_group.teams.reject { |t| t == my_team }
-      opponments_response = json_response[:_embedded][:opponents]
-      expect(opponments_response.size).to eq(teams_in_group.size)
-      expect(opponments_response[0][:team_name]).to eq(teams_in_group[0].name)
-      expect(opponments_response[0][:invitation_id]).to eq(invitation_b.id)
-      expect(opponments_response[0][:invitation_status]).to eq(invitation_b.status)
-    end
+      describe 'return all my group that belong to current tournament' do
+        let!(:other_team) { create(:team, :has_players, tournament: my_tournament1) }
+        let!(:my_group) { create(:group, tournament: my_tournament1, created_at: 2.days.ago) }
+        let!(:group_a_myteam) { create(:groups_team, group: my_group, team: my_team) }
+        let!(:group_a_other_team) { create(:groups_team, group: my_group, team: other_team) }
+        let!(:match_1) { create(:match, group: my_group, team_a: my_team, team_b: other_team) }
+        it 'all opponents have intitations' do
+          invitation_a = create(:invitation, :accepted, invitee: match_1.team_a, inviter: match_1.team_b, venue: match_1.venue)
+          group_api_request
+          expect(response.status).to eq(200)
+          my_group_response = json_response[:my_groups]
+          expect(my_group_response.size).to eq(1)
+          expect(my_group_response[0][:group_name]).to eq(my_group.name)
+          expect(my_group_response[0][:opponent_teams][0][:team_name]).to eq(other_team.name)
+          expect(my_group_response[0][:opponent_teams][0][:invitation_inviter_id]).to eq(other_team.id)
+          expect(my_group_response[0][:opponent_teams][0][:invitation_invitee_id]).to eq(my_team.id)
+          expect(my_group_response[0][:opponent_teams][0][:invitation_status]).to eq(invitation_a.status)
+        end
 
-    it 'view opponments when at lease one team doesnt have invitation' do
-      get "/api/v1/tournaments/#{my_tournament1.id}/view_opponents", headers: request_headers.merge(auth_headers)
-      expect(response.status).to eq(200)
-      teams_in_group = other_group.teams.reject { |t| t == my_team }
-      opponments_response = json_response[:_embedded][:opponents]
-      expect(opponments_response.size).to eq(teams_in_group.size)
-      expect(opponments_response[0][:team_name]).to eq(teams_in_group[0].name)
+        it 'At lease one opponent doesnt have any invitations' do
+          group_api_request
+          expect(response.status).to eq(200)
+          my_group_response = json_response[:my_groups]
+          expect(my_group_response.size).to eq(1)
+          expect(my_group_response[0][:group_name]).to eq(my_group.name)
+          expect(my_group_response[0][:opponent_teams][0][:team_name]).to eq(other_team.name)
+          expect(my_group_response[0][:opponent_teams][0][:invitation_id]).to be_nil
+        end
+      end
+
+      describe 'return all other groups that belong to current tournament' do
+        let!(:other_group) { create(:group, tournament: my_tournament1, created_at: Time.zone.now) }
+        let!(:other_team) { create(:team, :has_players, tournament: my_tournament1) }
+        let!(:group_a_other_team) { create(:groups_team, group: other_group, team: other_team) }
+
+        it 'work' do
+          group_api_request
+          expect(response.status).to eq(200)
+          other_groups_response = json_response[:other_groups]
+          expect(other_groups_response.size).to eq(1)
+          expect(other_groups_response[0][:group_name]).to eq(other_group.name)
+          expect(other_groups_response[0][:teams].size).to eq(1)
+          expect(other_groups_response[0][:teams][0][:name]).to include(other_team.name)
+        end
+      end
     end
   end
 end

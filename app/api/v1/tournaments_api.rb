@@ -44,21 +44,32 @@ module V1
     end
 
     desc 'view opponent'
-    get 'tournaments/:tournament_id/view_opponents' do
-      team = current_api_user.teams.find_by(tournament_id: params[:tournament_id])
-      group = team.groups.max_by(&:created_at)
-      opponent_teams = group.teams.reject { |t| t == team }
-      opponent_with_status_invitation = opponent_teams.map do |t|
-        invitatee = team.invitations_as_invitee.where(inviter_id: t.id)
-        invitater = team.invitations_as_inviter.where(invitee_id: t.id)
-        list_invitations = invitatee.empty? ? invitater : invitatee
-        invitation_max = list_invitations.max_by(&:created_at)
-        OpenStruct.new team_id: t.id, team_name: t.name, invitation_id: invitation_max.try(:id),
-                       invitation_status: invitation_max.try(:status),
-                       invitation_invitee_id: invitation_max.try(:invitee_id),
-                       invitation_inviter_id: invitation_max.try(:inviter_id)
+    get 'tournaments/:tournament_id/groups' do
+      my_team = current_api_user.teams.find_by(tournament_id: params[:tournament_id])
+      my_groups = my_team.groups
+      other_groups = Group.where(tournament_id: params[:tournament_id])
+                          .where.not(id: my_groups.ids)
+      my_groups = my_groups.map do |g|
+        opponent_teams = g.teams.reject { |t| t == my_team }
+        opponent_with_status_invitation = opponent_teams.map do |t|
+          invitee = my_team.invitations_as_invitee.where(inviter_id: t.id)
+          inviter = my_team.invitations_as_inviter.where(invitee_id: t.id)
+          list_invitations = invitee.empty? ? inviter : invitee
+          invitation_last = list_invitations.last
+          { team_id: t.id, team_name: t.name, invitation_id: invitation_last.try(:id),
+            invitation_status: invitation_last.try(:status),
+            invitation_invitee_id: invitation_last.try(:invitee_id),
+            invitation_inviter_id: invitation_last.try(:inviter_id) }
+        end
+        { group_name: g.name, group_time_create: g.created_at,
+          opponent_teams: opponent_with_status_invitation }
       end
-      present opponent_with_status_invitation, with: Representers::OpponentsRepresenter
+      other_groups = other_groups.map do |g|
+        { group_name: g.name, teams: g.teams }
+      end
+
+      list_groups = OpenStruct.new my_groups: my_groups, other_groups: other_groups
+      present list_groups, with: Representers::GroupsRepresenter
     end
   end
 end
