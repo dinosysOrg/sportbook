@@ -1,4 +1,5 @@
 describe 'TournamentsApi' do
+  let!(:venue) { create(:venue) }
   let!(:my_tournament1) { create(:tournament, start_date: 1.days.from_now, end_date: 2.weeks.from_now) }
   let!(:my_team) { create(:team, :has_players, tournament: my_tournament1) }
   let!(:api_user) { my_team.users.first.becomes ApiUser }
@@ -75,9 +76,9 @@ describe 'TournamentsApi' do
         let!(:my_group) { create(:group, tournament: my_tournament1, created_at: 2.days.ago) }
         let!(:group_a_myteam) { create(:groups_team, group: my_group, team: my_team) }
         let!(:group_a_other_team) { create(:groups_team, group: my_group, team: other_team) }
-        let!(:match_1) { create(:match, group: my_group, team_a: my_team, team_b: other_team) }
+        let!(:match_1) { create(:match, group: my_group, team_a: my_team, team_b: other_team, venue: venue) }
         it 'all opponents have intitations' do
-          invitation_a = create(:invitation, :accepted, invitee: match_1.team_a, inviter: match_1.team_b, venue: match_1.venue)
+          invitation_a = create(:invitation, :accepted, time: TimeSlot.first.time, invitee: match_1.team_a, inviter: match_1.team_b, venue: match_1.venue)
           group_api_request
           expect(response.status).to eq(200)
           my_group_response = json_response[:my_groups]
