@@ -8,9 +8,14 @@ module V1
       include Roar::Hypermedia
       include Grape::Roar::Representer
 
+      property :id
       property :name
       property :start_date
       property :end_date
+      property :competition_mode
+      property :competition_fee
+      property :competition_schedule
+      property :teams
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
