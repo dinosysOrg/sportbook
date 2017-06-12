@@ -93,3 +93,7 @@ en:
   time:
     formats:
       long: "%Y-%m-%d %H:%M:%S"
+  tournament:
+    push:
+      registration_confirmed: Your registration is confirmed. You can access to my tournament
+      registered: You have just registered to tournament

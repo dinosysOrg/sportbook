@@ -14,6 +14,16 @@ class Tournament < ApplicationRecord
   after_create :generate_time_slots
   after_create :generate_pages
 
+  def self.registration_confirmed(user_ids)
+    message = I18n.t('tournament.push.registration_confirmed')
+    NotificationsService.push_notification(user_ids, message)
+  end
+
+  def self.registered(user_ids)
+    message = I18n.t('tournament.push.registered')
+    NotificationsService.push_notification(user_ids, message)
+  end
+
   private
 
   def generate_pages
