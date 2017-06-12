@@ -142,9 +142,14 @@ describe 'TeamsApi' do
       expect(json_response[:_embedded][:venues]).to_not be_nil
     end
 
+    it 'check venue ranking and time slot before update' do
+      expect(team.time_slots.pluck(:time)).to be_empty
+      expect(team.venue_ranking).to be_empty
+    end
+
     it 'updates time slot and venue ranking for team' do
-      put "/api/v1/teams/#{team.id}/information", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
-                                                  headers: request_headers.merge(auth_headers)
+      put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
+                                      headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
       expect(team.time_slots.pluck(:time)).to match_array(
         [
