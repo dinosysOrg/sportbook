@@ -35,14 +35,6 @@ module V1
       present tournaments, with: Representers::TournamentsRepresenter
     end
 
-    desc 'get all upcoming matches'
-    get 'tournaments/my-tournaments/upcoming-matches' do
-      matches_team_a = Match.where('team_a_id = ? And time > ?', current_api_user.team_ids, Time.zone.now)
-      matches_team_b = Match.where('team_b_id = ? And time > ?', current_api_user.team_ids, Time.zone.now)
-      upcoming_matches = matches_team_a.or(matches_team_b)
-      present upcoming_matches, with: Representers::MatchesRepresenter
-    end
-
     desc 'view opponent'
     get 'tournaments/:tournament_id/groups' do
       my_team = current_api_user.teams.find_by(tournament_id: params[:tournament_id])
@@ -52,10 +44,7 @@ module V1
       my_groups = my_groups.map do |g|
         opponent_teams = g.teams.reject { |t| t == my_team }
         opponent_with_status_invitation = opponent_teams.map do |t|
-          invitee = my_team.invitations_as_invitee.where(inviter_id: t.id)
-          inviter = my_team.invitations_as_inviter.where(invitee_id: t.id)
-          list_invitations = invitee.empty? ? inviter : invitee
-          invitation_last = list_invitations.last
+          invitation_last = Invitation.latest_invitation_between(my_team, t)
           { team_id: t.id, team_name: t.name, invitation_id: invitation_last.try(:id),
             invitation_status: invitation_last.try(:status),
             invitation_invitee_id: invitation_last.try(:invitee_id),
