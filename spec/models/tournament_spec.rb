@@ -51,6 +51,13 @@ RSpec.describe Tournament, type: :model do
     end
   end
   describe 'notification_create' do
+    let(:user1) { create(:api_user) }
+    let(:user2) { create(:api_user) }
+    let(:team) { create(:team) }
+    let(:player1) { create(:player, team: team, user: user1) }
+    let(:player2) { create(:player, team: team, user: user2) }
+    let(:device1) { create(:device, user: user1, token: SecureRandom.uuid, platform: 0) }
+    let(:device2) { create(:device, user: user2, token: SecureRandom.uuid, platform: 1) }
     it 'registration is confirmed' do
       allow(Tournament).to receive(:registration_confirmed)
     end
