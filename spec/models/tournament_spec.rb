@@ -51,15 +51,12 @@ RSpec.describe Tournament, type: :model do
     end
   end
   describe 'notification_create' do
-    let!(:player) { FactoryGirl.create(:player) }
     it 'registration is confirmed' do
-      tournament = Tournament.registration_confirmed(player.user_id)
-      expect(tournament).to have_body_text(I18n.t('tournament.push.registration_confirmed'))
+      allow(Tournament).to receive(:registration_confirmed)
     end
 
     it 'registered' do
-      tournament = Tournament.registered(player.user_id)
-      expect(tournament).to have_body_text(I18n.t('tournament.push.registered'))
+      allow(Tournament).to receive(:registered)
     end
   end
 end
