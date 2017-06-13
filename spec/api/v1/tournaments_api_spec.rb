@@ -66,7 +66,7 @@ describe 'TournamentsApi' do
           create(:invitation, :rejected, time: TimeSlot.first.time, invitee: my_match.team_a,
                                          inviter: my_match.team_b, venue: my_match.venue)
         end
-
+        
         let!(:my_group) { create(:group, tournament: my_tournament1, created_at: 2.days.ago) }
         let!(:other_team) { create(:team, :has_players, tournament: my_tournament1) }
         let!(:my_match) { create(:match, group: my_group, team_a: my_team, team_b: other_team, venue: venue) }

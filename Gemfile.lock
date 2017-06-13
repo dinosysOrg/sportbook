@@ -1,3 +1,20 @@
+GIT
+  remote: https://github.com/anthony-robin/activeadmin-globalize.git
+  revision: 5d552094f2f487e36e5dcab18530f3cfb7290012
+  specs:
+    activeadmin-globalize (1.0.0)
+      activeadmin
+      globalize (>= 5.0.0)
+
+GIT
+  remote: https://github.com/globalize/globalize
+  revision: 6f9d3f38d132f3e5dcbe33311674e696c922d23c
+  specs:
+    globalize (5.1.0.beta1)
+      activemodel (>= 4.2, < 5.2)
+      activerecord (>= 4.2, < 5.2)
+      request_store (~> 1.0)
+
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -112,6 +129,7 @@ GEM
     commander (4.4.3)
       highline (~> 1.7.2)
     concurrent-ruby (1.0.5)
+    database_cleaner (1.6.1)
     declarative (0.0.9)
     declarative-option (0.1.0)
     descendants_tracker (0.0.4)
@@ -208,6 +226,8 @@ GEM
       rake
     grape-swagger (0.27.0)
       grape (>= 0.16.2)
+    grape-swagger-rails (0.3.0)
+      railties (>= 3.2.12)
     grape_devise_token_auth (0.1.4)
       devise (>= 3.3)
       devise_token_auth (>= 0.1.32)
@@ -505,6 +525,7 @@ PLATFORMS
 DEPENDENCIES
   aasm
   activeadmin (~> 1.0.0.pre5)
+  activeadmin-globalize!
   api-pagination
   arctic_admin
   auto_strip_attributes
@@ -513,6 +534,7 @@ DEPENDENCIES
   cancancan
   capybara
   coffee-rails (~> 4.2)
+  database_cleaner
   devise
   devise-i18n
   devise_token_auth
@@ -524,6 +546,7 @@ DEPENDENCIES
   font-awesome-rails
   friendly_id
   gcm
+  globalize!
   google-api-client
   grape
   grape-cancan
@@ -531,6 +554,7 @@ DEPENDENCIES
   grape-roar
   grape-route-helpers
   grape-swagger
+  grape-swagger-rails
   grape_devise_token_auth
   haml-rails (~> 0.9)
   hashie-forbidden_attributes
@@ -576,4 +600,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.15.0
+   1.15.1

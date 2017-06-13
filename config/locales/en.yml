@@ -55,6 +55,9 @@ en:
         wins: wins
       tournament:
         name: name
+        competition_mode: Competition mode
+        competition_fee: Competition fee & Prizes
+        competition_schedule: Competitions Schedule & Processes
       venue:
         name: name
         calendar: calendar

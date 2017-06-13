@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170602080413) do
+ActiveRecord::Schema.define(version: 20170608084328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,18 @@ ActiveRecord::Schema.define(version: 20170602080413) do
     t.integer  "object_id"
     t.string   "object_type"
     t.integer  "match_id"
+  end
+
+  create_table "tournament_translations", force: :cascade do |t|
+    t.integer  "tournament_id",        null: false
+    t.string   "locale",               null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.text     "competition_mode"
+    t.text     "competition_fee"
+    t.text     "competition_schedule"
+    t.index ["locale"], name: "index_tournament_translations_on_locale", using: :btree
+    t.index ["tournament_id"], name: "index_tournament_translations_on_tournament_id", using: :btree
   end
 
   create_table "tournaments", force: :cascade do |t|

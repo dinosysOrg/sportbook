@@ -3,17 +3,17 @@ require 'roar/hypermedia'
 
 module V1
   module Representers
-    module MatchRepresenter
+    module InvitationRepresenter
       include Roar::JSON::HAL
       include Roar::Hypermedia
       include Grape::Roar::Representer
 
-      property :id
       property :time
-      property :team_a
-      property :team_b
+      property :status
+      property :invitee
+      property :inviter
       property :venue
-      property :group
+      property :match
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])

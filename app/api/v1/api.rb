@@ -16,6 +16,7 @@ module V1
 
     mount TournamentsApi
     mount TeamsApi
+    mount MatchesApi
     mount SkillsApi
     mount InvitationsApi
     mount DevicesApi
