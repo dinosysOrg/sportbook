@@ -7,6 +7,8 @@ require 'spec_helper'
 require 'rspec/rails'
 require 'email_spec'
 require 'email_spec/rspec'
+require 'database_cleaner'
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -64,11 +66,20 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  # Devise config to use devise helper in test environment
+  config.include Devise::Test::ControllerHelpers, type: :controller
+
   config.before(:all) do
     Rails.application.load_seed
   end
 
   config.before(:each) do
     I18n.locale = :en
+  end
+
+  # Clean DB after run tests
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
   end
 end
