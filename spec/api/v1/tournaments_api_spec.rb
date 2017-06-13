@@ -63,15 +63,15 @@ describe 'TournamentsApi' do
         before do
           create(:groups_team, group: my_group, team: my_team)
           create(:groups_team, group: my_group, team: other_team)
-          create(:invitation, :rejected, time: TimeSlot.first.time, invitee: my_match.team_a,
-                                         inviter: my_match.team_b, venue: my_match.venue)
         end
-        
+
         let!(:my_group) { create(:group, tournament: my_tournament1, created_at: 2.days.ago) }
         let!(:other_team) { create(:team, :has_players, tournament: my_tournament1) }
         let!(:my_match) { create(:match, group: my_group, team_a: my_team, team_b: other_team, venue: venue) }
 
         it 'all opponents have intitations' do
+          create(:invitation, :rejected, time: TimeSlot.first.time, invitee: my_match.team_a,
+                                         inviter: my_match.team_b, venue: my_match.venue)
           my_accepted_invatation = create(:invitation, :accepted, time: TimeSlot.second.time, invitee: my_match.team_b,
                                                                   inviter: my_match.team_a, venue: my_match.venue)
           group_api_request

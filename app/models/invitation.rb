@@ -62,7 +62,7 @@ class Invitation < ApplicationRecord
   end
 
   def self.latest_invitation_between(invitee, inviter)
-    Invitation.where('(inviter_id = ? AND invitee_id = ?) OR (invitee_id = ? AND inviter_id = ?)', invitee.id, inviter.id, inviter.id, invitee.id).last
+    Invitation.where('(inviter_id = ? AND invitee_id = ?) OR (invitee_id = ? AND inviter_id = ?)', invitee.id, inviter.id, invitee.id, inviter.id).last
   end
 
   private
