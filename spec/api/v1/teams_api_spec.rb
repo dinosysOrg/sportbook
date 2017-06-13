@@ -156,6 +156,7 @@ describe 'TeamsApi' do
       put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
                                       headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
+      team = tour.teams.find_by(name: name)
       expect(team.time_slots.pluck(:time)).to match_array(
         [
           Time.new(2017, 5, 15, 9),
@@ -167,7 +168,7 @@ describe 'TeamsApi' do
           Time.new(2017, 5, 23, 11)
         ]
       )
-      expect(json_response[:venue_ranking]).to match_array(venue_ranking)
+      expect(team.venue_ranking).to match_array(venue_ranking)
     end
   end
 end

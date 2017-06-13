@@ -9,7 +9,6 @@ module V1
       include Grape::Roar::Representer
 
       property :name
-      property :venue_ranking
       property :players
 
       link :self do |opts|
