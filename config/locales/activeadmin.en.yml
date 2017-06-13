@@ -9,3 +9,4 @@ en:
       current_scope: scope
       current_filters: current filter
       no_current_filters: show all
+    not_permission: You don't have permission to access.

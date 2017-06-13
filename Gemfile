@@ -112,6 +112,7 @@ group :test do
   gem 'capybara'
   gem 'site_prism'
   gem 'email_spec'
+  gem 'database_cleaner'
 end
 
 group :development do
