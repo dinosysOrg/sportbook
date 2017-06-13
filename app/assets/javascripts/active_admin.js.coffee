@@ -7,3 +7,4 @@
 
 $ ->
   $('.summernote').summernote()
+  $('.available-locales').remove()
