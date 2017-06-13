@@ -84,7 +84,7 @@ vi:
             status:
               expired: Thư mời đã hết hạn
             team:
-              wrong_team: Bạn không có quyền thực hiện. 
+              wrong_team: Bạn không có quyền thực hiện.
   date:
     formats:
       long: "%d-%m-%Y"
@@ -93,3 +93,7 @@ vi:
   time:
     formats:
       long: "%d-%m-%Y %H:%M"
+  tournament:
+    push:
+      registration_confirmed: Đăng ký của bạn được xác nhận. Bạn có thể truy cập vào giải đấu của mình
+      registered: Bạn vừa đăng ký tham gia giải đấu
