@@ -64,7 +64,7 @@ describe 'TournamentsApi' do
     expect(json_response[:_embedded][:tournaments].count).to eq(1)
     expect(json_response[:_embedded][:tournaments][0][:name]).to eq(my_tournament1.name)
   end
-
+  
   it 'show all upcoming confirmed match that is belong to current_user' do
     create(:match, time: 1.days.ago.at_beginning_of_hour, team_a: my_team)
     match1 = create(:match, time: 2.days.from_now.at_beginning_of_hour, team_b: my_team)

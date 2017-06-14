@@ -55,6 +55,9 @@ vi:
         wins: thắng
       tournament:
         name: tên
+        competition_mode: Thể thức thi đấu
+        competition_fee: Lệ phí thi đấu & Cơ cấu giải thưởng
+        competition_schedule: Thời gian & Quy trình thi đấu
       venue:
         name: tên
         calendar: lịch
@@ -84,7 +87,7 @@ vi:
             status:
               expired: Thư mời đã hết hạn
             team:
-              wrong_team: Bạn không có quyền thực hiện. 
+              wrong_team: Bạn không có quyền thực hiện.
   date:
     formats:
       long: "%d-%m-%Y"

@@ -1,6 +1,8 @@
 class Tournament < ApplicationRecord
   PAGE_NAMES = [:register, :rules_and_regulations].freeze
 
+  active_admin_translates :competition_mode, :competition_fee, :competition_schedule
+
   has_many :groups, dependent: :destroy
   has_many :matches, through: :groups
   has_many :pages

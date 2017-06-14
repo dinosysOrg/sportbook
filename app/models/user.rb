@@ -27,5 +27,12 @@ class User < ApplicationRecord
 
   def last_name
     name.split[1..-1].join(' ') unless name.split.count < 1
+
+  def admin?
+    role? 'Admin'
+  end
+
+  def role?(role)
+    roles.pluck(:name).include?(role)
   end
 end
