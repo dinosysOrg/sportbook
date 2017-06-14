@@ -1,7 +1,7 @@
 describe 'TeamsApi' do
+  let!(:tour) { create(:tournament, start_date: Date.new(2017, 5, 15), end_date: Date.new(2017, 5, 24)) }
+  let(:name) { 'TeamA' }
   describe '#create' do
-    let!(:tour) { create(:tournament, start_date: Date.new(2017, 5, 15), end_date: Date.new(2017, 5, 24)) }
-
     context 'when not signed in' do
       it 'sign up tournament without login' do
         post "/api/v1/tournaments/#{tour.id}/teams"
@@ -17,10 +17,8 @@ describe 'TeamsApi' do
                                                      headers: request_headers.merge(auth_headers)
       end
 
-      let(:tour) { create(:tournament, start_date: Date.new(2017, 5, 15), end_date: Date.new(2017, 5, 24)) }
       let(:user) { create(:api_user, email: 'zi@dinosys.com', password: 'password') }
       let(:venue_ranking) { (1..4).to_a }
-      let(:name) { 'TeamA' }
       let(:preferred_time_blocks) { { monday: [[9, 10, 11]] } }
       let(:skill) { create(:skill, name: 'professinal') }
 
@@ -129,11 +127,13 @@ describe 'TeamsApi' do
   end
 
   describe '#time_slots' do
+    let(:new_venue_ranking) { (1..4).to_a }
+    let(:team) { create(:team, tournament: tour, name: 'TeamA', venue_ranking: new_venue_ranking) }
+    let(:api_user) { create(:api_user) }
+    let(:auth_headers) { api_user.create_new_auth_token }
+    let(:venue_ranking) { (5..8).to_a }
+    let(:preferred_time_blocks) { { tuesday: [[9, 10, 11]] } }
     it 'returns the available time slots' do
-      api_user = create(:api_user)
-      auth_headers = api_user.create_new_auth_token
-      team = create(:team)
-
       expect(TimeSlotService).to receive(:possible_time_slots).and_call_original
 
       get "/api/v1/teams/#{team.id}/time_slots", params: { type: 'available' }.as_json,
@@ -141,6 +141,34 @@ describe 'TeamsApi' do
 
       expect(response.status).to eq(200)
       expect(json_response[:_embedded][:venues]).to_not be_nil
+    end
+
+    it 'updates time slot and venue ranking for team' do
+      create(:time_slot, object: team, time: Time.new(2017, 5, 15, 9), available: false)
+      create(:time_slot, object: team, time: Time.new(2017, 5, 15, 10))
+      expect(team.time_slots.pluck(:time)).to match_array(
+        [
+          Time.new(2017, 5, 15, 9),
+          Time.new(2017, 5, 15, 10)
+        ]
+      )
+      expect(team.venue_ranking).to match_array(new_venue_ranking)
+      put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
+                                      headers: request_headers.merge(auth_headers)
+      expect(response.status).to eq(200)
+      team = tour.teams.find_by(name: name)
+      expect(team.time_slots.pluck(:time)).to match_array(
+        [
+          Time.new(2017, 5, 15, 9),
+          Time.new(2017, 5, 16, 9),
+          Time.new(2017, 5, 16, 10),
+          Time.new(2017, 5, 16, 11),
+          Time.new(2017, 5, 23, 9),
+          Time.new(2017, 5, 23, 10),
+          Time.new(2017, 5, 23, 11)
+        ]
+      )
+      expect(team.venue_ranking).to match_array(venue_ranking)
     end
   end
 end
