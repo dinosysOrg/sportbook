@@ -136,4 +136,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Multi language in DB
 gem 'globalize', git: 'https://github.com/globalize/globalize'
-gem "activeadmin-globalize", github: 'anthony-robin/activeadmin-globalize'
+gem 'activeadmin-globalize', github: 'anthony-robin/activeadmin-globalize'
