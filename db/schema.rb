@@ -144,6 +144,18 @@ ActiveRecord::Schema.define(version: 20170609024813) do
     t.integer  "match_id"
   end
 
+  create_table "tournament_translations", force: :cascade do |t|
+    t.integer  "tournament_id",        null: false
+    t.string   "locale",               null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.text     "competition_mode"
+    t.text     "competition_fee"
+    t.text     "competition_schedule"
+    t.index ["locale"], name: "index_tournament_translations_on_locale", using: :btree
+    t.index ["tournament_id"], name: "index_tournament_translations_on_tournament_id", using: :btree
+  end
+
   create_table "tournaments", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
