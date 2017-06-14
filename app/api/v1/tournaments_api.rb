@@ -23,9 +23,14 @@ module V1
       present tournaments, with: Representers::TournamentsRepresenter
     end
 
-    desc 'Get one tournament'
+    desc 'Get one tournament', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' }
+    ]
+    params do
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
+    end
     get 'tournaments/:tournament_id' do
-      tournament = Tournament.find_by_id(params[:tournament_id])
+      tournament = TournamentsService.tournament_detail params[:tournament_id], params[:locale], current_api_user
       present tournament, with: Representers::TournamentRepresenter
     end
 

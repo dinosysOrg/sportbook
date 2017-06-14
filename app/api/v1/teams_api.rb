@@ -21,7 +21,7 @@ module V1
       optional :user_ids, type: Array[Integer], desc: 'Arrays user for creating team'
     end
     post 'tournaments/:tournament_id/teams' do
-      tour = Tournament.find_by_id(params[:tournament_id])
+      tour = Tournament.find(params[:tournament_id])
       team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered, venue_ranking: params[:venue_ranking])
       current_api_user.update_attributes!(skill_id: params[:skill_id]) if current_api_user.skill_id.nil?
       date_range = (tour['start_date']..tour['end_date']).to_a
@@ -45,6 +45,28 @@ module V1
       team = Team.find params[:id]
       venue_time_slots = TimeSlotService.possible_time_slots team
       present venue_time_slots, with: Representers::PossibleTimeSlotsRepresenter
+    end
+
+    desc 'Updates time slot and venue ranking for team', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'One of require fields is missing' }
+    ]
+    params do
+      requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
+      requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team'
+    end
+    put 'teams/:team_id' do
+      team = Team.find params[:team_id]
+      tour = team.tournament
+      date_range = (tour['start_date']..tour['end_date']).to_a
+      if params[:preferred_time_blocks].present?
+        team.time_slots.where(available: true).each(&:destroy)
+        TimeSlotService.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
+      end
+      if params[:venue_ranking].present?
+        team.update_attributes!(venue_ranking: params[:venue_ranking])
+      end
+      present team, with: Representers::TeamRepresenter
     end
   end
 end
