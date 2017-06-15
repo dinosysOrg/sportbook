@@ -195,7 +195,7 @@ ActiveRecord::Schema.define(version: 20170609024813) do
     t.string   "facebook_uid"
     t.json     "facebook_credentials"
     t.integer  "skill_id"
-    t.datetime "birthday"
+    t.date     "birthday"
     t.string   "club"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree

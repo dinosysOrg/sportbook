@@ -226,8 +226,6 @@ GEM
       rake
     grape-swagger (0.27.0)
       grape (>= 0.16.2)
-    grape-swagger-rails (0.3.0)
-      railties (>= 3.2.12)
     grape_devise_token_auth (0.1.4)
       devise (>= 3.3)
       devise_token_auth (>= 0.1.32)
@@ -554,7 +552,6 @@ DEPENDENCIES
   grape-roar
   grape-route-helpers
   grape-swagger
-  grape-swagger-rails
   grape_devise_token_auth
   haml-rails (~> 0.9)
   hashie-forbidden_attributes

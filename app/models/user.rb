@@ -21,6 +21,14 @@ class User < ApplicationRecord
     "#{name} #{phone_number ? phone_number[-3..-1] : ''}"
   end
 
+  def first_name
+    name.split.first
+  end
+
+  def last_name
+    name.split[1..-1].join(' ') unless name.split.count < 1
+  end
+
   def admin?
     role? 'Admin'
   end

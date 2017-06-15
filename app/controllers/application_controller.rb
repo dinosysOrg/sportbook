@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:account_update, keys: [:address, :phone_number, :email, :name, :password,
-                                                              :password_confirmation])
+                                                              :birthday, :club, :password_confirmation])
   end
 
   def set_locale

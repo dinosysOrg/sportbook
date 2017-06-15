@@ -39,5 +39,26 @@ module V1
       tournaments = current_api_user.tournaments.where('start_date > ?', Time.zone.now)
       present tournaments, with: Representers::TournamentsRepresenter
     end
+    
+    desc 'get all upcoming matches'
+    get 'tournaments/my-tournaments/upcoming-matches' do
+      matches_team_a = Match.where('team_a_id = ? And time > ?', current_api_user.team_ids, Time.zone.now)
+      matches_team_b = Match.where('team_b_id = ? And time > ?', current_api_user.team_ids, Time.zone.now)
+      upcoming_matches = matches_team_a.or(matches_team_b)
+      present upcoming_matches, with: Representers::MatchesRepresenter
+    end
+
+    desc 'update infomations for profile player'
+    params do
+      requires :first_name, type: String, desc: "Player's First Name"
+      requires :last_name, type: String, desc: "Player's Last Name"
+      requires :address, type: String, desc: "Player's Address"
+      requires :birthday, type: String, desc: "Player's Birthday"
+      requires :club, type: String, desc: "Player's Club"
+    end
+    put 'tournaments/:tournament_id/players/:player_id' do
+      player = Player.update_infomations(params)
+      present player, with: Representers::PlayerRepresenter
+    end
   end
 end
