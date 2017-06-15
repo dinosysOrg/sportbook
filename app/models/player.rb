@@ -9,16 +9,7 @@ class Player < ApplicationRecord
   def self.update_infomations(params)
     name = [params[:first_name], params[:last_name]].reject(&:empty?).join(' ')
     player = Player.find_by_id(params[:player_id])
-    player.user.update_attributes!(name: name, password: params[:password],
-                                   address: params[:address], birthday: params[:birthday], club: params[:club])
+    player.user.update_attributes!(name: name, address: params[:address], birthday: params[:birthday], club: params[:club])
     player
-  end
-
-  def first_name
-    user.first_name unless user.blank?
-  end
-
-  def last_name
-    user.last_name unless user.blank?
   end
 end

@@ -47,9 +47,6 @@ module V1
     params do
       requires :first_name, type: String, desc: "Player's First Name"
       requires :last_name, type: String, desc: "Player's Last Name"
-      requires :email, type: String, desc: "Player's Email"
-      requires :password, type: String, desc: "Player's Password"
-      requires :password_confirmation, type: String, desc: "Player's Password confirmation"
       requires :address, type: String, desc: "Player's Address"
       requires :birthday, type: String, desc: "Player's Birthday"
       requires :club, type: String, desc: "Player's Club"

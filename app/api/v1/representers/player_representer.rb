@@ -8,13 +8,17 @@ module V1
       include Roar::Hypermedia
       include Grape::Roar::Representer
 
-      property :first_name
-      property :last_name
-      property :user
+      property :user, class: User do
+        property :first_name
+        property :last_name
+        property :address
+        property :birthday
+        property :club
+      end
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
-        "#{request.url}/#{id}"
+        request.url
       end
     end
   end

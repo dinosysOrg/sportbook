@@ -9,9 +9,6 @@ describe 'TournamentsApi' do
   let(:params) do
     { first_name: 'Jeny',
       last_name: 'Kim',
-      email: user.email,
-      password: '12345678',
-      password_confirmation: '12345678',
       address: '33 Paster, Q3, HCM',
       birthday: '1990-01-01',
       club: 'Chelsea' }
@@ -77,13 +74,16 @@ describe 'TournamentsApi' do
   end
 
   it 'update infomations for profile player' do
+    expect(user.first_name).to_not match(params[:first_name])
+    expect(user.last_name).to_not match(params[:last_name])
+    expect(user.address).to_not match(params[:last_name])
+    expect(user.birthday).to_not match(params[:birthday])
+    expect(user.club).to_not match(params[:club])
     put "/api/v1/tournaments/#{my_tournament1.id}/players/#{player.id}", params: params.to_json,
                                                                          headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
-    p json_response
-    expect(json_response[:user][:email]).to match(params[:email])
-    expect(json_response[:first_name]).to match(params[:first_name])
-    expect(json_response[:last_name]).to match(params[:last_name])
+    expect(json_response[:user][:first_name]).to match(params[:first_name])
+    expect(json_response[:user][:last_name]).to match(params[:last_name])
     expect(json_response[:user][:address]).to match(params[:address])
     expect(json_response[:user][:birthday]).to match(params[:birthday])
     expect(json_response[:user][:club]).to match(params[:club])
