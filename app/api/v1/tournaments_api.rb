@@ -8,6 +8,8 @@ module V1
       authenticate_api_user!
     end
 
+    include ExceptionHandlers
+
     desc 'Get all tournaments'
     get 'tournaments' do
       tournaments = Tournament.where('start_date > ? ', Time.zone.now)
