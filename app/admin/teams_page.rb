@@ -9,6 +9,7 @@ ActiveAdmin.register Team do
       link_to record.tournament.name, admin_tournament_path(record.tournament)
     end
     column :name
+    column :status
     actions
   end
 
@@ -16,6 +17,7 @@ ActiveAdmin.register Team do
     attributes_table do
       row :tournament
       row :name
+      row :status
       row :groups do |object|
         object.groups.pluck(:name).join(', ')
       end
@@ -26,7 +28,7 @@ ActiveAdmin.register Team do
     f.inputs 'Admin Details' do
       f.input :tournament, input_html: { disabled: true }
       f.input :name
-
+      f.input :status
       if f.object.tournament
         f.has_many :groups_teams do |groups_team|
           groups_team.input :group, collection: f.object.tournament.groups
@@ -37,5 +39,5 @@ ActiveAdmin.register Team do
     f.actions
   end
 
-  permit_params :name, :tournament_id, groups_teams_attributes: [:id, :group_id, :order, :_destroy]
+  permit_params :name, :tournament_id, :status, groups_teams_attributes: [:id, :group_id, :order, :_destroy]
 end

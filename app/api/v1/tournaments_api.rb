@@ -34,7 +34,7 @@ module V1
       tournaments = current_api_user.tournaments.where('start_date > ?', Time.zone.now)
       present tournaments, with: Representers::TournamentsRepresenter
     end
-
+    
     desc 'get all upcoming matches'
     get 'tournaments/my-tournaments/upcoming-matches' do
       matches_team_a = Match.where('team_a_id = ? And time > ?', current_api_user.team_ids, Time.zone.now)

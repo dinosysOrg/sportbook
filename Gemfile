@@ -112,6 +112,7 @@ group :test do
   gem 'capybara'
   gem 'site_prism'
   gem 'email_spec'
+  gem 'database_cleaner'
 end
 
 group :development do
@@ -132,3 +133,7 @@ gem 'whenever', require: false
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Multi language in DB
+gem 'globalize', git: 'https://github.com/globalize/globalize'
+gem "activeadmin-globalize", github: 'anthony-robin/activeadmin-globalize'
