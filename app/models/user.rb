@@ -27,6 +27,7 @@ class User < ApplicationRecord
 
   def last_name
     name.split[1..-1].join(' ') unless name.split.count < 1
+  end
 
   def admin?
     role? 'Admin'
