@@ -72,6 +72,14 @@ describe 'TeamsApi' do
         end
       end
 
+      context 'try to request nil params' do
+        let(:params) { { name: name, skill_id: skill.id, birthday: Date.today, club: club, phone_number: '', address: '' } }
+        it 'throw 422' do
+          make_request
+          expect(response.status).to eq(422)
+        end
+      end
+
       context 'define skill for team' do
         it 'adds skill for user' do
           make_request

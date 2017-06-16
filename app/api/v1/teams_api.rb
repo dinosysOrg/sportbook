@@ -23,11 +23,14 @@ module V1
       optional :user_ids, type: Array[Integer], desc: 'Arrays user for creating team'
     end
     post 'tournaments/:tournament_id/teams' do
+      unless params[:phone_number] && params[:address] && params[:name]
+        error!(I18n.t('activerecord.errors.models.team.attributes.missing_field'), 422)
+      end
       team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered)
-      current_api_user.update_attributes!({ birthday: params[:birthday],
-                                            club: params[:club],
-                                            phone_number: params[:phone_number],
-                                            address: params[:address] }.reject { |_k, v| v.blank? })
+      current_api_user.update_attributes!(birthday: params[:birthday],
+                                          club: params[:club],
+                                          phone_number: params[:phone_number],
+                                          address: params[:address])
       current_api_user.update_attribute('skill_id', params[:skill_id]) if current_api_user.skill_id.nil?
       user_ids = params[:user_ids] || []
       user_ids << current_api_user.id

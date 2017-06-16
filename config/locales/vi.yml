@@ -91,6 +91,7 @@ vi:
         team:
           attributes:
             team_id: Bạn không có quyền thực hiện
+            missing_field: Một số thông tin khong được bỏ trống.
   date:
     formats:
       long: "%d-%m-%Y"
