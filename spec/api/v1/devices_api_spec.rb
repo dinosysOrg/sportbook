@@ -4,8 +4,8 @@ describe 'DevicesApi' do
     let(:token) { SecureRandom.uuid }
     let(:platform) { 0 }
     let(:params) { { user_id: user.id, token: token, platform: platform } }
+    let(:auth_headers) { user.create_new_auth_token }
     let(:make_request) do
-      auth_headers = user.create_new_auth_token
       post '/api/v1/devices/create', params: params.to_json,
                                      headers: request_headers.merge(auth_headers)
     end
@@ -49,6 +49,28 @@ describe 'DevicesApi' do
           expect { make_request }.to_not change(Device, :count)
           expect(response.status).to eq(422)
           expect(json_response[:errors]).to be_present
+        end
+
+        it 'without locale' do
+          params[:user_id] = nil
+          expect(Device.count).to eq(0)
+          expect { make_request }.to_not change(Device, :count)
+          expect(response.status).to eq(422)
+          expect(json_response[:errors]).to be_present
+          expect(json_response[:errors].first[:attribute]).to eq 'user_id'
+          expect(json_response[:errors].first[:message]).to include "can't be blank"
+        end
+
+        it 'with locale = vi' do
+          params[:user_id] = nil
+          expect(Device.count).to eq(0)
+          other_make_request = post '/api/v1/devices/create?locale=vi', params: params.to_json,
+                                                                        headers: request_headers.merge(auth_headers)
+          expect { other_make_request }.to_not change(Device, :count)
+          expect(response.status).to eq(422)
+          expect(json_response[:errors]).to be_present
+          expect(json_response[:errors].first[:attribute]).to eq 'user_id'
+          expect(json_response[:errors].first[:message]).to include 'không thể để trắng'
         end
       end
 

@@ -46,6 +46,23 @@ describe 'InvitationsApi' do
         expect(response.status).to eq(405)
       end
     end
+
+    context 'return error message' do
+      let(:params) { { time: time_slot_venue.time, match_id: match.id } }
+      it 'without locale' do
+        make_request
+        expect(response.status).to eq 422
+        expect(json_response[:errors].first[:attribute]).to eq 'venue_id'
+        expect(json_response[:errors].first[:message]).to eq 'is missing'
+      end
+
+      it 'with locale = vi' do
+        post '/api/v1/invitations/create?locale=vi', params: params.to_json, headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq 422
+        expect(json_response[:errors].first[:attribute]).to eq 'venue_id'
+        expect(json_response[:errors].first[:message]).to eq 'bị thiếu'
+      end
+    end
   end
 
   describe '#accept' do
