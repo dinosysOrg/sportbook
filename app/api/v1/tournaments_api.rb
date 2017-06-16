@@ -39,7 +39,7 @@ module V1
       optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'tournaments/:tournament_id' do
-      tournament = TournamentsService.tournament_detail params[:tournament_id], params[:locale], current_api_user
+      tournament = TournamentsService.tournament_detail params[:tournament_id], current_api_user
       present tournament, with: Representers::TournamentRepresenter
     end
 
