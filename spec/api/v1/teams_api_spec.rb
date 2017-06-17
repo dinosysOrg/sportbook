@@ -121,10 +121,7 @@ describe 'TeamsApi' do
     let(:team) { create(:team, :has_players, tournament: tour, name: 'TeamA', venue_ranking: new_venue_ranking) }
     let(:venue_ranking) { (5..8).to_a }
     let(:preferred_time_blocks) { { tuesday: [[9, 10, 11]] } }
-    before do
-      create(:time_slot, object: team, time: Time.new(2017, 5, 15, 9), available: false)
-      create(:time_slot, object: team, time: Time.new(2017, 5, 15, 10))
-    end
+
     describe 'user can update timeslot and venue ranking for thier team' do
       let!(:api_user) { team.players.first.user.becomes ApiUser }
       let!(:auth_headers) { api_user.create_new_auth_token }
@@ -138,7 +135,26 @@ describe 'TeamsApi' do
         expect(json_response[:_embedded][:venues]).to_not be_nil
       end
 
+      it 'create time slot and venue ranking for team' do
+        team.update_attribute('venue_ranking', [])
+        put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
+                                        headers: request_headers.merge(auth_headers)
+        expect(team.reload.time_slots.pluck(:time)).to match_array(
+          [
+            Time.new(2017, 5, 16, 9),
+            Time.new(2017, 5, 16, 10),
+            Time.new(2017, 5, 16, 11),
+            Time.new(2017, 5, 23, 9),
+            Time.new(2017, 5, 23, 10),
+            Time.new(2017, 5, 23, 11)
+          ]
+        )
+        expect(team.reload.venue_ranking).to match_array(venue_ranking)
+      end
+
       it 'updates time slot and venue ranking for team' do
+        create(:time_slot, object: team, time: Time.new(2017, 5, 15, 9), available: false)
+        create(:time_slot, object: team, time: Time.new(2017, 5, 15, 10))
         expect(team.time_slots.pluck(:time)).to match_array(
           [
             Time.new(2017, 5, 15, 9),
