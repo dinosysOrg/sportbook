@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  devise_for :admin_users, ActiveAdmin::Devise.config.merge(skip: [:registrations])
+  devise_for :admin_users, { class_name: 'User' }.merge(ActiveAdmin::Devise.config.merge(skip: [:registrations]))
   ActiveAdmin.routes(self)
-  devise_for :users
 
   mount ApplicationApi => '/'
 
