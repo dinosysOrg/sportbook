@@ -1,5 +1,5 @@
 ActiveAdmin.register User do
-  permit_params :name, :email, :phone_number, :password, :password_confirmation, role_ids: []
+  permit_params :name, :email, :phone_number, :password, :password_confirmation, :address, :club, :birthday, role_ids: []
 
   index do
     id_column
@@ -19,6 +19,8 @@ ActiveAdmin.register User do
       row :phone_number
       row :skill
       row :address
+      row :club
+      row :birthday
       row :note
       row :slug
       row :facebook_uid
@@ -34,7 +36,10 @@ ActiveAdmin.register User do
     f.inputs 'Admin Details' do
       f.input :name
       f.input :phone_number
+      f.input :birthday, as: :date_picker, datepicker_options: { dateFormat: 'dd/mm/yy' }
+      f.input :club
       f.input :email
+      f.input :address
       f.input :roles, as: :check_boxes, input_html: { style: 'width: auto; margin-right: 10px;' }
       f.input :password
       f.input :password_confirmation
