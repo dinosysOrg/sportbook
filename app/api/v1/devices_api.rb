@@ -15,14 +15,21 @@ module V1
       { code: 422, message: 'One of require fields is missing' }
     ]
     params do
-      requires :user_id, type: Integer, desc: 'User register push notification'
+      optional :user_id, type: Integer, desc: 'User register push notification'
+      requires :device_id, type: String, desc: 'Device if of mobile'
       requires :token, type: String, desc: 'Device token from mobile'
       requires :platform, type: Integer, desc: "Platform of device. Input value is '0 - iOS' or '1 - Android'"
     end
     post 'devices/create' do
-      Device.create!(user_id: params[:user_id],
-                     token: params[:token],
-                     platform: params[:platform])
+      device = Device.find_by(device_id: params[:device_id])
+      if device.nil?
+        Device.create!(user_id: params[:user_id],
+                       device_id: params[:device_id],
+                       token: params[:token],
+                       platform: params[:platform])
+      else
+        device.update_attributes(user_id: params[:user_id], token: params[:token])
+      end
     end
 
     desc 'Store device token', failure: [
