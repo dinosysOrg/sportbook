@@ -18,17 +18,23 @@ module V1
     ]
     params do
       requires :name, type: String, desc: 'Team Name'
-      requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team'
-      requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
+      requires :phone_number, type: Integer, desc: 'Player phone number'
+      requires :address, type: String, desc: 'User Address'
+      optional :club, type: String, desc: 'Club that player is playing'
+      optional :birthday, type: Date, desc: 'Player BOD'
       optional :user_ids, type: Array[Integer], desc: 'Arrays user for creating team'
       optional :locale, type: String
     end
     post 'tournaments/:tournament_id/teams' do
-      tour = Tournament.find(params[:tournament_id])
-      team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered, venue_ranking: params[:venue_ranking])
-      current_api_user.update_attributes!(skill_id: params[:skill_id]) if current_api_user.skill_id.nil?
-      date_range = (tour['start_date']..tour['end_date']).to_a
-      TimeSlotService.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
+      unless params[:phone_number] && params[:address] && params[:name]
+        error!(I18n.t('activerecord.errors.models.team.attributes.missing_field'), 422)
+      end
+      team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered)
+      current_api_user.update_attributes!(birthday: params[:birthday],
+                                          club: params[:club],
+                                          phone_number: params[:phone_number],
+                                          address: params[:address])
+      current_api_user.update_attribute('skill_id', params[:skill_id]) if current_api_user.skill_id.nil?
       user_ids = params[:user_ids] || []
       user_ids << current_api_user.id
       user_ids.each do |user_id|
@@ -53,7 +59,8 @@ module V1
 
     desc 'Updates time slot and venue ranking for team', failure: [
       { code: 401, message: 'Unauthorized, missing token in header' },
-      { code: 422, message: 'One of require fields is missing' }
+      { code: 422, message: 'One of require fields is missing' },
+      { code: 405, message: 'You are not in the team that can do this operation' }
     ]
     params do
       requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
@@ -61,6 +68,9 @@ module V1
       optional :locale, type: String
     end
     put 'teams/:team_id' do
+      unless current_api_user.team_ids.include?(params[:team_id].to_i)
+        error!(I18n.t('activerecord.errors.models.team.attributes.team_id'), 405)
+      end
       team = Team.find params[:team_id]
       tour = team.tournament
       date_range = (tour['start_date']..tour['end_date']).to_a

@@ -88,6 +88,10 @@ en:
               expired: This invitation is expired
             team:
               wrong_team: You are not in the team that can do this operation
+        team:
+          attributes:
+            team_id: You are not in the team that can do this operation
+            missing_field: One of require fields is missing
   date:
     formats:
       long: "%Y-%m-%d"
