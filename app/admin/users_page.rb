@@ -1,5 +1,5 @@
 ActiveAdmin.register User do
-  permit_params :name, :email, :phone_number, :password, :password_confirmation, role_ids: []
+  permit_params :name, :email, :phone_number, :password, :password_confirmation, :address, :club, :birthday, role_ids: []
 
   index do
     id_column
@@ -19,6 +19,8 @@ ActiveAdmin.register User do
       row :phone_number
       row :skill
       row :address
+      row :club
+      row :birthday
       row :note
       row :slug
       row :facebook_uid
