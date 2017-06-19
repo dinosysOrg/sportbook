@@ -16,7 +16,6 @@ describe 'TournamentsApi' do
       create(:tournament, start_date: 4.days.ago, end_date: 1.weeks.from_now)
       get '/api/v1/tournaments', headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
-      expect(json_response[:name]).to eq(my_tournament1.name)
       expect(json_response[:_embedded][:tournaments].count).to eq(5)
       expect(json_response[:_embedded][:tournaments][0][:name]).to eq(my_tournament1.name)
       expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode)
@@ -30,7 +29,6 @@ describe 'TournamentsApi' do
 
       get '/api/v1/tournaments/my-tournaments', headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
-      expect(json_response[:name]).to eq(my_tournament1.name)
       expect(json_response[:_embedded][:tournaments].count).to eq(1)
       expect(json_response[:_embedded][:tournaments][0][:name]).to eq(my_tournament1.name)
     end
@@ -39,8 +37,6 @@ describe 'TournamentsApi' do
       get "/api/v1/tournaments/#{my_tournament1.id}?locale=en", headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
       expect(json_response[:name]).to eq(my_tournament1.name)
-      expect(json_response[:_embedded][:tournaments].count).to eq(1)
-      expect(json_response[:_embedded][:tournaments][0][:name]).to eq(my_tournament1.name)
       expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode)
       expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee)
       expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule)
@@ -68,34 +64,34 @@ describe 'TournamentsApi' do
       context 'show one tournament' do
         before do
           my_tournament1.update_attributes(competition_mode: 'Mode Vi', competition_fee: 'Fee Vi', competition_schedule: 'Schedule Vi', locale: :vi)
-          my_tournament1.update_attributes(competition_mode: 'Mode En', competition_fee: 'Fee En', competition_schedule: 'Schedule En')
+          my_tournament1.update_attributes(competition_mode: 'Mode En', competition_fee: 'Fee En', competition_schedule: 'Schedule En', locale: :en)
         end
 
         it 'without locale param' do
           get "/api/v1/tournaments/#{my_tournament1.id}", headers: request_headers.merge(auth_headers)
           expect(response.status).to eq(200)
           expect(json_response[:name]).to eq(my_tournament1.name)
-          expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode(:vi))
-          expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee(:vi))
-          expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule(:vi))
+          expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode)
+          expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee)
+          expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule)
         end
 
         it 'with locale = vi' do
           get "/api/v1/tournaments/#{my_tournament1.id}?locale=vi", headers: request_headers.merge(auth_headers)
           expect(response.status).to eq(200)
           expect(json_response[:name]).to eq(my_tournament1.name)
-          expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode(:vi))
-          expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee(:vi))
-          expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule(:vi))
+          expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode)
+          expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee)
+          expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule)
         end
 
         it 'with locale = en' do
           get "/api/v1/tournaments/#{my_tournament1.id}?locale=en", headers: request_headers.merge(auth_headers)
           expect(response.status).to eq(200)
           expect(json_response[:name]).to eq(my_tournament1.name)
-          expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode(:en))
-          expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee(:en))
-          expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule(:en))
+          expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode)
+          expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee)
+          expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule)
         end
 
         it 'with current user signed up this tournament' do
