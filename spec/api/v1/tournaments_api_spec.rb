@@ -18,9 +18,6 @@ describe 'TournamentsApi' do
       expect(response.status).to eq(200)
       expect(json_response[:_embedded][:tournaments].count).to eq(5)
       expect(json_response[:_embedded][:tournaments][0][:name]).to eq(my_tournament1.name)
-      expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode)
-      expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee)
-      expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule)
     end
 
     it 'show all tournaments that I signed up for' do
@@ -31,15 +28,6 @@ describe 'TournamentsApi' do
       expect(response.status).to eq(200)
       expect(json_response[:_embedded][:tournaments].count).to eq(1)
       expect(json_response[:_embedded][:tournaments][0][:name]).to eq(my_tournament1.name)
-    end
-
-    it 'with locale = en' do
-      get "/api/v1/tournaments/#{my_tournament1.id}?locale=en", headers: request_headers.merge(auth_headers)
-      expect(response.status).to eq(200)
-      expect(json_response[:name]).to eq(my_tournament1.name)
-      expect(json_response[:competition_mode]).to eq(my_tournament1.competition_mode)
-      expect(json_response[:competition_fee]).to eq(my_tournament1.competition_fee)
-      expect(json_response[:competition_schedule]).to eq(my_tournament1.competition_schedule)
     end
 
     it 'returns error when user is not signed in' do
