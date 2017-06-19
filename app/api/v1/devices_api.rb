@@ -24,5 +24,19 @@ module V1
                      token: params[:token],
                      platform: params[:platform])
     end
+
+    desc 'Store device token', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'One of require fields is missing' }
+    ]
+
+    params do
+      requires :device_id, type: String, desc: 'Device id of mobile'
+    end
+
+    put 'devices/delete' do
+      device = Device.find_by(device_id: params[:device_id])
+      device&.update_attribute(:user_id, nil)
+    end
   end
 end

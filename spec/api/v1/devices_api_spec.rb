@@ -69,4 +69,29 @@ describe 'DevicesApi' do
       end
     end
   end
+
+  describe '#delete' do
+    let(:user) { create(:api_user) }
+    let(:device_id) { SecureRandom.hex(8) }
+    let!(:device) { create(:device, user_id: user.id, device_id: device_id) }
+    let(:auth_headers) { user.create_new_auth_token }
+
+    it 'remove user_id after log out' do
+      params = { device_id: device_id }
+      put '/api/v1/devices/delete', params: params.to_json,
+                                    headers: request_headers.merge(auth_headers)
+
+      expect(response.status).to eq 200
+      device.reload
+      expect(device.user_id).to be_nil
+    end
+
+    it 'device_id not exists' do
+      params = { device_id: SecureRandom.hex(8) }
+      put '/api/v1/devices/delete', params: params.to_json,
+                                    headers: request_headers.merge(auth_headers)
+      expect(response.status).to eq 200
+      expect(json_response).to be_nil
+    end
+  end
 end
