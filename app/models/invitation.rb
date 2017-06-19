@@ -61,6 +61,10 @@ class Invitation < ApplicationRecord
     add_time_slot_pick_error
   end
 
+  def self.latest_invitation_between(invitee, inviter)
+    Invitation.where('(inviter_id = ? AND invitee_id = ?) OR (invitee_id = ? AND inviter_id = ?)', invitee.id, inviter.id, invitee.id, inviter.id).last
+  end
+
   private
 
   def update_point_for_winner

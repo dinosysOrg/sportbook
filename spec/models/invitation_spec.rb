@@ -122,4 +122,18 @@ RSpec.describe Invitation, type: :model do
       end
     end
   end
+
+  describe 'find latest invitation between 2 team' do
+    let(:venue) { create(:venue) }
+    let(:time_slot) { create(:time_slot, object: venue, available: true) }
+    let!(:invitation_first) { create(:invitation, :rejected, time: time_slot.time, venue: venue) }
+    it 'work' do
+      invitation_expect = create(:invitation, :accepted, time: time_slot.time, venue: venue,
+                                                         invitee: invitation_first.inviter, inviter: invitation_first.invitee)
+      invitation_actual = Invitation.latest_invitation_between invitation_first.invitee, invitation_first.inviter
+      expect(invitation_actual.status).to eq(invitation_expect.status)
+      expect(invitation_actual.invitee).to eq(invitation_expect.invitee)
+      expect(invitation_actual.inviter).to eq(invitation_expect.inviter)
+    end
+  end
 end
