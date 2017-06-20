@@ -16,20 +16,18 @@ module V1
     ]
     params do
       optional :user_id, type: Integer, desc: 'User register push notification'
-      requires :device_id, type: String, desc: 'Device if of mobile'
+      requires :udid, type: String, desc: 'Device if of mobile'
       requires :token, type: String, desc: 'Device token from mobile'
       requires :platform, type: Integer, desc: "Platform of device. Input value is '0 - iOS' or '1 - Android'"
     end
     post 'devices/create' do
-      device = Device.find_by(device_id: params[:device_id])
-      if device.nil?
-        Device.create!(user_id: params[:user_id],
-                       device_id: params[:device_id],
-                       token: params[:token],
-                       platform: params[:platform])
-      else
-        device.update_attributes(user_id: params[:user_id], token: params[:token])
-      end
+      Device.where(udid: params[:udid])
+            .first_or_create!(user_id: params[:user_id],
+                              udid: params[:udid],
+                              token: params[:token],
+                              platform: params[:platform])
+            .update_attributes(user_id: params[:user_id],
+                               token: params[:token])
     end
 
     desc 'Store device token', failure: [
@@ -38,11 +36,11 @@ module V1
     ]
 
     params do
-      requires :device_id, type: String, desc: 'Device id of mobile'
+      requires :udid, type: String, desc: 'Device id of mobile'
     end
 
     put 'devices/delete' do
-      device = Device.find_by(device_id: params[:device_id])
+      device = Device.find_by(udid: params[:udid])
       device&.update_attribute(:user_id, nil)
     end
   end

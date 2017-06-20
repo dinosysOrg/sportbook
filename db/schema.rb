@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20170619074853) do
     t.integer  "platform"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string   "device_id"
+    t.string   "udid"
     t.index ["user_id"], name: "index_devices_on_user_id", using: :btree
   end
 

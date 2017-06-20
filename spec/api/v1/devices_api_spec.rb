@@ -2,9 +2,9 @@ describe 'DevicesApi' do
   describe '#create' do
     let(:user) { create(:api_user) }
     let(:token) { SecureRandom.uuid }
-    let(:device_id) { SecureRandom.hex(8) }
+    let(:udid) { SecureRandom.hex(8) }
     let(:platform) { 0 }
-    let(:params) { { user_id: user.id, token: token, platform: platform, device_id: device_id } }
+    let(:params) { { user_id: user.id, token: token, platform: platform, udid: udid } }
     let(:make_request) do
       auth_headers = user.create_new_auth_token
       post '/api/v1/devices/create', params: params.to_json,
@@ -20,8 +20,8 @@ describe 'DevicesApi' do
 
     context 'when signed in' do
       context 'with invalid data' do
-        it 'device_id is blank' do
-          params[:device_id] = nil
+        it 'udid is blank' do
+          params[:udid] = nil
           expect(Device.count).to eq(0)
           expect { make_request }.to_not change(Device, :count)
           expect(response.status).to eq(422)
@@ -69,14 +69,12 @@ describe 'DevicesApi' do
         end
 
         it 'device id does not exists' do
-          expect(Device.count).to eq 0
           expect { make_request }.to change(Device, :count).from(0).to(1)
           expect(response.status).to eq 201
         end
 
         it 'device id exists' do
-          create(:device, user_id: user.id, device_id: device_id)
-          expect(Device.count).to eq 1
+          create(:device, user_id: user.id, udid: udid)
           expect { make_request }.to_not change(Device, :count)
         end
       end
@@ -85,12 +83,12 @@ describe 'DevicesApi' do
 
   describe '#delete' do
     let(:user) { create(:api_user) }
-    let(:device_id) { SecureRandom.hex(8) }
-    let!(:device) { create(:device, user_id: user.id, device_id: device_id) }
+    let(:udid) { SecureRandom.hex(8) }
+    let!(:device) { create(:device, user_id: user.id, udid: udid) }
     let(:auth_headers) { user.create_new_auth_token }
 
     it 'remove user_id after log out' do
-      params = { device_id: device_id }
+      params = { udid: udid }
       put '/api/v1/devices/delete', params: params.to_json,
                                     headers: request_headers.merge(auth_headers)
 
@@ -99,8 +97,8 @@ describe 'DevicesApi' do
       expect(device.user_id).to be_nil
     end
 
-    it 'device_id not exists' do
-      params = { device_id: SecureRandom.hex(8) }
+    it 'udid not exists' do
+      params = { udid: SecureRandom.hex(8) }
       put '/api/v1/devices/delete', params: params.to_json,
                                     headers: request_headers.merge(auth_headers)
       expect(response.status).to eq 200
