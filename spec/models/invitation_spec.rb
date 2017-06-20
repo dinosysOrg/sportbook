@@ -47,7 +47,6 @@ RSpec.describe Invitation, type: :model do
     end
 
     describe 'validate deadline for pending inivation' do
-      let!(:rejected_invitation) { create_list(:invitation, 2, :rejected, created_at: 1.days.ago.at_beginning_of_hour, venue: venue) }
       it 'check deadline with time is less than now' do
         invitations = create_list(:invitation, 2, :pending, created_at: 1.days.ago.at_beginning_of_hour, venue: venue)
         Invitation.validate_deadline
@@ -60,6 +59,25 @@ RSpec.describe Invitation, type: :model do
         Invitation.validate_deadline
         expect(invitations.first.reload).to be_pending
         expect(invitations.last.reload).to be_pending
+      end
+
+      it 'invation will be exprired if user dont response any invitations after rejecting one invitationc' do
+        rejected_invitation = create_list(:invitation, 2, :rejected, created_at: 1.days.ago.at_beginning_of_hour, venue: venue)
+        Invitation.check_reject_invitation
+        expect(rejected_invitation.first.reload).to be_expired
+        expect(rejected_invitation.last.reload).to be_expired
+      end
+
+      it 'invation will not be exprired if user response some invitations after rejecting one invitationc' do
+        rejected_invitation = create(:invitation, :rejected, created_at: 2.hours.ago.at_beginning_of_hour, venue: venue)
+        create(:invitation, :pending,
+               invitee: rejected_invitation.inviter,
+               inviter: rejected_invitation.inviter,
+               created_at: 1.hours.ago.at_beginning_of_hour,
+               match: rejected_invitation.match,
+               venue: rejected_invitation.venue)
+        Invitation.check_reject_invitation
+        expect(rejected_invitation).to be_rejected
       end
     end
 

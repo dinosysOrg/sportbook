@@ -28,6 +28,22 @@ describe 'InvitationsApi' do
       end
     end
 
+    context 'when already had one reject invitation' do
+      let(:params) { { time: time_slot_venue.time, match_id: match.id, venue_id: venue.id } }
+      let!(:invitation) do
+        create :invitation, :rejected,
+               time: time_slot_venue.time, match: match, venue: venue,
+               invitee: match.team_a, inviter: match.team_b,
+               created_at: 1.days.ago.at_beginning_of_hour
+      end
+      it 'can not create response invitation after 1day ' do
+        make_request
+        expect(response.status).to eq(405)
+        expect(invitation.reload).to be_expired
+        expect(Invitation.all.size).to eq(1)
+      end
+    end
+
     context 'when time slot is no longer available' do
       let(:params) { { time: time_slot_venue.time, match_id: match.id, venue_id: venue.id } }
       it 'throws 422' do

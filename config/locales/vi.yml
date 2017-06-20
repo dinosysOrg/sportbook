@@ -88,6 +88,7 @@ vi:
               expired: Thư mời đã hết hạn
             team:
               wrong_team: Bạn không có quyền thực hiện.
+              no_response_after_reject: Bạn không có quyền thực hiện.
         team:
           attributes:
             team_id: Bạn không có quyền thực hiện

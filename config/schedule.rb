@@ -21,4 +21,5 @@
 
 every 5.hours do
   runner 'Invitation.validate_deadline'
+  runner 'Invitation.check_reject_invitation'
 end

@@ -32,6 +32,12 @@ module V1
         error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405)
       end
 
+      Invitation.check_reject_invitation params[:match_id]
+      expired = Invitation.expired.where(match_id: params[:match_id])
+      unless expired.empty?
+        error!(I18n.t('activerecord.errors.models.invitation.attributes.team.no_response_after_reject'), 405)
+      end
+
       invitation = Invitation.create!(status: 'created', time: params[:time], invitee_id: invitee_id, inviter_id: inviter_id,
                                       match_id: params[:match_id], venue_id: params[:venue_id])
       team = Team.find(invitation.invitee_id)
