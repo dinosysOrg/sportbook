@@ -88,7 +88,7 @@ en:
               expired: This invitation is expired
             team:
               wrong_team: You are not in the team that can do this operation
-              no_response_after_reject: You can not do create invitation because your deadline is expired
+              no_response_after_reject: You can not create invitation because your deadline is expired
         team:
           attributes:
             team_id: You are not in the team that can do this operation
