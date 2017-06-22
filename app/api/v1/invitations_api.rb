@@ -16,9 +16,9 @@ module V1
       { code: 422, message: 'This time slot is no longer available' }
     ]
     params do
-      requires :time, type: Time
-      requires :venue_id, type: Integer
-      requires :match_id, type: Integer
+      requires :time, type: Time, desc: 'Time start match'
+      requires :venue_id, type: Integer, desc: 'Id of venue'
+      requires :match_id, type: Integer, desc: 'Id of match'
     end
     post 'invitations/create' do
       match = Match.find params[:match_id]
@@ -48,7 +48,7 @@ module V1
       { code: 422, message: 'This timeslot is picked' }
     ]
     params do
-      requires :invitation_id, type: Integer
+      requires :invitation_id, type: Integer, desc: 'Id of invitation'
     end
     put 'invitations/:invitation_id/accept' do
       invitation = Invitation.find(params[:invitation_id])
@@ -67,7 +67,7 @@ module V1
       { code: 422, message: 'You cant reject invitation that already is accepted' }
     ]
     params do
-      requires :invitation_id, type: Integer
+      requires :invitation_id, type: Integer, desc: 'Id of invitation'
     end
     put 'invitations/:invitation_id/reject' do
       invitation = Invitation.find params[:invitation_id]
@@ -84,7 +84,7 @@ module V1
       { code: 422, message: 'Missing Invitation Id' }
     ]
     params do
-      requires :invitation_id, type: Integer
+      requires :invitation_id, type: Integer, desc: 'Id of invitation'
     end
     get 'invitations/:invitation_id' do
       invitation = Invitation.find(params[:invitation_id])
