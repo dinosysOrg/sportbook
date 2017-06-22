@@ -72,6 +72,13 @@ describe 'TeamsApi' do
         end
       end
 
+      context 'add user in response params' do
+        it 'get user detail' do
+          make_request
+          expect(json_response[:users][0][:id]).to eq(user.id)
+        end
+      end
+
       context 'try to request nil params' do
         let(:params) { { name: name, skill_id: skill.id, birthday: Date.today, club: club, phone_number: '', address: '' } }
         it 'throw 422' do

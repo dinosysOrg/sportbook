@@ -11,6 +11,7 @@ module V1
       property :id
       property :name
       property :players
+      property :users
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
