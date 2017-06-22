@@ -3,9 +3,11 @@ module V1
     auth :grape_devise_token_auth, resource_class: :user
 
     helpers GrapeDeviseTokenAuth::AuthHelpers
+    helpers V1::Helpers
 
     before do
       authenticate_api_user!
+      set_locale_api
     end
 
     include ExceptionHandlers
@@ -15,19 +17,21 @@ module V1
       { code: 422, message: 'One of require fields is missing' }
     ]
     params do
-      requires :name, type: String, desc: 'Team Name'
+      requires :name, type: String, desc: 'User Name'
       requires :phone_number, type: Integer, desc: 'Player phone number'
       requires :address, type: String, desc: 'User Address'
       optional :club, type: String, desc: 'Club that player is playing'
       optional :birthday, type: Date, desc: 'Player BOD'
       optional :user_ids, type: Array[Integer], desc: 'Arrays user for creating team'
+      optional :locale, type: String
     end
     post 'tournaments/:tournament_id/teams' do
       unless params[:phone_number] && params[:address] && params[:name]
         error!(I18n.t('activerecord.errors.models.team.attributes.missing_field'), 422)
       end
       team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered)
-      current_api_user.update_attributes!(birthday: params[:birthday],
+      current_api_user.update_attributes!(name: params[:name],
+                                          birthday: params[:birthday],
                                           club: params[:club],
                                           phone_number: params[:phone_number],
                                           address: params[:address])
@@ -46,6 +50,7 @@ module V1
     ]
     params do
       requires :type, type: String, default: 'available', values: ['available']
+      optional :locale, type: String
     end
     get 'teams/:id/time_slots' do
       team = Team.find params[:id]
@@ -61,6 +66,7 @@ module V1
     params do
       requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
       requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team'
+      optional :locale, type: String
     end
     put 'teams/:team_id' do
       unless current_api_user.team_ids.include?(params[:team_id].to_i)

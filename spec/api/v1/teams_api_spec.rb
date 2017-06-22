@@ -11,8 +11,8 @@ describe 'TeamsApi' do
 
     context 'when signed in' do
       let(:params) { { name: name, skill_id: skill.id, birthday: Date.today, club: club, phone_number: 12_345_666, address: address } }
+      let(:auth_headers) { user.create_new_auth_token }
       let(:make_request) do
-        auth_headers = user.create_new_auth_token
         post "/api/v1/tournaments/#{tour.id}/teams", params: params.to_json,
                                                      headers: request_headers.merge(auth_headers)
       end
@@ -108,9 +108,20 @@ describe 'TeamsApi' do
 
       context 'when fails to save' do
         let(:name) { '' }
-        it 'returns error' do
+        it 'returns error without locale' do
           make_request
           expect(response.status).to eq(422)
+          expect(json_response[:errors].first[:attribute]).to eq 'name'
+          expect(json_response[:errors].first[:message]).to include "can't be blank"
+        end
+
+        it 'returns error with locale = vi' do
+          params.delete :name
+          post "/api/v1/tournaments/#{tour.id}/teams?locale=vi", params: params.to_json,
+                                                                 headers: request_headers.merge(auth_headers)
+          expect(response.status).to eq(422)
+          expect(json_response[:errors].first[:attribute]).to eq 'name'
+          expect(json_response[:errors].first[:message]).to include 'bị thiếu'
         end
       end
     end

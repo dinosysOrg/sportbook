@@ -3,9 +3,11 @@ module V1
     auth :grape_devise_token_auth, resource_class: :user
 
     helpers GrapeDeviseTokenAuth::AuthHelpers
+    helpers V1::Helpers
 
     before do
       authenticate_api_user!
+      set_locale_api
     end
 
     include ExceptionHandlers
@@ -19,6 +21,7 @@ module V1
       requires :udid, type: String, desc: 'Device if of mobile'
       requires :token, type: String, desc: 'Device token from mobile'
       requires :platform, type: Integer, desc: "Platform of device. Input value is '0 - iOS' or '1 - Android'"
+      optional :locale, type: String
     end
     post 'devices/create' do
       Device.where(udid: params[:udid])

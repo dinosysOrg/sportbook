@@ -15,7 +15,7 @@ class Team < ApplicationRecord
   has_many :invitations_as_inviter, foreign_key: 'inviter_id', class_name: 'Invitation'
   accepts_nested_attributes_for :groups_teams, allow_destroy: true
 
-  validates :name, presence: true, uniqueness: { scope: :tournament_id, case_sensitive: false }
+  validates :name, presence: true
   validates :status, presence: true
   validates :tournament, presence: true
 

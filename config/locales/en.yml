@@ -88,6 +88,7 @@ en:
               expired: This invitation is expired
             team:
               wrong_team: You are not in the team that can do this operation
+              no_response_after_reject: You can not create invitation because your deadline is expired
         team:
           attributes:
             team_id: You are not in the team that can do this operation
@@ -100,3 +101,12 @@ en:
   time:
     formats:
       long: "%Y-%m-%d %H:%M:%S"
+  grape:
+    errors:
+      messages:
+        coerce: is invalid
+        presence: is missing
+        regexp: is invalid
+        blank: is empty
+        values: does not have a valid value
+        except_values: has a value not allowed
