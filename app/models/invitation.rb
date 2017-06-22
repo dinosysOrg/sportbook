@@ -33,6 +33,10 @@ class Invitation < ApplicationRecord
       transitions from: :pending, to: :expired
     end
 
+    event :expire_after_reject, after_commit: :update_point_for_winner do
+      transitions from: :rejected, to: :expired
+    end
+
     event :accept, after_commit: :update_time_slot_and_match do
       transitions from: :pending, to: :accepted
     end
@@ -46,6 +50,15 @@ class Invitation < ApplicationRecord
     pending_invitations = Invitation.pending
     pending_invitations.each do |invitation|
       invitation.expire! if invitation.created_at + TIME_TO_RESPOND <= Time.zone.now
+    end
+  end
+
+  def self.check_reject_invitation(match_id = 0)
+    rejected_invitations = match_id.zero? ? Invitation.rejected : Invitation.rejected.where(match_id: match_id)
+    rejected_invitations.each do |invitation|
+      next if invitation.created_at + TIME_TO_RESPOND > Time.zone.now
+      pending_invitations = Invitation.pending.where(invitee: invitation.inviter, inviter: invitation.invitee, match: invitation.match)
+      invitation.expire_after_reject! if pending_invitations.empty?
     end
   end
 
