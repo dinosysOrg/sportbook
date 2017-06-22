@@ -72,7 +72,7 @@ RSpec.describe Invitation, type: :model do
         rejected_invitation = create(:invitation, :rejected, created_at: 2.hours.ago.at_beginning_of_hour, venue: venue)
         create(:invitation, :pending,
                invitee: rejected_invitation.inviter,
-               inviter: rejected_invitation.inviter,
+               inviter: rejected_invitation.invitee,
                created_at: 1.hours.ago.at_beginning_of_hour,
                match: rejected_invitation.match,
                venue: rejected_invitation.venue)

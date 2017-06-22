@@ -40,7 +40,7 @@ describe 'InvitationsApi' do
         make_request
         expect(response.status).to eq(405)
         expect(invitation.reload).to be_expired
-        expect(Invitation.all.size).to eq(1)
+        expect(Invitation.count).to eq(1)
       end
     end
 

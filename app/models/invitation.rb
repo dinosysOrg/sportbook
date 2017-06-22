@@ -56,10 +56,9 @@ class Invitation < ApplicationRecord
   def self.check_reject_invitation(match_id = 0)
     rejected_invitations = match_id.zero? ? Invitation.rejected : Invitation.rejected.where(match_id: match_id)
     rejected_invitations.each do |invitation|
-      if invitation.created_at + TIME_TO_RESPOND <= Time.zone.now
-        pending_invitations = Invitation.pending.where(invitee: invitation.inviter, inviter: invitation.invitee, match: invitation.match)
-        invitation.expire_after_reject! if pending_invitations.empty?
-      end
+      next if invitation.created_at + TIME_TO_RESPOND > Time.zone.now
+      pending_invitations = Invitation.pending.where(invitee: invitation.inviter, inviter: invitation.invitee, match: invitation.match)
+      invitation.expire_after_reject! if pending_invitations.empty?
     end
   end
 
