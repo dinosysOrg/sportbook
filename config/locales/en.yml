@@ -100,3 +100,12 @@ en:
   time:
     formats:
       long: "%Y-%m-%d %H:%M:%S"
+  grape:
+    errors:
+      messages:
+        coerce: is invalid
+        presence: is missing
+        regexp: is invalid
+        blank: is empty
+        values: does not have a valid value
+        except_values: has a value not allowed

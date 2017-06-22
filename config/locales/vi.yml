@@ -100,3 +100,12 @@ vi:
   time:
     formats:
       long: "%d-%m-%Y %H:%M"
+  grape:
+    errors:
+      messages:
+        coerce: không hợp lệ
+        presence: bị thiếu
+        regexp: không hợp lệ
+        blank: bị trống
+        values: không có một giá trị hợp lệ
+        except_values: có một giá trị không được phép

@@ -3,9 +3,11 @@ module V1
     auth :grape_devise_token_auth, resource_class: :user
 
     helpers GrapeDeviseTokenAuth::AuthHelpers
+    helpers V1::Helpers
 
     before do
       authenticate_api_user!
+      set_locale_api
     end
 
     include ExceptionHandlers
@@ -21,6 +23,7 @@ module V1
       optional :club, type: String, desc: 'Club that player is playing'
       optional :birthday, type: Date, desc: 'Player BOD'
       optional :user_ids, type: Array[Integer], desc: 'Arrays user for creating team'
+      optional :locale, type: String
     end
     post 'tournaments/:tournament_id/teams' do
       unless params[:phone_number] && params[:address] && params[:name]
@@ -46,6 +49,7 @@ module V1
     ]
     params do
       requires :type, type: String, default: 'available', values: ['available']
+      optional :locale, type: String
     end
     get 'teams/:id/time_slots' do
       team = Team.find params[:id]
@@ -61,6 +65,7 @@ module V1
     params do
       requires :preferred_time_blocks, type: Hash, desc: 'Preferred time block for team'
       requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team'
+      optional :locale, type: String
     end
     put 'teams/:team_id' do
       unless current_api_user.team_ids.include?(params[:team_id].to_i)
