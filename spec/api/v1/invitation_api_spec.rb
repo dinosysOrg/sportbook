@@ -28,6 +28,22 @@ describe 'InvitationsApi' do
       end
     end
 
+    context 'when already had one reject invitation' do
+      let(:params) { { time: time_slot_venue.time, match_id: match.id, venue_id: venue.id } }
+      let!(:invitation) do
+        create :invitation, :rejected,
+               time: time_slot_venue.time, match: match, venue: venue,
+               invitee: match.team_a, inviter: match.team_b,
+               created_at: 1.days.ago.at_beginning_of_hour
+      end
+      it 'can not create response invitation after 1day ' do
+        make_request
+        expect(response.status).to eq(405)
+        expect(invitation.reload).to be_expired
+        expect(Invitation.count).to eq(1)
+      end
+    end
+
     context 'when time slot is no longer available' do
       let(:params) { { time: time_slot_venue.time, match_id: match.id, venue_id: venue.id } }
       it 'throws 422' do
@@ -44,6 +60,23 @@ describe 'InvitationsApi' do
       it 'throws 405' do
         make_request
         expect(response.status).to eq(405)
+      end
+    end
+
+    context 'return error message' do
+      let(:params) { { time: time_slot_venue.time, match_id: match.id } }
+      it 'without locale' do
+        make_request
+        expect(response.status).to eq 422
+        expect(json_response[:errors].first[:attribute]).to eq 'venue_id'
+        expect(json_response[:errors].first[:message]).to eq 'is missing'
+      end
+
+      it 'with locale = vi' do
+        post '/api/v1/invitations/create?locale=vi', params: params.to_json, headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq 422
+        expect(json_response[:errors].first[:attribute]).to eq 'venue_id'
+        expect(json_response[:errors].first[:message]).to eq 'bị thiếu'
       end
     end
   end

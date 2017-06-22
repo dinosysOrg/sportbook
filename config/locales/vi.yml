@@ -88,6 +88,7 @@ vi:
               expired: Thư mời đã hết hạn
             team:
               wrong_team: Bạn không có quyền thực hiện.
+              no_response_after_reject: Bạn không có quyền thực hiện.
         team:
           attributes:
             team_id: Bạn không có quyền thực hiện
@@ -105,3 +106,12 @@ vi:
       push_is_paid: Giải đấu của bạn được trả tiền. Bạn có thể truy cập vào giải đấu của mình
       push_unpaid: "Giải đấu #{tour_name} của bạn chưa được thanh toán"
       push_upcoming: Bạn có một giải đấu sắp tới
+  grape:
+    errors:
+      messages:
+        coerce: không hợp lệ
+        presence: bị thiếu
+        regexp: không hợp lệ
+        blank: bị trống
+        values: không có một giá trị hợp lệ
+        except_values: có một giá trị không được phép

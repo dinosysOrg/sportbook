@@ -3,9 +3,11 @@ module V1
     auth :grape_devise_token_auth, resource_class: :user
 
     helpers GrapeDeviseTokenAuth::AuthHelpers
+    helpers V1::Helpers
 
     before do
       authenticate_api_user!
+      set_locale_api
     end
 
     desc 'get all upcoming or history matches'
@@ -14,6 +16,7 @@ module V1
       optional :tournament_id, type: Integer, desc: 'Filter tournament_id for matches'
       requires :limit, type: Integer, desc: 'Number of list'
       requires :page, type: Integer, desc: 'Number of page'
+      optional :locale, type: String
     end
     get 'matches' do
       case params[:type]

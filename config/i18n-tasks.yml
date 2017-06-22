@@ -95,7 +95,7 @@ ignore_unused:
 - 'activerecord.*'
 - 'date.formats.*'
 - 'time.formats.*'
-- '{devise,kaminari,active_admin,errors}.*'
+- '{devise,kaminari,active_admin,errors,grape}.*'
 - '*_mailer.*.subject'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'
