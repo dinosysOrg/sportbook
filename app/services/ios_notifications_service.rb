@@ -8,7 +8,7 @@ class IosNotificationsService
 
     def houston_push_notification(tokens, message, code)
       apn = Houston::Client.development
-      apn.certificate = File.read(ENV.fetch('APPLE_CERTIFICATE')) # certificate from prerequisites
+      apn.certificate = File.read(ENV.fetch("#{Rails.env.upcase}_APPLE_CERTIFICATE")) # certificate from prerequisites
       tokens.each do |token|
         notification = Houston::Notification.new(device: token)
         notification.alert = message
