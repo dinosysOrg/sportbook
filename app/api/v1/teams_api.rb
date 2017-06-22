@@ -17,7 +17,7 @@ module V1
       { code: 422, message: 'One of require fields is missing' }
     ]
     params do
-      requires :name, type: String, desc: 'Team Name'
+      requires :name, type: String, desc: 'User Name'
       requires :phone_number, type: Integer, desc: 'Player phone number'
       requires :address, type: String, desc: 'User Address'
       optional :club, type: String, desc: 'Club that player is playing'
@@ -30,7 +30,8 @@ module V1
         error!(I18n.t('activerecord.errors.models.team.attributes.missing_field'), 422)
       end
       team = Team.create!(name: params[:name], tournament_id: params[:tournament_id], status: :registered)
-      current_api_user.update_attributes!(birthday: params[:birthday],
+      current_api_user.update_attributes!(name: params[:name],
+                                          birthday: params[:birthday],
                                           club: params[:club],
                                           phone_number: params[:phone_number],
                                           address: params[:address])
