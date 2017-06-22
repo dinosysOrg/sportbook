@@ -28,24 +28,40 @@ class Invitation < ApplicationRecord
     event :sent do
       transitions from: :created, to: :pending
     end
-
     event :expire, after_commit: :update_point_for_winner do
       transitions from: :pending, to: :expired
     end
-
     event :accept, after_commit: :update_time_slot_and_match do
       transitions from: :pending, to: :accepted
     end
-
     event :reject do
       transitions from: :pending, to: :rejected
     end
   end
 
+  def self.push_rejected(user_ids)
+    NotificationsService.push_notification(user_ids, I18n.t('invitation.push.push_rejected'), 101)
+  end
+
+  def self.push_accepted(user_ids)
+    NotificationsService.push_notification(user_ids, I18n.t('invitation.push.push_accepted'), 102)
+  end
+
+  def self.push_sent(user_ids)
+    NotificationsService.push_notification(user_ids, I18n.t('invitation.push.push_sent'), 103)
+  end
+
+  def self.push_expired(user_ids)
+    NotificationsService.push_notification(user_ids, I18n.t('invitation.push.push_expired'), 104)
+  end
+
   def self.validate_deadline
     pending_invitations = Invitation.pending
     pending_invitations.each do |invitation|
-      invitation.expire! if invitation.created_at + TIME_TO_RESPOND <= Time.zone.now
+      if invitation.created_at + TIME_TO_RESPOND <= Time.zone.now
+        invitation.expire!
+        Invitation.push_rejected(invitation.invitee.user_ids)
+      end
     end
   end
 
@@ -57,8 +73,7 @@ class Invitation < ApplicationRecord
     return unless time && venue_id
     available_time_slots = TimeSlot.where(time: time, object_id: venue_id, available: true)
     return unless available_time_slots.empty?
-
-    add_time_slot_pick_error
+    errors.add(:time, :slot_picked)
   end
 
   def self.latest_invitation_between(invitee, inviter)
@@ -77,7 +92,7 @@ class Invitation < ApplicationRecord
   end
 
   def update_time_slot_and_match
-    create_inviter_time_slot_if_necessary
+    TimeSlot.find_or_create_by!(time: time, object: inviter) { |t| t.available = true }
 
     update_status_time_slot(venue)
     update_status_time_slot(invitee)
@@ -85,41 +100,21 @@ class Invitation < ApplicationRecord
     match.update_attributes!(time: time, venue: venue)
   end
 
-  def create_inviter_time_slot_if_necessary
-    TimeSlot.find_or_create_by!(time: time, object: inviter) do |t|
-      t.available = true
-    end
-  end
-
   def check_invitation_count
     return unless match_id
     count_invitation = match.invitations_count
     return unless count_invitation >= Match::MAX_INVITATIONS_COUNT
-
-    add_invation_error
+    errors.add(:match_id, :count_full, max: Match::MAX_INVITATIONS_COUNT)
   end
 
   def check_existing_pending_invitation
     return unless match_id
-
     last_invitation = match.invitations.pending.first
     return unless last_invitation
-
     errors.add(:match_id, :pending_invitation_exists)
   end
 
   def update_status_time_slot(object)
-    object.time_slots.find_by(time: time, available: true)
-          .update_attributes!(available: false, match_id: match_id)
-  end
-
-  def add_invation_error
-    errors.add(:match_id,
-               :count_full,
-               max: Match::MAX_INVITATIONS_COUNT)
-  end
-
-  def add_time_slot_pick_error
-    errors.add(:time, :slot_picked)
+    object.time_slots.find_by(time: time, available: true).update_attributes!(available: false, match_id: match_id)
   end
 end

@@ -22,3 +22,15 @@
 every 5.hours do
   runner 'Invitation.validate_deadline'
 end
+
+every 5.hours do
+  runner 'Match.push_match_upcoming'
+end
+
+every 5.hours do
+  runner 'Tournament.push_unpaid'
+end
+
+every 5.hours do
+  runner 'Tournament.push_upcoming'
+end

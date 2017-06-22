@@ -100,3 +100,8 @@ vi:
   time:
     formats:
       long: "%d-%m-%Y %H:%M"
+  tournament:
+    push:
+      push_is_paid: Giải đấu của bạn được trả tiền. Bạn có thể truy cập vào giải đấu của mình
+      push_unpaid: "Giải đấu #{tour_name} của bạn chưa được thanh toán"
+      push_upcoming: Bạn có một giải đấu sắp tới

@@ -18,6 +18,13 @@ class Match < ApplicationRecord
 
   delegate :tournament, to: :group
 
+  def self.push_match_upcoming
+    user_team_a = User.includes(teams: :matches_as_team_a).in_one_day.references(:matches_as_team_a).ids
+    user_team_b = User.includes(teams: :matches_as_team_b).references(:matches_as_team_b).in_one_day.ids
+    user_ids = user_team_a | user_team_b
+    NotificationsService.push_notification(user_ids, I18n.t('match.push.push_match_upcoming'), 301)
+  end
+
   def player_emails
     team_a_emails = team_a ? team_a.emails : []
     team_b_emails = team_b ? team_b.emails : []

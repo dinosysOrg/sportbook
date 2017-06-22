@@ -100,3 +100,17 @@ en:
   time:
     formats:
       long: "%Y-%m-%d %H:%M:%S"
+  tournament:
+    push:
+      push_is_paid: Your tournament is paid. You can access to my tournament
+      push_unpaid: "Your tournament %{name} is unpaid"
+      push_upcoming: Your have a tournament upcoming
+  match:
+    push:
+      push_match_upcoming: Your have a match upcoming
+  invitation:
+    push:
+      push_rejected: This invitation is rejected
+      push_accepted: This invitation is accepted
+      push_sent: This invitation is sent
+      push_expired: This invitation is expired

@@ -36,6 +36,7 @@ module V1
                                       match_id: params[:match_id], venue_id: params[:venue_id])
       team = Team.find(invitation.invitee_id)
       ApplicationMailer.invitation_mail(team.users.pluck(:email)).deliver_now
+      Invitation.push_sent(team.users.pluck(:id))
       invitation.sent!
     end
 
@@ -56,6 +57,7 @@ module V1
       unless invitation.invitee.user_ids.include?(current_api_user.id)
         error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405)
       end
+      Invitation.push_accepted(current_api_user.id)
       invitation.accept!
     end
 
@@ -75,6 +77,7 @@ module V1
       unless invitation.invitee.user_ids.include?(current_api_user.id)
         error!(I18n.t('activerecord.errors.models.invitation.attributes.team.wrong_team'), 405)
       end
+      Invitation.push_rejected(current_api_user.id)
       invitation.reject!
     end
 
