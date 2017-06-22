@@ -54,6 +54,7 @@ describe 'TeamsApi' do
       context 'define bod for user' do
         it 'adds bod for user' do
           make_request
+          expect(response.status).to eq(201)
           expect(user.reload.birthday).to eq(Date.today)
         end
       end
@@ -61,6 +62,7 @@ describe 'TeamsApi' do
       context 'define club for user' do
         it 'adds club for user' do
           make_request
+          expect(response.status).to eq(201)
           expect(user.reload.club).to eq(club)
         end
       end
@@ -75,7 +77,8 @@ describe 'TeamsApi' do
       context 'add user in response params' do
         it 'get user detail' do
           make_request
-          expect(json_response[:users][0][:id]).to eq(user.id)
+          expect(response.status).to eq(201)
+          expect(json_response[:user][:id]).to eq(user.id)
         end
       end
 
