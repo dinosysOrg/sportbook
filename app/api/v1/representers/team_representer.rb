@@ -8,9 +8,8 @@ module V1
       include Roar::Hypermedia
       include Grape::Roar::Representer
 
-      property :id
-      property :name
-      property :players
+      property :team
+      property :user
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])

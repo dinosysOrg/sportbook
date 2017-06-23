@@ -42,6 +42,7 @@ module V1
       user_ids.each do |user_id|
         Player.create(user_id: user_id, tournament_id: params[:tournament_id], team_id: team.id)
       end
+      team = OpenStruct.new team: team, user: current_api_user
       present team, with: Representers::TeamRepresenter
     end
 
@@ -86,6 +87,7 @@ module V1
       if params[:venue_ranking].present?
         team.update_attributes!(venue_ranking: params[:venue_ranking])
       end
+      team = OpenStruct.new team: team, user: current_api_user
       present team, with: Representers::TeamRepresenter
     end
   end
