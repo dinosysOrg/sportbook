@@ -24,7 +24,7 @@ module V1
       optional :club, type: String, desc: 'Club that player is playing'
       optional :birthday, type: Date, desc: 'Player BOD'
       optional :user_ids, type: Array[Integer], desc: 'Arrays user for creating team. Input values are user_id: [1, 2, 3 ,4]'
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     post 'tournaments/:tournament_id/teams' do
       unless params[:phone_number] && params[:address] && params[:name]
@@ -53,7 +53,7 @@ module V1
     params do
       requires :type, type: String, default: 'available', values: ['available']
       requires :id, type: Integer, desc: 'Id of team'
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'teams/:id/time_slots' do
       team = Team.find params[:id]
@@ -71,7 +71,7 @@ module V1
                                                           Input values are: { tuesday: [[9, 10, 11],[13, 14, 15]], monday: [[9, 10, 11],[13, 14, 15]] }'
       requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team. Input values are array of venue_id: [1, 2, 3, 4]'
       requires :team_id, type: Integer, desc: 'Id of team'
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     put 'teams/:team_id' do
       unless current_api_user.team_ids.include?(params[:team_id].to_i)

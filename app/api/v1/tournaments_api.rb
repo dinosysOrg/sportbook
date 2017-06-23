@@ -14,7 +14,7 @@ module V1
 
     desc 'Get all tournaments'
     params do
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'tournaments' do
       tournaments = Tournament.where('start_date > ? ', Time.zone.now)
@@ -25,7 +25,7 @@ module V1
       { code: 401, message: 'Unauthorized, missing token in header' }
     ]
     params do
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'tournaments/my-tournaments' do
       tournaments = current_api_user.tournaments
@@ -48,7 +48,7 @@ module V1
       { code: 401, message: 'Unauthorized, missing token in header' }
     ]
     params do
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'tournaments/my-tournaments/upcoming-tournaments' do
       tournaments = current_api_user.tournaments.where('start_date > ?', Time.zone.now)

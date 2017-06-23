@@ -110,3 +110,10 @@ vi:
         blank: bị trống
         values: không có một giá trị hợp lệ
         except_values: có một giá trị không được phép
+
+  devise_token_auth:
+    sessions:
+      not_confirmed: "Một email xác nhận đã gởi tới tài khoản của bạn tại '%{email}'. Bạn phải làm theo hướng dẫn trong email trước khi tài khoản của bạn có thể được kích hoạt"
+      bad_credentials: "Thông tin đăng nhập không hợp lệ. Vui lòng thử lại."
+      user_not_found: "Người dùng không được tìm thấy hoặc chưa đăng nhập."
+    
