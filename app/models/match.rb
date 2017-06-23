@@ -18,6 +18,14 @@ class Match < ApplicationRecord
 
   delegate :tournament, to: :group
 
+  def self.this_week
+    where(time: Time.now.beginning_of_day..Time.now.advance(days: 6).end_of_day).order(:time)
+  end
+
+  def self.next_week
+    where(time: Time.now.advance(weeks: 1).beginning_of_day..Time.now.advance(days: 13).end_of_day).order(:time)
+  end
+
   def player_emails
     team_a_emails = team_a ? team_a.emails : []
     team_b_emails = team_b ? team_b.emails : []

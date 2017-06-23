@@ -9,15 +9,19 @@ describe 'MatchesApi' do
     tournament2 = create(:tournament, start_date: 1.days.ago, end_date: 2.weeks.from_now)
     my_player2 = create(:player, user: api_user, tournament: tournament2)
     my_team2 = create(:team, players: [my_player2], tournament: tournament2)
+    match0 = create(:match, time: 1.days.ago.at_beginning_of_hour, team_a: my_team)
     match1 = create(:match, time: 1.days.from_now.at_beginning_of_hour, team_b: my_team)
-    match2 = create(:match, time: 1.days.from_now.at_beginning_of_hour, team_b: my_team2)
+    match2 = create(:match, time: 8.days.from_now.at_beginning_of_hour, team_b: my_team2)
+    match3 = create(:match, time: 9.days.from_now.at_beginning_of_hour, team_a: my_team2)
+    match4 = create(:match, time: 17.days.from_now.at_beginning_of_hour, team_a: my_team2)
 
-    get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 2, page: 1 }.as_json,
+    get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 1, page: 1 }.as_json,
                            headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
-    expect(json_response[:_embedded][:matches].count).to eq(request.params[:limit].to_i)
-    expect(json_response[:_embedded][:matches][0][:team_b][:name]).to eq(match1.team_b.name)
-    expect(Time.parse(json_response[:_embedded][:matches][0][:time])).to eq(match1.time)
+    expect(json_response[:_embedded][:matches_this_week].count).to eq(request.params[:limit].to_i)
+    expect(json_response[:_embedded][:matches_next_week].count).to eq(request.params[:limit].to_i)
+    expect(Time.parse(json_response[:_embedded][:matches_this_week][0][:time])).to eq(match1.time)
+    expect(Time.parse(json_response[:_embedded][:matches_next_week][0][:time])).to eq(match2.time)
   end
 
   it 'limit for matches by history and belong to current_user' do
@@ -51,12 +55,14 @@ describe 'MatchesApi' do
   end
 
   context 'pagination when upcoming' do
-    let!(:matches) { FactoryGirl.create_list(:match, 10, time: 5.days.from_now.at_beginning_of_hour, team_a: my_team) }
+    let!(:matches_this) { FactoryGirl.create_list(:match, 4, time: 5.days.from_now, team_a: my_team) }
+    let!(:matches_next) { FactoryGirl.create_list(:match, 3, time: 9.days.from_now, team_b: my_team) }
     it 'pagination for matches by upcoming and belong to current_user' do
-      get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 5, page: 2 }.as_json,
+      get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 2, page: 2 }.as_json,
                              headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
-      expect(json_response[:_embedded][:matches].count).to eq(5)
+      expect(json_response[:_embedded][:matches_this_week].count).to eq(2)
+      expect(json_response[:_embedded][:matches_next_week].count).to eq(1)
     end
   end
 

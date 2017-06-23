@@ -21,8 +21,8 @@ module V1
     get 'matches' do
       case params[:type]
       when 'my_upcoming'
-        matches_team_a = Match.where('team_a_id IN (?) And time > ?', current_api_user.team_ids, Time.zone.now)
-        matches_team_b = Match.where('team_b_id IN (?) And time > ?', current_api_user.team_ids, Time.zone.now)
+        matches_team_a = Match.where('team_a_id IN (?)', current_api_user.team_ids)
+        matches_team_b = Match.where('team_b_id IN (?)', current_api_user.team_ids)
       when 'my_historical'
         matches_team_a = Match.where('team_a_id IN (?) And time < ?', current_api_user.team_ids, Time.zone.now)
         matches_team_b = Match.where('team_b_id IN (?) And time < ?', current_api_user.team_ids, Time.zone.now)
@@ -31,8 +31,12 @@ module V1
         matches_team_a = Match.where('team_a_id IN (?)', my_tournament.team_ids)
         matches_team_b = Match.where('team_b_id IN (?)', my_tournament.team_ids)
       end
-      upcoming_matches = matches_team_a.or(matches_team_b).page(params[:page]).per(params[:limit])
-      present upcoming_matches, with: Representers::MatchesRepresenter
+      matches = matches_team_a.or(matches_team_b).page(params[:page]).per(params[:limit])
+      if params[:type] == 'my_upcoming'
+        present matches, with: Representers::UpcomingMatchesRepresenter
+      else
+        present matches, with: Representers::MatchesRepresenter
+      end
     end
   end
 end
