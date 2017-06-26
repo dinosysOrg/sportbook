@@ -18,10 +18,10 @@ module V1
       { code: 422, message: 'This time slot is no longer available' }
     ]
     params do
-      requires :time, type: Time
-      requires :venue_id, type: Integer
-      requires :match_id, type: Integer
-      optional :locale, type: String
+      requires :time, type: Time, desc: 'Time start match'
+      requires :venue_id, type: Integer, desc: 'Id of venue'
+      requires :match_id, type: Integer, desc: 'Id of match'
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     post 'invitations/create' do
       match = Match.find params[:match_id]
@@ -55,8 +55,8 @@ module V1
       { code: 422, message: 'This timeslot is picked' }
     ]
     params do
-      requires :invitation_id, type: Integer
-      optional :locale, type: String
+      requires :invitation_id, type: Integer, desc: 'Id of invitation'
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     put 'invitations/:invitation_id/accept' do
       invitation = Invitation.find(params[:invitation_id])
@@ -75,8 +75,8 @@ module V1
       { code: 422, message: 'You cant reject invitation that already is accepted' }
     ]
     params do
-      requires :invitation_id, type: Integer
-      optional :locale, type: String
+      requires :invitation_id, type: Integer, desc: 'Id of invitation'
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     put 'invitations/:invitation_id/reject' do
       invitation = Invitation.find params[:invitation_id]
@@ -93,8 +93,8 @@ module V1
       { code: 422, message: 'Missing Invitation Id' }
     ]
     params do
-      requires :invitation_id, type: Integer
-      optional :locale, type: String
+      requires :invitation_id, type: Integer, desc: 'Id of invitation'
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'invitations/:invitation_id' do
       invitation = Invitation.find(params[:invitation_id])

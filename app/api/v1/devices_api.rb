@@ -21,7 +21,7 @@ module V1
       requires :udid, type: String, desc: 'Device if of mobile'
       requires :token, type: String, desc: 'Device token from mobile'
       requires :platform, type: Integer, desc: "Platform of device. Input value is '0 - iOS' or '1 - Android'"
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     post 'devices/create' do
       Device.where(udid: params[:udid])
