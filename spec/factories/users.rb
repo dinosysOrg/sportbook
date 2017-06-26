@@ -6,6 +6,7 @@ FactoryGirl.define do
     nickname { FFaker::Name.name }
     name { FFaker::Name.name }
     password 'password'
+    password_confirmation 'password'
     confirmed_at { Time.zone.now }
     birthday { FFaker::Time.datetime }
     address { FFaker::Address.street_address }

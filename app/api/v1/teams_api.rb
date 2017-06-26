@@ -67,7 +67,7 @@ module V1
       { code: 405, message: 'You are not in the team that can do this operation' }
     ]
     params do
-      requires :preferred_time_blocks, type: JSON, desc: 'Preferred time block for team.
+      requires :preferred_time_blocks, type: Object, desc: 'Preferred time block for team.
                                                           Input values are: { tuesday: [[9, 10, 11],[13, 14, 15]], monday: [[9, 10, 11],[13, 14, 15]] }'
       requires :venue_ranking, type: Array[Integer], desc: 'Venue ranking for team. Input values are array of venue_id: [1, 2, 3, 4]'
       requires :team_id, type: Integer, desc: 'Id of team'
