@@ -14,7 +14,7 @@ class User < ApplicationRecord
   has_many :roles_users, dependent: :destroy
   has_many :roles, through: :roles_users
   has_many :devices
-
+  validates :password_confirmation, presence: true, on: :create
   before_save :add_uid
 
   def add_uid
