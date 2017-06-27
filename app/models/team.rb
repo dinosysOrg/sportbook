@@ -21,6 +21,10 @@ class Team < ApplicationRecord
 
   enum status: { registered: 0, paid: 1 }
 
+  def paid?
+    self[:status] == 'paid' ? true : false
+  end
+
   def phone_numbers
     players.map(&:phone_number).join(', ')
   end
