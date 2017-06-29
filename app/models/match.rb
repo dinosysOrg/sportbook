@@ -19,11 +19,11 @@ class Match < ApplicationRecord
   delegate :tournament, to: :group
 
   def self.this_week
-    where(time: Time.now.beginning_of_day..Time.now.advance(days: 6).end_of_day).order(:time)
+    where(time: Time.zone.now..Time.zone.now.advance(days: 6).end_of_day).order(:time)
   end
 
   def self.next_week
-    where(time: Time.now.advance(weeks: 1).beginning_of_day..Time.now.advance(days: 13).end_of_day).order(:time)
+    where(time: Time.zone.now.advance(weeks: 1).beginning_of_day..Time.zone.now.advance(days: 13).end_of_day).order(:time)
   end
 
   def player_emails
