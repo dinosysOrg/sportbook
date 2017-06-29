@@ -19,9 +19,9 @@ describe 'MatchesApi' do
                            headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
     expect(json_response[:_embedded][:matches_this_week].count).to eq(request.params[:limit].to_i)
-    expect(json_response[:_embedded][:matches_next_week].count).to eq(request.params[:limit].to_i)
+    expect(json_response[:_embedded][:matches_later].count).to eq(request.params[:limit].to_i)
     expect(Time.parse(json_response[:_embedded][:matches_this_week][0][:time])).to eq(match1.time)
-    expect(Time.parse(json_response[:_embedded][:matches_next_week][0][:time])).to eq(match2.time)
+    expect(Time.parse(json_response[:_embedded][:matches_later][0][:time])).to eq(match2.time)
   end
 
   it 'limit for matches by history and belong to current_user' do
@@ -62,7 +62,7 @@ describe 'MatchesApi' do
                              headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
       expect(json_response[:_embedded][:matches_this_week].count).to eq(2)
-      expect(json_response[:_embedded][:matches_next_week].count).to eq(1)
+      expect(json_response[:_embedded][:matches_later].count).to eq(1)
     end
   end
 

@@ -9,7 +9,7 @@ module V1
       include Grape::Roar::Representer
 
       collection :this_week, extend: MatchRepresenter, as: :matches_this_week, embedded: true
-      collection :next_week, extend: MatchRepresenter, as: :matches_next_week, embedded: true
+      collection :later, extend: MatchRepresenter, as: :matches_later, embedded: true
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])

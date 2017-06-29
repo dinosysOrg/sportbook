@@ -22,8 +22,8 @@ class Match < ApplicationRecord
     where(time: Time.zone.now..Time.zone.now.advance(days: 6).end_of_day).order(:time)
   end
 
-  def self.next_week
-    where(time: Time.zone.now.advance(weeks: 1).beginning_of_day..Time.zone.now.advance(days: 13).end_of_day).order(:time)
+  def self.later
+    where('time > ?', Time.zone.now.advance(weeks: 1).beginning_of_day).order(:time)
   end
 
   def player_emails
