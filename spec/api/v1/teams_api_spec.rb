@@ -141,7 +141,7 @@ describe 'TeamsApi' do
     let(:new_venue_ranking) { (1..4).to_a }
     let(:team) { create(:team, :has_players, tournament: tour, name: 'TeamA', venue_ranking: new_venue_ranking) }
     let(:venue_ranking) { (5..8).to_a }
-    let(:preferred_time_blocks) { { tuesday: [[9, 10, 11]] } }
+    let(:preferred_time_blocks) { { 'tuesday' => [[9, 10, 11]] } }
 
     describe 'user can update timeslot and venue ranking for thier team' do
       let!(:api_user) { team.players.first.user.becomes ApiUser }
@@ -170,6 +170,7 @@ describe 'TeamsApi' do
             Time.new(2017, 5, 23, 11)
           ]
         )
+        expect(team.reload.preferred_time_blocks).to match_array(preferred_time_blocks)
         expect(team.reload.venue_ranking).to match_array(venue_ranking)
       end
 
@@ -183,6 +184,7 @@ describe 'TeamsApi' do
           ]
         )
         expect(team.venue_ranking).to match_array(new_venue_ranking)
+        expect(team.reload.preferred_time_blocks).to be_nil
         put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
                                         headers: request_headers.merge(auth_headers)
         expect(response.status).to eq(200)
@@ -198,6 +200,7 @@ describe 'TeamsApi' do
             Time.new(2017, 5, 23, 11)
           ]
         )
+        expect(team.preferred_time_blocks).to match_array(preferred_time_blocks)
         expect(team.venue_ranking).to match_array(venue_ranking)
       end
     end

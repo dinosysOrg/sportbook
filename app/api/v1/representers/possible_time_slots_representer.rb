@@ -11,6 +11,7 @@ module V1
       collection :entries, as: :venues, embedded: true do
         property :id
         property :name
+        property :preferred_time_blocks
         collection :time_slots
       end
 
