@@ -175,7 +175,7 @@ describe 'TeamsApi' do
       end
 
       it 'check team is paid when update timeslot' do
-        team1 = create(:team, :has_players, tournament: tour, name: 'TeamA', status: 0)
+        team1 = create(:team, :has_players, tournament: tour, name: 'TeamA', status: 0, venue_ranking: new_venue_ranking)
         create(:time_slot, object: team1, time: Time.new(2017, 5, 15, 10))
         put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
                                         headers: request_headers.merge(auth_headers)
@@ -185,6 +185,7 @@ describe 'TeamsApi' do
             Time.new(2017, 5, 15, 10)
           ]
         )
+        expect(team.venue_ranking).to match_array(new_venue_ranking)
       end
 
       it 'updates time slot and venue ranking for team' do
