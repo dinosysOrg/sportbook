@@ -7,7 +7,7 @@ module V1
 
     desc 'Get all skills'
     params do
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'skills' do
       skills = Skill.all

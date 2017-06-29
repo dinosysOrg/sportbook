@@ -7,6 +7,7 @@ class AuthApiController < ApplicationController
       u.uid = profile['id']
       u.name = profile['name']
       u.password = 'password'
+      u.password_confirmation = 'password'
     end
     user.facebook_uid = profile['id']
     user.facebook_credentials = long_term_token

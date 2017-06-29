@@ -16,7 +16,7 @@ module V1
       optional :tournament_id, type: Integer, desc: 'Filter tournament_id for matches'
       requires :limit, type: Integer, desc: 'Number of list'
       requires :page, type: Integer, desc: 'Number of page'
-      optional :locale, type: String
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
     get 'matches' do
       case params[:type]

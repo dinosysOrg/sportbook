@@ -1,0 +1,180 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "The API title to be displayed on the API homepage.",
+    "description": "A description of the API.",
+    "version": "0.0.1",
+    "contact": {
+      "name": "hungryzi",
+      "email": "hungryzi@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "http://localhost:3000",
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Operations about user",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/v1/auth": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Sign up user",
+        "description": "Sign up user",
+        "operationId": "createUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "Email to sign up",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "Password",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password_confirmation",
+            "in": "formData",
+            "description": "Password confirmation",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "One of require fields is missing"
+          }
+        }
+      }
+    },
+    "/v1/auth/sign_in_with_facebook": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Sign in with Facebook",
+        "description": "Sign in with Facebook",
+        "operationId": "createUserViaFacebook",
+        "parameters": null,
+        "responses": null
+      }
+    },
+    "/v1/auth/sign_in": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Sign in",
+        "description": "Sign in",
+        "operationId": "createSession",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "User email",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "Password",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized, missing token in header"
+          }
+        }
+      }
+    },
+    "/v1/auth/password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Update password",
+        "description": "Update password",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "New password",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password_confirmation",
+            "in": "formData",
+            "description": "Password confirmation",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized, missing token in header"
+          }
+        }
+      }
+    },
+    "/v1/auth/sign_out": {
+      "delete": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs out current logged in user session",
+        "description": "Logs out current logged in user session",
+        "operationId": "deleteSession",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
