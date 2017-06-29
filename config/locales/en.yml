@@ -88,6 +88,7 @@ en:
               expired: This invitation is expired
             team:
               wrong_team: You are not in the team that can do this operation
+              no_response_after_reject: You can not create invitation because your deadline is expired
         team:
           attributes:
             team_id: You are not in the team that can do this operation
@@ -114,3 +115,17 @@ en:
       push_accepted: This invitation is accepted
       push_sent: This invitation is sent
       push_expired: This invitation is expired
+  grape:
+    errors:
+      messages:
+        coerce: is invalid
+        presence: is missing
+        regexp: is invalid
+        blank: is empty
+        values: does not have a valid value
+        except_values: has a value not allowed
+  devise_token_auth:
+    sessions:
+      not_confirmed: "A confirmation email was sent to your account at '%{email}'. You must follow the instructions in the email before your account can be activated"
+      bad_credentials: "Invalid login credentials. Please try again."
+      user_not_found: "User was not found or was not logged in."

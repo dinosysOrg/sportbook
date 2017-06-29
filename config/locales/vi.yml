@@ -88,6 +88,7 @@ vi:
               expired: Thư mời đã hết hạn
             team:
               wrong_team: Bạn không có quyền thực hiện.
+              no_response_after_reject: Bạn không có quyền thực hiện.
         team:
           attributes:
             team_id: Bạn không có quyền thực hiện
@@ -114,3 +115,17 @@ vi:
       push_accepted: Lời mời này được chấp nhận
       push_sent: Lời mời này được gửi
       push_expired: Lời mời này đã hết hạn
+  grape:
+    errors:
+      messages:
+        coerce: không hợp lệ
+        presence: bị thiếu
+        regexp: không hợp lệ
+        blank: bị trống
+        values: không có một giá trị hợp lệ
+        except_values: có một giá trị không được phép
+  devise_token_auth:
+    sessions:
+      not_confirmed: "Một email xác nhận đã gởi tới tài khoản của bạn tại '%{email}'. Bạn phải làm theo hướng dẫn trong email trước khi tài khoản của bạn có thể được kích hoạt"
+      bad_credentials: "Thông tin đăng nhập không hợp lệ. Vui lòng thử lại."
+      user_not_found: "Người dùng không được tìm thấy hoặc chưa đăng nhập."

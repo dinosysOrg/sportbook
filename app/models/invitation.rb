@@ -31,6 +31,9 @@ class Invitation < ApplicationRecord
     event :expire, after_commit: :update_point_for_winner do
       transitions from: :pending, to: :expired
     end
+    event :expire_after_reject, after_commit: :update_point_for_winner do
+      transitions from: :rejected, to: :expired
+    end
     event :accept, after_commit: :update_time_slot_and_match do
       transitions from: :pending, to: :accepted
     end
@@ -58,10 +61,14 @@ class Invitation < ApplicationRecord
   def self.validate_deadline
     pending_invitations = Invitation.pending
     pending_invitations.each do |invitation|
-      if invitation.created_at + TIME_TO_RESPOND <= Time.zone.now
-        invitation.expire!
-        Invitation.push_rejected(invitation.invitee.user_ids)
-      end
+      Invitation.push_rejected(invitation.invitee.user_ids) if invitation.expire! && invitation.created_at + TIME_TO_RESPOND <= Time.zone.now
+    end
+  end
+
+  def self.check_reject_invitation(match_id = 0)
+    rejected_invitations = match_id.zero? ? Invitation.rejected : Invitation.rejected.where(match_id: match_id)
+    rejected_invitations.where.not(status: 'pending').each do |invitation|
+      invitation.expire_after_reject! if invitation.created_at + TIME_TO_RESPOND > Time.zone.now
     end
   end
 
@@ -70,9 +77,7 @@ class Invitation < ApplicationRecord
   end
 
   def check_time_slot_avaible
-    return unless time && venue_id
-    available_time_slots = TimeSlot.where(time: time, object_id: venue_id, available: true)
-    return unless available_time_slots.empty?
+    return unless time && venue_id && TimeSlot.where(time: time, object_id: venue_id, available: true).empty?
     errors.add(:time, :slot_picked)
   end
 
@@ -101,16 +106,12 @@ class Invitation < ApplicationRecord
   end
 
   def check_invitation_count
-    return unless match_id
-    count_invitation = match.invitations_count
-    return unless count_invitation >= Match::MAX_INVITATIONS_COUNT
+    return unless match_id && match.invitations_count >= Match::MAX_INVITATIONS_COUNT
     errors.add(:match_id, :count_full, max: Match::MAX_INVITATIONS_COUNT)
   end
 
   def check_existing_pending_invitation
-    return unless match_id
-    last_invitation = match.invitations.pending.first
-    return unless last_invitation
+    return unless match_id && match.invitations.pending.first
     errors.add(:match_id, :pending_invitation_exists)
   end
 

@@ -11,8 +11,8 @@ describe 'TeamsApi' do
 
     context 'when signed in' do
       let(:params) { { name: name, skill_id: skill.id, birthday: Date.today, club: club, phone_number: 12_345_666, address: address } }
+      let(:auth_headers) { user.create_new_auth_token }
       let(:make_request) do
-        auth_headers = user.create_new_auth_token
         post "/api/v1/tournaments/#{tour.id}/teams", params: params.to_json,
                                                      headers: request_headers.merge(auth_headers)
       end
@@ -54,6 +54,7 @@ describe 'TeamsApi' do
       context 'define bod for user' do
         it 'adds bod for user' do
           make_request
+          expect(response.status).to eq(201)
           expect(user.reload.birthday).to eq(Date.today)
         end
       end
@@ -61,6 +62,7 @@ describe 'TeamsApi' do
       context 'define club for user' do
         it 'adds club for user' do
           make_request
+          expect(response.status).to eq(201)
           expect(user.reload.club).to eq(club)
         end
       end
@@ -69,6 +71,14 @@ describe 'TeamsApi' do
         it 'adds phone number for user' do
           make_request
           expect(user.reload.phone_number.to_i).to eq(12_345_666)
+        end
+      end
+
+      context 'add user in response params' do
+        it 'get user detail' do
+          make_request
+          expect(response.status).to eq(201)
+          expect(json_response[:user][:id]).to eq(user.id)
         end
       end
 
@@ -108,9 +118,20 @@ describe 'TeamsApi' do
 
       context 'when fails to save' do
         let(:name) { '' }
-        it 'returns error' do
+        it 'returns error without locale' do
           make_request
           expect(response.status).to eq(422)
+          expect(json_response[:errors].first[:attribute]).to eq 'name'
+          expect(json_response[:errors].first[:message]).to include "can't be blank"
+        end
+
+        it 'returns error with locale = vi' do
+          params.delete :name
+          post "/api/v1/tournaments/#{tour.id}/teams?locale=vi", params: params.to_json,
+                                                                 headers: request_headers.merge(auth_headers)
+          expect(response.status).to eq(422)
+          expect(json_response[:errors].first[:attribute]).to eq 'name'
+          expect(json_response[:errors].first[:message]).to include 'bị thiếu'
         end
       end
     end
@@ -128,7 +149,7 @@ describe 'TeamsApi' do
       it 'returns the available time slots' do
         expect(TimeSlotService).to receive(:possible_time_slots).and_call_original
 
-        get "/api/v1/teams/#{team.id}/time_slots", params: { type: 'available' }.as_json,
+        get "/api/v1/teams/#{team.id}/time_slots", params: {}.as_json,
                                                    headers: request_headers.merge(auth_headers)
 
         expect(response.status).to eq(200)
