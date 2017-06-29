@@ -203,6 +203,18 @@ describe 'TeamsApi' do
         expect(team.preferred_time_blocks).to match_array(preferred_time_blocks)
         expect(team.venue_ranking).to match_array(venue_ranking)
       end
+
+      it 'Get time_block and venue ranking for team' do
+        new_preferred_time_blocks = { monday: [[8, 11, 12]] }
+        team1 = create(:team, :has_players, tournament: tour, name: 'TeamA', venue_ranking: venue_ranking,
+                                            preferred_time_blocks: new_preferred_time_blocks)
+        get "/api/v1/teams/#{team1.id}/time_blocks", params: {}.as_json,
+                                                     headers: request_headers.merge(auth_headers)
+
+        expect(response.status).to eq(200)
+        expect(json_response[:preferred_time_blocks]).to match_array(new_preferred_time_blocks)
+        expect(json_response[:venue_ranking]).to match_array(venue_ranking)
+      end
     end
     describe 'current user can not update timeslot and venue for another team' do
       let(:api_user) { create(:api_user) }

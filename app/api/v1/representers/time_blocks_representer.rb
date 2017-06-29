@@ -3,16 +3,15 @@ require 'roar/hypermedia'
 
 module V1
   module Representers
-    module PossibleTimeSlotsRepresenter
+    module TimeBlocksRepresenter
       include Roar::JSON::HAL
       include Roar::Hypermedia
       include Grape::Roar::Representer
 
-      collection :entries, as: :venues, embedded: true do
-        property :id
-        property :name
-        collection :time_slots
-      end
+      property :id
+      property :name
+      property :preferred_time_blocks
+      property :venue_ranking
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])

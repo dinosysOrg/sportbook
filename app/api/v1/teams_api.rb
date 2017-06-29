@@ -91,5 +91,18 @@ module V1
       team = OpenStruct.new team: team, user: current_api_user
       present team, with: Representers::TeamRepresenter
     end
+
+    desc 'Get time_block and venue ranking for team', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'One of require fields is missing' }
+    ]
+    params do
+      requires :id, type: Integer, desc: 'Id of team'
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
+    end
+    get 'teams/:id/time_blocks' do
+      team = Team.find params[:id]
+      present team, with: Representers::TimeBlocksRepresenter
+    end
   end
 end
