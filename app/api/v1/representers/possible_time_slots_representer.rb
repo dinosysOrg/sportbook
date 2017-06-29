@@ -12,6 +12,7 @@ module V1
         property :id
         property :name
         collection :time_slots
+        collection :time_blocks
       end
 
       link :self do |opts|

@@ -9,6 +9,7 @@ class Team < ApplicationRecord
   has_many :groups_teams
   has_many :groups, through: :groups_teams
   has_many :time_slots, as: :object
+  has_many :time_blocks
   has_many :pages
   has_many :invitations
   has_many :invitations_as_invitee, foreign_key: 'invitee_id', class_name: 'Invitation'

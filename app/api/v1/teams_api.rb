@@ -82,7 +82,8 @@ module V1
       date_range = (tour['start_date']..tour['end_date']).to_a
       if params[:preferred_time_blocks].present?
         team.time_slots.where(available: true).each(&:destroy)
-        TimeSlotService.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
+        time_slots = TimeSlotService.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
+        times = team.time_blocks.create!(preferred_time: params[:preferred_time_blocks].as_json)
       end
       if params[:venue_ranking].present?
         team.update_attributes!(venue_ranking: params[:venue_ranking])
