@@ -18,13 +18,8 @@ class Match < ApplicationRecord
 
   delegate :tournament, to: :group
 
-  def self.this_week
-    where(time: Time.zone.now..Time.zone.now.end_of_week).order(:time)
-  end
-
-  def self.later
-    where('time > ?', Time.zone.now.end_of_week).order(:time)
-  end
+  scope :this_week, -> { where(time: Time.zone.now..Time.zone.now.end_of_week).order(:time) }
+  scope :later, -> { where('time > ?', Time.zone.now.end_of_week).order(:time) }
 
   def player_emails
     team_a_emails = team_a ? team_a.emails : []

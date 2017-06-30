@@ -21,8 +21,8 @@ module V1
     get 'matches' do
       case params[:type]
       when 'my_upcoming'
-        matches_team_a = Match.where('team_a_id IN (?)', current_api_user.team_ids)
-        matches_team_b = Match.where('team_b_id IN (?)', current_api_user.team_ids)
+        matches_team_a = Match.where('team_a_id IN (?) And time > ?', current_api_user.team_ids)
+        matches_team_b = Match.where('team_b_id IN (?) And time > ?', current_api_user.team_ids)
       when 'my_historical'
         matches_team_a = Match.where('team_a_id IN (?) And time < ?', current_api_user.team_ids, Time.zone.now)
         matches_team_b = Match.where('team_b_id IN (?) And time < ?', current_api_user.team_ids, Time.zone.now)
