@@ -55,7 +55,7 @@ describe 'MatchesApi' do
   end
 
   context 'pagination when upcoming' do
-    let!(:matches_this) { FactoryGirl.create_list(:match, 4, time: 5.days.from_now, team_a: my_team) }
+    let!(:matches_this) { FactoryGirl.create_list(:match, 4, time: 1.days.from_now, team_a: my_team) }
     let!(:matches_next) { FactoryGirl.create_list(:match, 3, time: 9.days.from_now, team_b: my_team) }
     it 'pagination for matches by upcoming and belong to current_user' do
       get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 2, page: 2 }.as_json,
