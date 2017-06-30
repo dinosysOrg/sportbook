@@ -23,7 +23,7 @@ class Match < ApplicationRecord
   end
 
   def self.later
-    where('time > ?', Time.zone.now.advance(weeks: 1).beginning_of_day).order(:time)
+    where('time > ?', Time.zone.now.end_of_week).order(:time)
   end
 
   def player_emails
