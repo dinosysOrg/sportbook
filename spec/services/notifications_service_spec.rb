@@ -21,21 +21,36 @@ describe NotificationsService do
     end
   end
 
-  describe 'Create houston data' do
-    let(:notification_options) do
+  describe 'Check alert houston when tournament push_is_paid' do
+    let(:push_is_paid) do
       {
         token: SecureRandom.uuid,
-        alert: 'Houston, we have a problem.',
+        alert: I18n.t('tournament.push.push_is_paid')
+      }
+    end
+    subject { Houston::Notification.new(push_is_paid) }
+
+    describe '#alert' do
+      subject { super().alert }
+      it { should == I18n.t('tournament.push.push_is_paid') }
+    end
+  end
+
+  describe 'Check houston data when tournament push_unpaid' do
+    let(:push_unpaid) do
+      {
+        token: SecureRandom.uuid,
+        alert: I18n.t('tournament.push.push_unpaid', name: tournament1.name),
         badge: 1,
         sound: 'sosumi.aiff',
         code: 201
       }
     end
-    subject { Houston::Notification.new(notification_options) }
+    subject { Houston::Notification.new(push_unpaid) }
 
     describe '#alert' do
       subject { super().alert }
-      it { should == 'Houston, we have a problem.' }
+      it { should == I18n.t('tournament.push.push_unpaid', name: tournament1.name) }
     end
 
     describe '#badge' do
@@ -51,6 +66,96 @@ describe NotificationsService do
     describe '#custom_data' do
       subject { super().custom_data }
       it { should == { code: 201 } }
+    end
+  end
+
+  describe 'Check alert houston when tournament push_upcoming' do
+    let(:push_upcoming) do
+      {
+        token: SecureRandom.uuid,
+        alert: I18n.t('tournament.push.push_upcoming')
+      }
+    end
+    subject { Houston::Notification.new(push_upcoming) }
+
+    describe '#alert' do
+      subject { super().alert }
+      it { should == I18n.t('tournament.push.push_upcoming') }
+    end
+  end
+
+  describe 'Check alert houston when push_match_upcoming' do
+    let(:push_match_upcoming) do
+      {
+        token: SecureRandom.uuid,
+        alert: I18n.t('match.push.push_match_upcoming')
+      }
+    end
+    subject { Houston::Notification.new(push_match_upcoming) }
+
+    describe '#alert' do
+      subject { super().alert }
+      it { should == I18n.t('match.push.push_match_upcoming') }
+    end
+  end
+
+  describe 'Check alert houston when invitation push_rejected' do
+    let(:push_rejected) do
+      {
+        token: SecureRandom.uuid,
+        alert: I18n.t('invitation.push.push_rejected')
+      }
+    end
+    subject { Houston::Notification.new(push_rejected) }
+
+    describe '#alert' do
+      subject { super().alert }
+      it { should == I18n.t('invitation.push.push_rejected') }
+    end
+  end
+
+  describe 'Check alert houston when invitation push_accepted' do
+    let(:push_accepted) do
+      {
+        token: SecureRandom.uuid,
+        alert: I18n.t('invitation.push.push_accepted')
+      }
+    end
+    subject { Houston::Notification.new(push_accepted) }
+
+    describe '#alert' do
+      subject { super().alert }
+      it { should == I18n.t('invitation.push.push_accepted') }
+    end
+  end
+
+  describe 'Check alert houston when invitation push_sent' do
+    let(:push_sent) do
+      {
+        token: SecureRandom.uuid,
+        alert: I18n.t('invitation.push.push_sent')
+      }
+    end
+    subject { Houston::Notification.new(push_sent) }
+
+    describe '#alert' do
+      subject { super().alert }
+      it { should == I18n.t('invitation.push.push_sent') }
+    end
+  end
+
+  describe 'Check alert houston when invitation push_expired' do
+    let(:push_expired) do
+      {
+        token: SecureRandom.uuid,
+        alert: I18n.t('invitation.push.push_expired')
+      }
+    end
+    subject { Houston::Notification.new(push_expired) }
+
+    describe '#alert' do
+      subject { super().alert }
+      it { should == I18n.t('invitation.push.push_expired') }
     end
   end
 
