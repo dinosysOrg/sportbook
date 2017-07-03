@@ -104,7 +104,7 @@ vi:
   tournament:
     push:
       push_is_paid: Giải đấu của bạn được trả tiền. Bạn có thể truy cập vào giải đấu của mình
-      push_unpaid: "Giải đấu %{name} của bạn chưa được thanh toán"
+      push_unpaid: Giải đấu %{name} của bạn chưa được thanh toán
       push_upcoming: Bạn có một giải đấu sắp tới
   match:
     push:

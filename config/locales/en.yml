@@ -104,7 +104,7 @@ en:
   tournament:
     push:
       push_is_paid: Your tournament is paid. You can access to my tournament
-      push_unpaid: "Your tournament %{name} is unpaid"
+      push_unpaid: Your tournament %{name} is unpaid
       push_upcoming: Your have a tournament upcoming
   match:
     push:
