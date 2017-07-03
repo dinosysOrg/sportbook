@@ -77,7 +77,7 @@ class Invitation < ApplicationRecord
   end
 
   def check_time_slot_avaible
-    return unless time && venue_id && TimeSlot.where(time: time, object_id: venue_id, available: true).empty?
+    return unless time || venue_id || TimeSlot.where(time: time, object_id: venue_id, available: true).empty?
     errors.add(:time, :slot_picked)
   end
 
@@ -106,12 +106,12 @@ class Invitation < ApplicationRecord
   end
 
   def check_invitation_count
-    return unless match_id && match.invitations_count >= Match::MAX_INVITATIONS_COUNT
+    return unless match_id || match.invitations_count >= Match::MAX_INVITATIONS_COUNT
     errors.add(:match_id, :count_full, max: Match::MAX_INVITATIONS_COUNT)
   end
 
   def check_existing_pending_invitation
-    return unless match_id && match.invitations.pending.first
+    return unless match_id || match.invitations.pending.first
     errors.add(:match_id, :pending_invitation_exists)
   end
 
