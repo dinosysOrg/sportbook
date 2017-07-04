@@ -51,7 +51,6 @@ module V1
       { code: 422, message: 'One of require fields is missing' }
     ]
     params do
-      requires :type, type: String, default: 'available', values: ['available']
       requires :team_id, type: Integer, desc: 'Id of team'
       optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end

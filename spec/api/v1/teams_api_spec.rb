@@ -143,15 +143,14 @@ describe 'TeamsApi' do
     let(:venue_ranking) { (5..8).to_a }
     let(:preferred_time_blocks) { { tuesday: [[9, 10, 11]] } }
 
-    describe 'user can update timeslot and venue ranking for thier team' do
+    describe 'user can update timeslot and venue ranking for their team' do
       let!(:api_user) { team.players.first.user.becomes ApiUser }
       let!(:auth_headers) { api_user.create_new_auth_token }
       it 'returns the available time slots' do
         expect(TimeSlotService).to receive(:possible_time_slots).and_call_original
 
         get "/api/v1/teams/#{team.id}/time_slots", params: {}.as_json,
-                                                   headers: request_headers.merge(auth_headers)
-
+                                                   headers: request_headers.merge(auth_headers)                                         
         expect(response.status).to eq(200)
         expect(json_response[:_embedded][:venues]).to_not be_nil
       end
