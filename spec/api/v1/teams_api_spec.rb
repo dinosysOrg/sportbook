@@ -149,7 +149,7 @@ describe 'TeamsApi' do
       it 'returns the available time slots' do
         expect(TimeSlotService).to receive(:possible_time_slots).and_call_original
 
-        get "/api/v1/teams/#{team.id}/time_slots", params: { type: 'available' }.as_json,
+        get "/api/v1/teams/#{team.id}/time_slots", params: {}.as_json,
                                                    headers: request_headers.merge(auth_headers)
 
         expect(response.status).to eq(200)
