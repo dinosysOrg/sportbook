@@ -79,14 +79,12 @@ module V1
       team = Team.find params[:team_id]
       tour = team.tournament
       date_range = (tour['start_date']..tour['end_date']).to_a
-      if params[:preferred_time_blocks].present?
+      if team.paid? && params[:preferred_time_blocks].present?
         team.time_slots.where(available: true).each(&:destroy)
         TimeSlotService.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
         team.update_attributes!(preferred_time_blocks: params[:preferred_time_blocks].as_json)
       end
-      if params[:venue_ranking].present?
-        team.update_attributes!(venue_ranking: params[:venue_ranking])
-      end
+      team.update_attributes!(venue_ranking: params[:venue_ranking]) if params[:venue_ranking].present? && team.paid?
       team = OpenStruct.new team: team, user: current_api_user
       present team, with: Representers::TeamRepresenter
     end

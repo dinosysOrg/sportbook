@@ -9,11 +9,11 @@ describe 'MatchesApi' do
     tournament2 = create(:tournament, start_date: 1.days.ago, end_date: 2.weeks.from_now)
     my_player2 = create(:player, user: api_user, tournament: tournament2)
     my_team2 = create(:team, players: [my_player2], tournament: tournament2)
-    match0 = create(:match, time: 1.days.ago.at_beginning_of_hour, team_a: my_team)
+    _match0 = create(:match, time: 1.days.ago.at_beginning_of_hour, team_a: my_team)
     match1 = create(:match, time: 1.days.from_now.at_beginning_of_hour, team_b: my_team)
     match2 = create(:match, time: 8.days.from_now.at_beginning_of_hour, team_b: my_team2)
-    match3 = create(:match, time: 9.days.from_now.at_beginning_of_hour, team_a: my_team2)
-    match4 = create(:match, time: 17.days.from_now.at_beginning_of_hour, team_a: my_team2)
+    _match3 = create(:match, time: 9.days.from_now.at_beginning_of_hour, team_a: my_team2)
+    _match4 = create(:match, time: 17.days.from_now.at_beginning_of_hour, team_a: my_team2)
 
     get '/api/v1/matches', params: { type: 'my_upcoming', tournament_id: nil, limit: 1, page: 1 }.as_json,
                            headers: request_headers.merge(auth_headers)
@@ -43,8 +43,8 @@ describe 'MatchesApi' do
 
   it 'limit for matches by belong to tournament' do
     match1 = create(:match, time: 5.days.from_now.at_beginning_of_hour, team_b: my_team)
-    match2 = create(:match, time: 4.days.ago.at_beginning_of_hour, team_a: my_team)
-    match3 = create(:match, time: 3.days.from_now.at_beginning_of_hour, team_a: my_team)
+    _match2 = create(:match, time: 4.days.ago.at_beginning_of_hour, team_a: my_team)
+    _match3 = create(:match, time: 3.days.from_now.at_beginning_of_hour, team_a: my_team)
     get '/api/v1/matches', params: { type: '', tournament_id: tour_id, limit: 3, page: 1 }.as_json,
                            headers: request_headers.merge(auth_headers)
     expect(response.status).to eq(200)
