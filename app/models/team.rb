@@ -1,6 +1,6 @@
 class Team < ApplicationRecord
   CAPACITY = 1
-
+  serialize :preferred_time_blocks
   belongs_to :tournament
   has_many :players, dependent: :destroy
   has_many :users, through: :players
