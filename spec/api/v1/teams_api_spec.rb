@@ -141,7 +141,7 @@ describe 'TeamsApi' do
     let(:new_venue_ranking) { (1..4).to_a }
     let(:team) { create(:team, :has_players, tournament: tour, name: 'TeamA', venue_ranking: new_venue_ranking) }
     let(:venue_ranking) { (5..8).to_a }
-    let(:preferred_time_blocks) { { 'tuesday' => [[9, 10, 11]] } }
+    let(:preferred_time_blocks) { { tuesday: [[9, 10, 11]] } }
 
     describe 'user can update timeslot and venue ranking for thier team' do
       let!(:api_user) { team.players.first.user.becomes ApiUser }
@@ -170,8 +170,8 @@ describe 'TeamsApi' do
             Time.new(2017, 5, 23, 11)
           ]
         )
-        expect(team.reload.preferred_time_blocks).to match_array(preferred_time_blocks)
-        expect(team.reload.venue_ranking).to match_array(venue_ranking)
+        expect(json_response[:team][:preferred_time_blocks]).to match_array(preferred_time_blocks)
+        expect(json_response[:team][:venue_ranking]).to match_array(venue_ranking)
       end
 
       it 'updates time slot and venue ranking for team' do
@@ -200,8 +200,8 @@ describe 'TeamsApi' do
             Time.new(2017, 5, 23, 11)
           ]
         )
-        expect(team.preferred_time_blocks).to match_array(preferred_time_blocks)
-        expect(team.venue_ranking).to match_array(venue_ranking)
+        expect(json_response[:team][:preferred_time_blocks]).to match_array(preferred_time_blocks)
+        expect(json_response[:team][:venue_ranking]).to match_array(venue_ranking)
       end
 
       it 'Get time_block and venue ranking for team' do

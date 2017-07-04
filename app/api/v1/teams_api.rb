@@ -52,11 +52,11 @@ module V1
     ]
     params do
       requires :type, type: String, default: 'available', values: ['available']
-      requires :id, type: Integer, desc: 'Id of team'
+      requires :team_id, type: Integer, desc: 'Id of team'
       optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
-    get 'teams/:id/time_slots' do
-      team = Team.find params[:id]
+    get 'teams/:team_id/time_slots' do
+      team = Team.find params[:team_id]
       venue_time_slots = TimeSlotService.possible_time_slots team
       present venue_time_slots, with: Representers::PossibleTimeSlotsRepresenter
     end
@@ -97,11 +97,11 @@ module V1
       { code: 422, message: 'One of require fields is missing' }
     ]
     params do
-      requires :id, type: Integer, desc: 'Id of team'
+      requires :team_id, type: Integer, desc: 'Id of team'
       optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
-    get 'teams/:id/time_blocks' do
-      team = Team.find params[:id]
+    get 'teams/:team_id/time_blocks' do
+      team = Team.find params[:team_id]
       present team, with: Representers::TimeBlocksRepresenter
     end
   end

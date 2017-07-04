@@ -136,14 +136,6 @@ ActiveRecord::Schema.define(version: 20170629073358) do
     t.index ["tournament_id"], name: "index_teams_on_tournament_id", using: :btree
   end
 
-  create_table "time_blocks", force: :cascade do |t|
-    t.text     "preferred_time"
-    t.integer  "team_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["team_id"], name: "index_time_blocks_on_team_id", using: :btree
-  end
-
   create_table "time_slots", force: :cascade do |t|
     t.datetime "time"
     t.boolean  "available"
