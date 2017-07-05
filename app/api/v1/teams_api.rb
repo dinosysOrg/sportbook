@@ -51,11 +51,11 @@ module V1
       { code: 422, message: 'One of require fields is missing' }
     ]
     params do
-      requires :id, type: Integer, desc: 'Id of team'
+      requires :team_id, type: Integer, desc: 'Id of team'
       optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
     end
-    get 'teams/:id/time_slots' do
-      team = Team.find params[:id]
+    get 'teams/:team_id/time_slots' do
+      team = Team.find params[:team_id]
       venue_time_slots = TimeSlotService.possible_time_slots team
       present venue_time_slots, with: Representers::PossibleTimeSlotsRepresenter
     end
@@ -79,15 +79,27 @@ module V1
       team = Team.find params[:team_id]
       tour = team.tournament
       date_range = (tour['start_date']..tour['end_date']).to_a
-      if params[:preferred_time_blocks].present?
+      if team.paid? && params[:preferred_time_blocks].present?
         team.time_slots.where(available: true).each(&:destroy)
         TimeSlotService.create_from_preferred_time_blocks([team], date_range, params[:preferred_time_blocks])
+        team.update_attributes!(preferred_time_blocks: params[:preferred_time_blocks].as_json)
       end
-      if params[:venue_ranking].present?
-        team.update_attributes!(venue_ranking: params[:venue_ranking])
-      end
+      team.update_attributes!(venue_ranking: params[:venue_ranking]) if params[:venue_ranking].present? && team.paid?
       team = OpenStruct.new team: team, user: current_api_user
       present team, with: Representers::TeamRepresenter
+    end
+
+    desc 'Get time_block and venue ranking for team', failure: [
+      { code: 401, message: 'Unauthorized, missing token in header' },
+      { code: 422, message: 'One of require fields is missing' }
+    ]
+    params do
+      requires :team_id, type: Integer, desc: 'Id of team'
+      optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
+    end
+    get 'teams/:team_id/time_blocks' do
+      team = Team.find params[:team_id]
+      present team, with: Representers::TimeBlocksRepresenter
     end
   end
 end

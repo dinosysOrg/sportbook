@@ -1,6 +1,6 @@
 class Team < ApplicationRecord
   CAPACITY = 1
-
+  serialize :preferred_time_blocks
   belongs_to :tournament
   has_many :players, dependent: :destroy
   has_many :users, through: :players
@@ -26,6 +26,10 @@ class Team < ApplicationRecord
   def check_is_paid
     user_ids = User.includes(:teams).references(:teams).where('teams.status = ?', 1).ids
     Tournament.push_is_paid(user_ids)
+  end
+  
+  def paid?
+    self[:status] == 'paid' ? true : false
   end
 
   def phone_numbers

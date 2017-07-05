@@ -17,6 +17,9 @@ class Match < ApplicationRecord
   after_destroy :recalculate_groups_teams_statistics
 
   delegate :tournament, to: :group
+  
+  scope :this_week, (-> { where('time < ?', Time.zone.now.end_of_week).order(:time) })
+  scope :later, (-> { where('time > ?', Time.zone.now.end_of_week).order(:time) })
 
   def self.push_match_upcoming
     user_team_a = User.includes(teams: :matches_as_team_a).in_one_day.references(:matches_as_team_a).ids

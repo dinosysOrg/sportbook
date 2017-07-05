@@ -139,11 +139,11 @@ describe 'TeamsApi' do
 
   describe '#time_slots' do
     let(:new_venue_ranking) { (1..4).to_a }
-    let(:team) { create(:team, :has_players, tournament: tour, name: 'TeamA', venue_ranking: new_venue_ranking) }
+    let(:team) { create(:team, :has_players, tournament: tour, name: 'TeamA', status: 1, venue_ranking: new_venue_ranking) }
     let(:venue_ranking) { (5..8).to_a }
     let(:preferred_time_blocks) { { tuesday: [[9, 10, 11]] } }
 
-    describe 'user can update timeslot and venue ranking for thier team' do
+    describe 'user can update timeslot and venue ranking for their team' do
       let!(:api_user) { team.players.first.user.becomes ApiUser }
       let!(:auth_headers) { api_user.create_new_auth_token }
       it 'returns the available time slots' do
@@ -151,7 +151,6 @@ describe 'TeamsApi' do
 
         get "/api/v1/teams/#{team.id}/time_slots", params: {}.as_json,
                                                    headers: request_headers.merge(auth_headers)
-
         expect(response.status).to eq(200)
         expect(json_response[:_embedded][:venues]).to_not be_nil
       end
@@ -170,7 +169,22 @@ describe 'TeamsApi' do
             Time.new(2017, 5, 23, 11)
           ]
         )
+        expect(team.status).to eq('paid')
         expect(team.reload.venue_ranking).to match_array(venue_ranking)
+      end
+
+      it 'check team is paid when update timeslot' do
+        team1 = create(:team, :has_players, tournament: tour, name: 'TeamA', status: 0, venue_ranking: new_venue_ranking)
+        create(:time_slot, object: team1, time: Time.new(2017, 5, 15, 10))
+        put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
+                                        headers: request_headers.merge(auth_headers)
+        expect(team1.status).to eq('registered')
+        expect(team1.reload.time_slots.pluck(:time)).to match_array(
+          [
+            Time.new(2017, 5, 15, 10)
+          ]
+        )
+        expect(team.venue_ranking).to match_array(new_venue_ranking)
       end
 
       it 'updates time slot and venue ranking for team' do
@@ -183,10 +197,12 @@ describe 'TeamsApi' do
           ]
         )
         expect(team.venue_ranking).to match_array(new_venue_ranking)
+        expect(team.reload.preferred_time_blocks).to be_nil
         put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,
                                         headers: request_headers.merge(auth_headers)
         expect(response.status).to eq(200)
         team = tour.teams.find_by(name: name)
+        expect(team.status).to eq('paid')
         expect(team.time_slots.pluck(:time)).to match_array(
           [
             Time.new(2017, 5, 15, 9),
@@ -198,7 +214,20 @@ describe 'TeamsApi' do
             Time.new(2017, 5, 23, 11)
           ]
         )
-        expect(team.venue_ranking).to match_array(venue_ranking)
+        expect(json_response[:team][:preferred_time_blocks]).to match_array(preferred_time_blocks)
+        expect(json_response[:team][:venue_ranking]).to match_array(venue_ranking)
+      end
+
+      it 'Get time_block and venue ranking for team' do
+        new_preferred_time_blocks = { monday: [[8, 11, 12]] }
+        team1 = create(:team, :has_players, tournament: tour, name: 'TeamA', venue_ranking: venue_ranking,
+                                            preferred_time_blocks: new_preferred_time_blocks)
+        get "/api/v1/teams/#{team1.id}/time_blocks", params: {}.as_json,
+                                                     headers: request_headers.merge(auth_headers)
+
+        expect(response.status).to eq(200)
+        expect(json_response[:preferred_time_blocks]).to match_array(new_preferred_time_blocks)
+        expect(json_response[:venue_ranking]).to match_array(venue_ranking)
       end
     end
     describe 'current user can not update timeslot and venue for another team' do
