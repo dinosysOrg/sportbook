@@ -101,7 +101,6 @@ class Invitation < ApplicationRecord
     elsif match.team_b_id == invitee_id
       match.update_attribute('point_a', 3)
     end
-    errors.add(:status, :expired)
   end
 
   def update_time_slot_and_match
