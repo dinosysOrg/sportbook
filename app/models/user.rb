@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :roles, through: :roles_users
   has_many :devices
 
-  scope :in_one_day, -> { where('matches.time > ? And matches.time < ?', Time.zone.now, 1.days.from_now) }
+  scope :in_one_day, (-> { where('matches.time > ? And matches.time < ?', Time.zone.now, 1.days.from_now) })
 
   validates :password_confirmation, presence: true, on: :create
 

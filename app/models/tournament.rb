@@ -16,7 +16,7 @@ class Tournament < ApplicationRecord
   after_create :generate_time_slots
   after_create :generate_pages
 
-  scope :in_two_day, -> { where('start_date > ? AND start_date < ?', Time.zone.now, 2.days.from_now) }
+  scope :in_two_day, (-> { where('start_date > ? AND start_date < ?', Time.zone.now, 2.days.from_now) })
 
   def self.push_is_paid(user_ids)
     NotificationsService.push_notification(user_ids, I18n.t('tournament.push.push_is_paid'), 201)

@@ -73,9 +73,10 @@ class Invitation < ApplicationRecord
 
   def self.check_reject_invitation(match_id = 0)
     rejected_invitations = match_id.zero? ? Invitation.rejected : Invitation.rejected.where(match_id: match_id)
-    rejected_invitations.where.not(status: 'pending').each do |invitation|
+    rejected_invitations.each do |invitation|
       next if invitation.created_at + TIME_TO_RESPOND > Time.zone.now
-      invitation.expire_after_reject!
+      pending_invitations = Invitation.pending.where(invitee: invitation.inviter, inviter: invitation.invitee, match: invitation.match)
+      invitation.expire_after_reject! if pending_invitations.empty?
     end
   end
 
@@ -95,8 +96,11 @@ class Invitation < ApplicationRecord
   private
 
   def update_point_for_winner
-    match.update_attribute('point_b', 3) if match.team_a_id == invitee_id
-    match.update_attribute('point_a', 3) if match.team_b_id == invitee_id
+    if match.team_a_id == invitee_id
+      match.update_attribute('point_b', 3)
+    elsif match.team_b_id == invitee_id
+      match.update_attribute('point_a', 3)
+    end
     errors.add(:status, :expired)
   end
 
@@ -110,13 +114,11 @@ class Invitation < ApplicationRecord
   end
 
   def check_invitation_count
-    return unless match_id && match.invitations_count >= Match::MAX_INVITATIONS_COUNT
-    errors.add(:match_id, :count_full, max: Match::MAX_INVITATIONS_COUNT)
+    errors.add(:match_id, :count_full, max: Match::MAX_INVITATIONS_COUNT) if match_id && match.invitations_count >= Match::MAX_INVITATIONS_COUNT
   end
 
   def check_existing_pending_invitation
-    return unless match_id && match.invitations.pending.first
-    errors.add(:match_id, :pending_invitation_exists)
+    errors.add(:match_id, :pending_invitation_exists) if match_id && match.invitations.pending.first
   end
 
   def update_status_time_slot(object)
