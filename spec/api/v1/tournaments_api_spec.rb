@@ -17,7 +17,6 @@ describe 'TournamentsApi' do
       get '/api/v1/tournaments', headers: request_headers.merge(auth_headers)
       expect(response.status).to eq(200)
       expect(json_response[:_embedded][:tournaments].count).to eq(5)
-      expect(json_response[:_embedded][:tournaments][0][:name]).to eq(my_tournament1.name)
     end
 
     it 'show all tournaments that I signed up for' do
