@@ -14,7 +14,11 @@ class User < ApplicationRecord
   has_many :roles_users, dependent: :destroy
   has_many :roles, through: :roles_users
   has_many :devices
+
+  scope :in_one_day, (-> { where('matches.time > ? And matches.time < ?', Time.zone.now, 1.days.from_now) })
+
   validates :password_confirmation, presence: true, on: :create
+
   before_save :add_uid
 
   def add_uid

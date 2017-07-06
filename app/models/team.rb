@@ -21,6 +21,13 @@ class Team < ApplicationRecord
 
   enum status: { registered: 0, paid: 1 }
 
+  before_create :check_is_paid
+
+  def check_is_paid
+    user_ids = User.includes(:teams).references(:teams).where('teams.status = ?', 1).ids
+    Tournament.push_is_paid(user_ids)
+  end
+
   def paid?
     self[:status] == 'paid' ? true : false
   end

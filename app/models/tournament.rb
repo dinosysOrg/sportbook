@@ -16,6 +16,25 @@ class Tournament < ApplicationRecord
   after_create :generate_time_slots
   after_create :generate_pages
 
+  scope :in_two_day, (-> { where('start_date > ? AND start_date < ?', Time.zone.now, 2.days.from_now) })
+
+  def self.push_is_paid(user_ids)
+    NotificationsService.push_notification(user_ids, I18n.t('tournament.push.push_is_paid'), 201)
+  end
+
+  def self.push_unpaid
+    tournaments = Tournament.in_two_day.includes(:teams).references(:teams).where('teams.status = ?', 0)
+    tournaments.each do |tournament|
+      user_ids = tournament.players.pluck(:user_id)
+      NotificationsService.push_notification(user_ids, I18n.t('tournament.push.push_unpaid', name: tournament.name), 202)
+    end
+  end
+
+  def self.push_upcoming
+    user_ids = Player.includes(:tournament).references(:tournament).in_two_day.pluck(:user_id)
+    NotificationsService.push_notification(user_ids, I18n.t('tournament.push.push_upcoming'), 203)
+  end
+
   private
 
   def generate_pages
