@@ -163,9 +163,16 @@ describe 'TeamsApi' do
         get "/api/v1/teams/#{team.id}/time_slots?date=16/5/2017", params: {}.as_json,
                                                                   headers: request_headers.merge(auth_headers)
         expect(response.status).to eq(200)
-        time_response = Time.parse(json_response[:_embedded][:venues][0][:time_slots][0])
+        time_response = Time.zone.parse(json_response[:_embedded][:venues][0][:time_slots][0])
         time_expect = Time.new(time_response.year, time_response.month, time_response.day)
         expect(time_expect).to eq(team_timeslot.time)
+      end
+
+      it 'throw 422' do
+        get "/api/v1/teams/#{team.id}/time_slots?date=100/100/1000", params: {}.as_json,
+                                                                     headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq(422)
+        expect(json_response[:errors][:message]).to include('Your params is wrong')
       end
 
       it 'create time slot and venue ranking for team' do
