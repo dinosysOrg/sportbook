@@ -1,5 +1,4 @@
 class TimeSlot < ApplicationRecord
-  DURATION_TIMESLOT = 1.days
   belongs_to :match
   validate :check_time_slots_for_each_venue, on: :create
   belongs_to :object, polymorphic: true

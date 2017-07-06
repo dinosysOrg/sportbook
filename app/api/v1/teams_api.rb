@@ -57,6 +57,7 @@ module V1
     end
     get 'teams/:team_id/time_slots' do
       team = Team.find params[:team_id]
+      params[:date] = nil if params[:date].blank?
       venue_time_slots = TimeSlotService.possible_time_slots team, params[:date]
       present venue_time_slots, with: Representers::PossibleTimeSlotsRepresenter
     end

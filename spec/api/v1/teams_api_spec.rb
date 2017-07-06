@@ -175,6 +175,13 @@ describe 'TeamsApi' do
         expect(json_response[:errors][:message]).to include('Your params is wrong')
       end
 
+      it 'returns all avaible time slot that belong team' do
+        get "/api/v1/teams/#{team.id}/time_slots", params: {}.as_json,
+                                                   headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq(200)
+        expect(json_response[:_embedded][:venues]).to_not be_nil
+      end
+
       it 'create time slot and venue ranking for team' do
         team.update_attribute('venue_ranking', [])
         put "/api/v1/teams/#{team.id}", params: { preferred_time_blocks: preferred_time_blocks, venue_ranking: venue_ranking }.to_json,

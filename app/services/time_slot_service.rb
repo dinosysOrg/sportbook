@@ -20,7 +20,8 @@ class TimeSlotService
 
     def get_team_timeslot(team, date)
       return team.time_slots.available.pluck(:time) unless date
-      team.time_slots.available.where('time BETWEEN ? AND ?', Time.zone.parse(date), Time.zone.parse(date) + TimeSlot::DURATION_TIMESLOT).pluck(:time)
+      time = Time.zone.parse(date)
+      team.time_slots.available.where('time BETWEEN ? AND ?', time.beginning_of_day, time.end_of_day).pluck(:time)
     end
 
     def choose_time_slot(team_a, team_b)
