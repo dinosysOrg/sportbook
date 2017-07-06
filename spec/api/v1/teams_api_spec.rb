@@ -176,8 +176,8 @@ describe 'TeamsApi' do
       end
 
       it 'returns all avaible time slot that belong team' do
-        get "/api/v1/teams/#{team.id}/time_slots", params: {}.as_json,
-                                                   headers: request_headers.merge(auth_headers)
+        get "/api/v1/teams/#{team.id}/time_slots?date=", params: {}.as_json,
+                                                         headers: request_headers.merge(auth_headers)
         expect(response.status).to eq(200)
         expect(json_response[:_embedded][:venues]).to_not be_nil
       end
