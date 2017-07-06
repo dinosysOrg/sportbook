@@ -53,10 +53,12 @@ module V1
     params do
       requires :team_id, type: Integer, desc: 'Id of team'
       optional :locale, type: String, default: 'vi', desc: "Language which server returns. Value is 'vi' or 'en'"
+      optional :date, type: String, desc: "Upcoming or history for matches, Example value is '12/2/2007'"
     end
     get 'teams/:team_id/time_slots' do
       team = Team.find params[:team_id]
-      venue_time_slots = TimeSlotService.possible_time_slots team
+      params[:date] = nil if params[:date].blank?
+      venue_time_slots = TimeSlotService.possible_time_slots team, params[:date]
       present venue_time_slots, with: Representers::PossibleTimeSlotsRepresenter
     end
 

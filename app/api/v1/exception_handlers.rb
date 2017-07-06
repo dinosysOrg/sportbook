@@ -43,9 +43,15 @@ module V1
         )
       end
 
+      rescue_from ArgumentError do |e|
+        error!(
+          { errors: { message: 'Your params is wrong' }, status_code: 422 },
+          422
+        )
+      end
+
       rescue_from :all do |e|
         raise e if Rails.env.development? || Rails.env.test?
-
         error!(
           { errors: [{ message: 'Unexpected error happened on server' }], status_code: 500 },
           500

@@ -10,13 +10,18 @@ class TimeSlotService
       generate_time_slots_for_objects(objects, slots)
     end
 
-    def possible_time_slots(team)
-      team_time_slots = team.time_slots.available.pluck(:time)
-
+    def possible_time_slots(team, date = nil)
+      team_time_slots = get_team_timeslot team, date
       Venue.all.map do |venue|
         shared_time_slots = venue.time_slots.available.where(time: team_time_slots).pluck(:time).uniq
         OpenStruct.new id: venue.id, name: venue.name, time_slots: shared_time_slots
       end
+    end
+
+    def get_team_timeslot(team, date)
+      return team.time_slots.available.pluck(:time) unless date
+      time = Time.zone.parse(date)
+      team.time_slots.available.where('time BETWEEN ? AND ?', time.beginning_of_day, time.end_of_day).pluck(:time)
     end
 
     def choose_time_slot(team_a, team_b)

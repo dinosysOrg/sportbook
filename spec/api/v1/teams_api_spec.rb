@@ -142,6 +142,7 @@ describe 'TeamsApi' do
     let(:team) { create(:team, :has_players, tournament: tour, name: 'TeamA', status: 1, venue_ranking: new_venue_ranking) }
     let(:venue_ranking) { (5..8).to_a }
     let(:preferred_time_blocks) { { tuesday: [[9, 10, 11]] } }
+    let(:venue) { create(:venue) }
 
     describe 'user can update timeslot and venue ranking for their team' do
       let!(:api_user) { team.players.first.user.becomes ApiUser }
@@ -151,6 +152,32 @@ describe 'TeamsApi' do
 
         get "/api/v1/teams/#{team.id}/time_slots", params: {}.as_json,
                                                    headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq(200)
+        expect(json_response[:_embedded][:venues]).to_not be_nil
+      end
+
+      it 'returns the avaible the slots flow date' do
+        team_timeslot = create(:time_slot, object: team, time: Time.new(2017, 5, 16))
+        create(:time_slot, object: venue, time: Time.new(2017, 5, 16))
+
+        get "/api/v1/teams/#{team.id}/time_slots?date=16/5/2017", params: {}.as_json,
+                                                                  headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq(200)
+        time_response = Time.zone.parse(json_response[:_embedded][:venues][0][:time_slots][0])
+        time_expect = Time.new(time_response.year, time_response.month, time_response.day)
+        expect(time_expect).to eq(team_timeslot.time)
+      end
+
+      it 'throw 422' do
+        get "/api/v1/teams/#{team.id}/time_slots?date=100/100/1000", params: {}.as_json,
+                                                                     headers: request_headers.merge(auth_headers)
+        expect(response.status).to eq(422)
+        expect(json_response[:errors][:message]).to include('Your params is wrong')
+      end
+
+      it 'returns all avaible time slot that belong team' do
+        get "/api/v1/teams/#{team.id}/time_slots?date=", params: {}.as_json,
+                                                         headers: request_headers.merge(auth_headers)
         expect(response.status).to eq(200)
         expect(json_response[:_embedded][:venues]).to_not be_nil
       end
