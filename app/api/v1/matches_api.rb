@@ -12,7 +12,7 @@ module V1
 
     desc 'get all upcoming or history matches'
     params do
-      optional :type, type: String, desc: 'Upcoming or history for matches'
+      requires :type, type: String, desc: 'Upcoming or history for matches ex: my_upcoming, my_historical'
       optional :tournament_id, type: Integer, desc: 'Filter tournament_id for matches'
       requires :limit, type: Integer, desc: 'Number of list'
       requires :page, type: Integer, desc: 'Number of page'
