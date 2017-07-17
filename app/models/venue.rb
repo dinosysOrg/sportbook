@@ -7,4 +7,6 @@ class Venue < ApplicationRecord
   auto_strip_attributes :google_calendar_name
 
   validates :name, presence: true, uniqueness: true
+  validates :lat, presence: true
+  validates :long, presence: true
 end
