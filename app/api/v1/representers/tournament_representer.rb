@@ -16,6 +16,7 @@ module V1
       property :competition_fee
       property :competition_schedule
       property :teams
+      property :venues
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
