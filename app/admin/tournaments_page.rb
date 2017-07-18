@@ -32,6 +32,7 @@ ActiveAdmin.register Tournament do
       f.input :name
       f.input :start_date, as: :date_picker
       f.input :end_date, as: :date_picker
+      f.input :venues, as: :check_boxes
       f.translated_inputs switch_locale: false do |t|
         t.input :competition_mode, label: "#{I18n.t('activerecord.attributes.tournament.competition_mode')} (#{t.object.locale.to_s.upcase})",
                                    input_html: { class: 'summernote' }
@@ -45,6 +46,6 @@ ActiveAdmin.register Tournament do
   end
 
   permit_params do
-    [:name, :start_date, :end_date, translations_attributes: [:id, :competition_mode, :competition_fee, :competition_schedule, :locale]]
+    [:name, :start_date, :end_date, venue_ids: [], translations_attributes: [:id, :competition_mode, :competition_fee, :competition_schedule, :locale]]
   end
 end

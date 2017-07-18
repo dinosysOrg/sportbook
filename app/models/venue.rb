@@ -4,7 +4,11 @@ class Venue < ApplicationRecord
   CAPACITY = 2
   has_many :matches
   has_many :time_slots, as: :object
+  has_many :tours_venues, dependent: :destroy
+  has_many :tournaments, through: :tours_venues
   auto_strip_attributes :google_calendar_name
 
   validates :name, presence: true, uniqueness: true
+  validates :lat, presence: true
+  validates :long, presence: true
 end
